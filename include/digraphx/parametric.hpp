@@ -5,6 +5,45 @@
 #include <tuple>
 #include <vector>
 
+template <typename DiGraph, typename ParametricAPI> class MaxParametricSolver {
+public:
+  using Nbrs1 = decltype((*std::declval<DiGraph>().begin()).second);
+  using Nbrs = std::remove_cv_t<std::remove_reference_t<Nbrs1>>;
+  using Edge1 = decltype((*std::declval<Nbrs>().begin()).second);
+  using Edge = std::remove_cv_t<std::remove_reference_t<Edge1>>;
+  using Cycle = std::vector<Edge>;
+
+private:
+  const DiGraph &_gra;
+  ParametricAPI &_omega;
+  NegCycleFinder<DiGraph> &_ncf;
+
+public:
+  MaxParametricSolver(const DiGraph &gra, ParametricAPI &omega)
+      : _gra{gra}, _omega{omega}, _ncf{gra} {}
+
+  template <typename R, typename Mapping> auto run(R &ratio, Mapping &&dist) {
+    auto cycle = Cycle{};
+
+    while (true) {
+      auto c_min = this->_ncf.howard(dist, [this, &ratio](const auto &edge) {
+        return this->_omega.distance(ratio, edge);
+      });
+      if (c_min.empty()) {
+        break;
+      }
+      auto r_min = this->_omega.zero_cancel(c_min);
+      if (r_min >= ratio) {
+        break;
+      }
+      cycle = std::move(c_min);
+      ratio = std::move(r_min);
+    }
+
+    return cycle;
+  }
+};
+
 /*!
  * @brief maximum parametric problem
  *
@@ -28,8 +67,9 @@
  */
 template <typename DiGraph, typename T, typename Fn1, typename Fn2,
           typename Mapping>
-auto max_parametric(const DiGraph &gra, T &r_opt, Fn1 &&distrance, Fn2 &&zero_cancel,
-                    Mapping &&dist, size_t max_iters = 1000) {
+auto max_parametric(const DiGraph &gra, T &r_opt, Fn1 &&distrance,
+                    Fn2 &&zero_cancel, Mapping &&dist,
+                    size_t max_iters = 1000) {
   // using Node1 = decltype((*std::declval<DiGraph>().begin()).first);
   // using Node = std::remove_cv_t<std::remove_reference_t<Node1>>;
   using Nbrs1 = decltype((*std::declval<DiGraph>().begin()).second);
@@ -47,24 +87,17 @@ auto max_parametric(const DiGraph &gra, T &r_opt, Fn1 &&distrance, Fn2 &&zero_ca
   auto c_opt = Cycle{}; // should initial outside
 
   for (auto niter = 0U; niter != max_iters; ++niter) {
-    const auto &c_min =
-        ncf.howard(std::forward<Mapping>(dist), std::move(get_weight));
+    auto c_min = ncf.howard(std::move(dist), std::move(get_weight));
     if (c_min.empty()) {
       break;
     }
-    const auto &r_min = zero_cancel(c_min);
+    auto r_min = zero_cancel(c_min);
     if (r_min >= r_opt) {
       break;
     }
 
-    c_opt = c_min;
-    r_opt = r_min;
-
-    // update ???
-    // for (auto &&edge : c_opt) {
-    //   const auto [utx, vtx] = edge;
-    //   dist[utx] = dist[vtx] - get_weight(edge);
-    // }
+    c_opt = std::move(c_min);
+    r_opt = std::move(r_min);
   }
 
   return c_opt;

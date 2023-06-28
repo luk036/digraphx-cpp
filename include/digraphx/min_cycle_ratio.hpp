@@ -47,7 +47,7 @@ auto min_cycle_ratio(const DiGraph &gra, T &r0, Fn1 &&get_cost, Fn2 &&get_time,
       total_cost += get_cost(edge);
       total_time += get_time(edge);
     }
-    return T(total_cost) / total_time;
+    return T(std::move(total_cost)) / std::move(total_time);
   };
 
   auto calc_weight = [&](const T &r, const Edge &edge) -> T {
