@@ -114,7 +114,7 @@ public:
 template <typename Container> class MapConstAdaptor {
 public:
   using key_type = size_t;
-  using mapped_type = Container::value_type;
+  using mapped_type = typename Container::value_type;
   using value_type = std::pair<key_type, mapped_type>;
   using E = decltype(py::const_enumerate(std::declval<Container>()));
 
