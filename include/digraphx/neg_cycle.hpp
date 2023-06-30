@@ -35,9 +35,7 @@ class NegCycleFinder {
   using Nbrs = std::remove_cv_t<std::remove_reference_t<Nbrs1>>;
   using Edge1 = decltype((*std::declval<Nbrs>().begin()).second);
   using Edge = std::remove_cv_t<std::remove_reference_t<Edge1>>;
-  // using Cycle = std::vector<std::pair<Edge, std::pair<Node, Node>>>;
   using Cycle = std::vector<Edge>;
-
   using Node2 = decltype((*std::declval<Nbrs>().begin()).first);
   using NodeTo = std::remove_cv_t<std::remove_reference_t<Node2>>;
   static_assert(std::is_same_v<Node, NodeTo>,
@@ -62,7 +60,7 @@ public:
    * @tparam Callable
    * @param[in,out] dist
    * @param[in] get_weight
-   * @return Cycle
+   * @return cppcoro::generator<Cycle>
    */
   template <typename Mapping, typename Callable>
   auto howard(Mapping &&dist, Callable &&get_weight)
@@ -83,7 +81,7 @@ private:
   /*!
    * @brief Find a cycle on policy graph
    *
-   * @return Node a start node of the cycle
+   * @return cppcoro::generator<Cycle>
    */
   auto _find_cycle() -> cppcoro::generator<Node> {
     auto visited = std::unordered_map<Node, Node>{};

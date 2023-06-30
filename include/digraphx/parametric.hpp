@@ -28,7 +28,7 @@ public:
     // using D = std::remove_cv_t<std::remove_reference_t<D1>>;
 
     auto get_weight = [&](const Edge &edge) -> D { // note!!!
-      return this->_omega.distance(r_opt, edge);
+      return static_cast<D>(this->_omega.distance(r_opt, edge));
     };
 
     auto r_min = r_opt;
@@ -92,7 +92,7 @@ auto max_parametric(const DiGraph &gra, T &r_opt, Fn1 &&distance,
   // using D = std::remove_cv_t<std::remove_reference_t<D1>>;
 
   auto get_weight = [&](const Edge &edge) -> D { // note!!!
-    return distance(r_opt, edge);
+    return static_cast<D>(distance(r_opt, edge));
   };
 
   auto ncf = NegCycleFinder<DiGraph>(gra);
