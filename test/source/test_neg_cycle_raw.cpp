@@ -1,6 +1,6 @@
 // -*- coding: utf-8 -*-
 #include <cstdint> // for uint32_t
-#include <digraphx/map_adaptor.hpp>
+#include <digraphx/map_adapter.hpp>
 #include <digraphx/neg_cycle.hpp> // for NegCycleFinder
 #include <doctest/doctest.h>      // for ResultBuilder, TestCase
 #include <list>
@@ -27,7 +27,10 @@ TEST_CASE("Test Negative Cycle (list of lists)") {
   NegCycleFinder ncf(gra);
   auto get_weight = [](const auto &edge) -> double { return edge; };
   auto dist = vector<double>(gra.size(), 0.0);
-  const auto cycle = ncf.howard(dist, std::move(get_weight));
+  auto cycle = vector<double>{};
+  for (auto ci : ncf.howard(dist, std::move(get_weight))) {
+    cycle = ci;
+  }
   CHECK(cycle.empty());
 }
 
@@ -50,7 +53,10 @@ TEST_CASE("Test Negative Cycle (dict of list's)") {
   // auto dist = unordered_map<uint32_t, double>{{0, 0.0}, {1, 0.0}, {2, 0.0}};
   auto dist = vector<double>(gra.size(), 0.0);
   NegCycleFinder ncf(gra);
-  const auto cycle = ncf.howard(dist, std::move(get_weight));
+  auto cycle = vector<uint32_t>{};
+  for (auto ci : ncf.howard(dist, std::move(get_weight))) {
+    cycle = ci;
+  }
   CHECK(cycle.empty());
 }
 
@@ -72,7 +78,10 @@ TEST_CASE("Test Negative Cycle (list of unordered_multimap's)") {
 
   auto dist = vector<double>(gra.size(), 0.0);
   NegCycleFinder ncf(gra);
-  const auto cycle = ncf.howard(dist, std::move(get_weight));
+  auto cycle = vector<size_t>{};
+  for (auto ci : ncf.howard(dist, std::move(get_weight))) {
+    cycle = ci;
+  }
   CHECK(cycle.empty());
 }
 
@@ -80,16 +89,18 @@ TEST_CASE("Test Negative Cycle (list of unordered_multimap's)") {
  * @brief
  *
  */
-TEST_CASE("Test Negative Cycle (MapAdaptor of list's)") {
+TEST_CASE("Test Negative Cycle (MapAdapter of list's)") {
   // contains multiple edges
   vector<list<pair<size_t, double>>> gra{{{1, 7.0}, {2, 5.0}},
                                          {{0, 0.0}, {2, 3.0}},
                                          {{1, 1.0}, {0, 2.0}, {0, 1.0}}};
   auto get_weight = [](const auto &edge) -> double { return edge; };
   auto dist = vector<double>(gra.size(), 0.0);
-  auto ga = MapConstAdaptor{gra};
+  auto ga = MapConstAdapter{gra};
   NegCycleFinder ncf(ga);
-  const auto cycle = ncf.howard(dist, std::move(get_weight));
+  auto cycle = vector<double>{};
+  for (auto ci : ncf.howard(dist, std::move(get_weight))) {
+    cycle = ci;
+  }
   CHECK(cycle.empty());
 }
-

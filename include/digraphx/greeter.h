@@ -28,4 +28,4 @@ public:
   std::string greet(LanguageCode lang = LanguageCode::EN) const;
 };
 
-} // namespace netoptim
+} // namespace digraphx

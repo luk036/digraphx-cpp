@@ -1,6 +1,6 @@
 // -*- coding: utf-8 -*-
 #include <cstdint> // for uint32_t
-#include <digraphx/map_adaptor.hpp>
+#include <digraphx/map_adapter.hpp>
 #include <digraphx/min_cycle_ratio.hpp> // for NegCycleFinder
 #include <doctest/doctest.h>            // for ResultBuilder, TestCase
 #include <list>
@@ -25,9 +25,9 @@ TEST_CASE("Test minimum mean cycle (list of lists)") {
   const auto get_cost = [&](const auto &edge) -> int { return edge; };
   const auto get_time = [&](const auto & /*edge*/) -> int { return 1; };
 
-  auto dist = vector<double>(gra.size(), 0.0);
+  auto dist = vector<int>(gra.size(), 0);
   auto r = 100.0;
-  const auto c = min_cycle_ratio(gra, r, get_cost, get_time, dist);
+  const auto c = min_cycle_ratio(gra, r, get_cost, get_time, dist, 0);
   CHECK(!c.empty());
   // CHECK_EQ(c.size(), 2);
   CHECK_EQ(r, 1.0);
@@ -50,10 +50,10 @@ TEST_CASE("Test minimum cost-to-time ratio (dict of list's)") {
     return edge_time.at(edge);
   };
 
-  auto dist = vector<double>(gra.size(), 0.0);
+  auto dist = vector<int>(gra.size(), 0);
   auto r = 100.0;
-  const auto c =
-      min_cycle_ratio(gra, r, std::move(get_cost), std::move(get_time), dist);
+  const auto c = min_cycle_ratio(gra, r, std::move(get_cost),
+                                 std::move(get_time), dist, 0);
   CHECK(!c.empty());
   // CHECK_EQ(c.size(), 2);
   CHECK_EQ(r, 1.0);
@@ -86,14 +86,14 @@ TEST_CASE("Test minimum cost-to-time ratio (dict of list's)") {
 //  * @brief
 //  *
 //  */
-// TEST_CASE("Test Negative Cycle (MapAdaptor of list's)") {
+// TEST_CASE("Test Negative Cycle (MapAdapter of list's)") {
 //   // contains multiple edges
 //   vector<list<pair<size_t, double>>> gra{{{1, 7.0}, {2, 5.0}},
 //                                          {{0, 0.0}, {2, 3.0}},
 //                                          {{1, 1.0}, {0, 2.0}, {0, 1.0}}};
 //   auto get_weight = [](const auto &edge) -> double { return edge; };
 //   auto dist = vector<double>{0.0, 0.0, 0.0};
-//   auto ga = MapConstAdaptor{gra};
+//   auto ga = MapConstAdapter{gra};
 //   NegCycleFinder ncf(ga);
 //   const auto cycle = ncf.howard(dist, std::move(get_weight));
 //   CHECK(cycle.empty());

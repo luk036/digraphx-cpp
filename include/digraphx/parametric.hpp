@@ -22,25 +22,37 @@ public:
   MaxParametricSolver(const DiGraph &gra, ParametricAPI &omega)
       : _gra{gra}, _omega{omega}, _ncf{gra} {}
 
-  template <typename R, typename Mapping> auto run(R &ratio, Mapping &&dist) {
-    auto cycle = Cycle{};
+  template <typename R, typename Mapping, typename D>
+  auto run(R &r_opt, Mapping &&dist, D && /* dist type */) {
+    // using D1 = decltype(*(dist.begin()).second);
+    // using D = std::remove_cv_t<std::remove_reference_t<D1>>;
+
+    auto get_weight = [&](const Edge &edge) -> D { // note!!!
+      return this->_omega.distance(r_opt, edge);
+    };
+
+    auto r_min = r_opt;
+    auto c_min = Cycle{};
+    auto c_opt = Cycle{}; // should initial outside
 
     while (true) {
-      auto c_min = this->_ncf.howard(dist, [this, &ratio](const auto &edge) {
-        return this->_omega.distance(ratio, edge);
-      });
-      if (c_min.empty()) {
+      for (auto ci :
+           this->_ncf.howard(std::move(dist), std::move(get_weight))) {
+        auto ri = zero_cancel(ci);
+        if (r_min > ri) {
+          r_min = ri;
+          c_min = ci;
+        }
+      }
+      if (r_min >= r_opt) {
         break;
       }
-      auto r_min = this->_omega.zero_cancel(c_min);
-      if (r_min >= ratio) {
-        break;
-      }
-      cycle = std::move(c_min);
-      ratio = std::move(r_min);
+
+      c_opt = std::move(c_min);
+      r_opt = std::move(r_min);
     }
 
-    return cycle;
+    return c_opt;
   }
 };
 
@@ -66,32 +78,36 @@ public:
  * @return optimal r and the critical cycle
  */
 template <typename DiGraph, typename T, typename Fn1, typename Fn2,
-          typename Mapping>
-auto max_parametric(const DiGraph &gra, T &r_opt, Fn1 &&distrance,
-                    Fn2 &&zero_cancel, Mapping &&dist,
-                    size_t max_iters = 1000) {
+          typename Mapping, typename D>
+auto max_parametric(const DiGraph &gra, T &r_opt, Fn1 &&distance,
+                    Fn2 &&zero_cancel, Mapping &&dist, D /* dist type*/) {
   // using Node1 = decltype((*std::declval<DiGraph>().begin()).first);
   // using Node = std::remove_cv_t<std::remove_reference_t<Node1>>;
   using Nbrs1 = decltype((*std::declval<DiGraph>().begin()).second);
   using Nbrs = std::remove_cv_t<std::remove_reference_t<Nbrs1>>;
   using Edge1 = decltype((*std::declval<Nbrs>().begin()).second);
   using Edge = std::remove_cv_t<std::remove_reference_t<Edge1>>;
-  // using Cycle = std::vector<std::pair<Edge, std::pair<Node, Node>>>;
   using Cycle = std::vector<Edge>;
+  // using D1 = decltype(*(dist.begin()).second);
+  // using D = std::remove_cv_t<std::remove_reference_t<D1>>;
 
-  auto get_weight = [&](const Edge &edge) -> T { // int???
-    return distrance(r_opt, edge);
+  auto get_weight = [&](const Edge &edge) -> D { // note!!!
+    return distance(r_opt, edge);
   };
 
   auto ncf = NegCycleFinder<DiGraph>(gra);
+  auto r_min = r_opt;
+  auto c_min = Cycle{};
   auto c_opt = Cycle{}; // should initial outside
 
-  for (auto niter = 0U; niter != max_iters; ++niter) {
-    auto c_min = ncf.howard(std::move(dist), std::move(get_weight));
-    if (c_min.empty()) {
-      break;
+  while (true) {
+    for (auto ci : ncf.howard(std::move(dist), std::move(get_weight))) {
+      auto ri = zero_cancel(ci);
+      if (r_min > ri) {
+        r_min = ri;
+        c_min = ci;
+      }
     }
-    auto r_min = zero_cancel(c_min);
     if (r_min >= r_opt) {
       break;
     }

@@ -7,12 +7,13 @@ Negative cycle detection for weighed graphs.
 // #include <ThreadPool.h>
 
 #include <cassert>
+#include <cppcoro/generator.hpp>
+#include <functional>
 #include <optional>
 #include <type_traits> // for is_same_v
 #include <unordered_map>
 #include <utility> // for pair
 #include <vector>
-#include <functional>
 
 /*!
  * @brief negative cycle
@@ -39,7 +40,8 @@ class NegCycleFinder {
 
   using Node2 = decltype((*std::declval<Nbrs>().begin()).first);
   using NodeTo = std::remove_cv_t<std::remove_reference_t<Node2>>;
-  static_assert(std::is_same_v<Node, NodeTo>, "NodeFrom should be equal to NodeTo");
+  static_assert(std::is_same_v<Node, NodeTo>,
+                "NodeFrom should be equal to NodeTo");
 
 private:
   std::unordered_map<Node, std::pair<Node, Edge>> _pred;
@@ -63,16 +65,18 @@ public:
    * @return Cycle
    */
   template <typename Mapping, typename Callable>
-  auto howard(Mapping &&dist, Callable &&get_weight) -> Cycle {
+  auto howard(Mapping &&dist, Callable &&get_weight)
+      -> cppcoro::generator<Cycle> {
     this->_pred.clear();
-    while (this->_relax(dist, get_weight)) {
-      const auto vtx = this->_find_cycle();
-      if (vtx) {
-        assert(this->_is_negative(*vtx, dist, get_weight));
-        return this->_cycle_list(*vtx);
+    auto found = false;
+    while (!found && this->_relax(dist, get_weight)) {
+      for (auto vtx : this->_find_cycle()) {
+        assert(this->_is_negative(vtx, dist, get_weight));
+        co_yield this->_cycle_list(vtx);
+        found = true;
       }
     }
-    return Cycle{}; // TODO
+    co_return;
   }
 
 private:
@@ -81,7 +85,7 @@ private:
    *
    * @return Node a start node of the cycle
    */
-  auto _find_cycle() -> std::optional<Node1> {
+  auto _find_cycle() -> cppcoro::generator<Node> {
     auto visited = std::unordered_map<Node, Node>{};
     for (const auto &result : this->_digraph) {
       const auto &vtx = result.first;
@@ -97,18 +101,13 @@ private:
         utx = this->_pred[utx].first;
         if (visited.find(utx) != visited.end()) { // contains utx
           if (visited[utx] == vtx) {
-            // should be "yield utx";
-            // *this->_cycle_start = utx;
-            // return this->_cycle_start.get();
-            return utx;
-            // }
+            co_yield utx;
           }
           break;
         }
       }
     }
-
-    return {};
+    co_return;
   }
 
   /*!
@@ -170,7 +169,7 @@ private:
                     Callable &&get_weight) const -> bool {
     auto vtx = handle;
     do {
-      const auto& [utx, edge] = this->_pred.at(vtx);
+      const auto &[utx, edge] = this->_pred.at(vtx);
       if (dist.at(vtx) > dist.at(utx) + get_weight(edge)) {
         return true;
       }

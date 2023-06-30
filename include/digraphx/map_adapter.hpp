@@ -10,7 +10,7 @@
  *
  * @tparam T
  */
-template <typename Container> class MapAdaptorBase {
+template <typename Container> class MapAdapterBase {
 public:
   using key_type = size_t;
   using mapped_type = Container::value_type;
@@ -21,11 +21,11 @@ public:
 
 public:
   /**
-   * @brief Construct a new MapAdaptor object
+   * @brief Construct a new MapAdapter object
    *
    * @param lst
    */
-  explicit MapAdaptorBase(Container &lst)
+  explicit MapAdapterBase(Container &lst)
       : _rng{py::range(lst.size())}, _lst(lst) {}
 
   /**
@@ -81,12 +81,12 @@ public:
  * @tparam T
  */
 template <typename Container>
-class MapAdaptor : public MapAdaptorBase<Container> {
+class MapAdapter : public MapAdapterBase<Container> {
 public:
   using key_type = size_t;
   using mapped_type = Container::value_type;
   using value_type = std::pair<key_type, mapped_type>;
-  using Base = MapAdaptorBase<Container>;
+  using Base = MapAdapterBase<Container>;
   using E = decltype(py::enumerate(Base::_lst));
 
 private:
@@ -94,11 +94,11 @@ private:
 
 public:
   /**
-   * @brief Construct a new MapAdaptor object
+   * @brief Construct a new MapAdapter object
    *
    * @param lst
    */
-  explicit MapAdaptor(Container &lst)
+  explicit MapAdapter(Container &lst)
       : Base(std::forward<Container>(lst)), mapview(py::enumerate(this->_lst)) {
   }
 
@@ -111,7 +111,7 @@ public:
  *
  * @tparam T
  */
-template <typename Container> class MapConstAdaptor {
+template <typename Container> class MapConstAdapter {
 public:
   using key_type = size_t;
   using mapped_type = Container::value_type;
@@ -125,11 +125,11 @@ private:
 
 public:
   /**
-   * @brief Construct a new MapAdaptor object
+   * @brief Construct a new MapAdapter object
    *
    * @param lst
    */
-  explicit MapConstAdaptor(const Container &lst)
+  explicit MapConstAdapter(const Container &lst)
       : _rng{py::range(lst.size())}, _lst(lst),
         mapview(py::const_enumerate(_lst)) {}
 
