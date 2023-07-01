@@ -36,8 +36,6 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
   add_compile_options(/std:c++latest /await)
 endif()
 
-set(SPECIFIC_LIBS cppcoro::cppcoro Bingo::Bingo fmt::fmt)
-
 CPMAddPackage(
   NAME Py2Cpp
   GIT_TAG 1.4.6

@@ -4,8 +4,6 @@
 /*!
 Negative cycle detection for weighed graphs.
 **/
-// #include <ThreadPool.h>
-
 #include <cassert>
 #include <cppcoro/generator.hpp>
 #include <functional>
@@ -18,14 +16,14 @@ Negative cycle detection for weighed graphs.
 /*!
  * @brief negative cycle
  *
- * @tparam DiGraph
- *
  * Note: Bellman-Ford's shortest-path algorithm (BF) is NOT the best way to
  *       detect negative cycles, because
  *
  *  1. BF needs a source node.
  *  2. BF detect whether there is a negative cycle at the fianl stage.
  *  3. BF restarts the solution (dist[utx]) every time.
+ *
+ * @tparam DiGraph
  */
 template <typename DiGraph> //
 class NegCycleFinder {
@@ -63,7 +61,7 @@ public:
    * @return cppcoro::generator<Cycle>
    */
   template <typename Mapping, typename Callable>
-  auto howard(Mapping &&dist, Callable &&get_weight)
+  auto howard(Mapping &dist, Callable &&get_weight)
       -> cppcoro::generator<Cycle> {
     this->_pred.clear();
     auto found = false;
@@ -119,11 +117,11 @@ private:
    * @return false
    */
   template <typename Mapping, typename Callable>
-  auto _relax(Mapping &&dist, Callable &&get_weight) -> bool {
+  auto _relax(Mapping &dist, Callable &&get_weight) -> bool {
     auto changed = false;
     for (const auto &[utx, nbrs] : this->_digraph) {
       for (const auto &[vtx, edge] : nbrs) {
-        const auto distance = dist[utx] + get_weight(edge);
+        auto distance = dist[utx] + get_weight(edge);
         if (dist[vtx] > distance) {
           this->_pred[vtx] = std::make_pair(utx, edge);
           dist[vtx] = distance;
@@ -140,14 +138,17 @@ private:
    * @param[in] handle
    * @return Cycle
    */
-  auto _cycle_list(const Node &handle) -> Cycle {
+  auto _cycle_list(const Node &handle) const -> Cycle {
     auto vtx = handle;
     auto cycle = Cycle{}; // TODO
-    do {
-      const auto &[utx, edge] = this->_pred[vtx];
+    while (true) {
+      const auto &[utx, edge] = this->_pred.at(vtx);
       cycle.push_back(edge);
       vtx = utx;
-    } while (vtx != handle);
+      if (vtx == handle) {
+        break;
+      }
+    }
     return cycle;
   }
 
@@ -166,14 +167,16 @@ private:
   auto _is_negative(const Node &handle, const Mapping &dist,
                     Callable &&get_weight) const -> bool {
     auto vtx = handle;
-    do {
+    while (true) {
       const auto &[utx, edge] = this->_pred.at(vtx);
       if (dist.at(vtx) > dist.at(utx) + get_weight(edge)) {
         return true;
       }
       vtx = utx;
-    } while (vtx != handle);
-
+      if (vtx == handle) {
+        break;
+      }
+    }
     return false;
   }
 };
