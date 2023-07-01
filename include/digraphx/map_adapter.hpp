@@ -13,7 +13,7 @@
 template <typename Container> class MapAdapterBase {
 public:
   using key_type = size_t;
-  using mapped_type = Container::value_type;
+  using mapped_type = typename Container::value_type;
   using value_type = std::pair<key_type, mapped_type>;
 
   py::Range<key_type> _rng;
@@ -179,6 +179,17 @@ public:
    */
   size_t size() const { return this->_rng.size(); }
 
+  /**
+   * @brief 
+   * 
+   * @return auto 
+   */
   auto begin() const { return mapview.begin(); }
+
+  /**
+   * @brief 
+   * 
+   * @return auto 
+   */
   auto end() const { return mapview.end(); }
 };

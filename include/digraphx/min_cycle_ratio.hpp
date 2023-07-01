@@ -44,15 +44,21 @@ public:
    * The `CycleRatioAPI` class has a constructor that takes a reference to a
    * `DiGraph` object as a parameter. This constructor is used to create a new
    * `CycleRatioAPI` object and initialize its `gra` member variable with the
-   * provided `DiGraph` object. The `gra` member variable is a constant reference to
-   * a `DiGraph` object, which means it cannot be modified after it is initialized.
+   * provided `DiGraph` object. The `gra` member variable is a constant
+   * reference to a `DiGraph` object, which means it cannot be modified after it
+   * is initialized.
    *
    * @param gra
    */
   CycleRatioAPI(const DiGraph &gra) : gra(gra) {}
 
   /**
-   * @brief
+   * @brief distance between two end points of an edge
+   *
+   * The `distance` function takes a reference to a `Ratio` object named `ratio`
+   * and a constant reference to an `Edge` object named `edge` as  parameters.
+   * It calculates the distance between two vertices in the graph based on the
+   * cost and time values associated with the edge  connecting them.
    *
    * @param ratio
    * @param edge
@@ -62,6 +68,15 @@ public:
     return Ratio(edge.at("cost")) - ratio * edge.at("time");
   }
 
+  /**
+   * @brief zero_cancel function
+   *
+   * The `zero_cancel` function calculates the ratio of the total cost to the
+   * total time for a given cycle.
+   *
+   * @param cycle
+   * @return Ratio
+   */
   auto zero_cancel(const Cycle &cycle) const -> Ratio {
     Ratio total_cost = 0;
     Ratio total_time = 0;
@@ -69,6 +84,13 @@ public:
       total_cost += edge.at("cost");
       total_time += edge.at("time");
     }
+    // Ratio total_cost =
+    //     std::accumulate(cycle.begin(), cycle.end(), Ratio(0),
+    //                     [](const Edge &edge) { return edge.at("cost"); });
+    // Ratio total_time =
+    //     std::accumulate(cycle.begin(), cycle.end(), Ratio(0),
+    //                     [](const Edge &edge) { return edge.at("time"); });
+
     return Ratio(total_cost) / total_time;
   }
 };
@@ -144,14 +166,20 @@ auto min_cycle_ratio(const DiGraph &gra, Ratio &r0, Fn1 &&get_cost,
   using cost_T = decltype(get_cost(std::declval<Edge>()));
   using time_T = decltype(get_time(std::declval<Edge>()));
 
-  auto calc_ratio = [&get_cost, &get_time](const Cycle &cycle) -> Ratio {
+  auto calc_ratio = [&](const Cycle &cycle) -> Ratio {
     auto total_cost = cost_T(0);
     auto total_time = time_T(0);
     for (auto &&edge : cycle) {
       total_cost += get_cost(edge);
       total_time += get_time(edge);
     }
-    return static_cast<Ratio>(std::move(total_cost)) / std::move(total_time);
+    // cost_T total_cost = std::accumulate(
+    //     cycle.cbegin(), cycle.cend(), cost_T(0),
+    //     [&get_cost](const Edge &edge) { return get_cost(edge); });
+    // time_T total_time = std::accumulate(
+    //     cycle.cbegin(), cycle.cend(), time_T(0),
+    //     [&get_time](const Edge &edge) { return get_time(edge); });
+    return Ratio(std::move(total_cost)) / std::move(total_time);
   };
 
   auto calc_weight = [&get_cost, &get_time](Ratio &ratio,
