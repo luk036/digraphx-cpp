@@ -14,10 +14,20 @@ Negative cycle detection for weighed graphs.
 #include <vector>
 
 /*!
- * @brief negative cycle
+ * @brief Negative Cycle Finder by Howard's method
+ *
+ * Howard's method is a minimum cycle ratio (MCR) algorithm that uses a policy
+ * iteration algorithm to find the minimum cycle ratio of a directed graph. The
+ * algorithm maintains a set of candidate cycles and iteratively updates the
+ * cycle with the minimum ratio until convergence. To detect negative cycles,
+ * Howard's method uses a cycle detection algorithm that is based on the
+ * Bellman-Ford relaxation algorithm. Specifically, the algorithm maintains a
+ * predecessor graph of the original graph and performs cycle detection on this
+ * graph using the Bellman-Ford relaxation algorithm. If a negative cycle is
+ * detected, the algorithm terminates and returns the cycle.
  *
  * Note: Bellman-Ford's shortest-path algorithm (BF) is NOT the best way to
- *       detect negative cycles, because
+ * detect negative cycles, because
  *
  *  1. BF needs a source node.
  *  2. BF detect whether there is a negative cycle at the fianl stage.
