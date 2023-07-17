@@ -180,16 +180,16 @@ public:
   size_t size() const { return this->_rng.size(); }
 
   /**
-   * @brief 
-   * 
-   * @return auto 
+   * @brief
+   *
+   * @return auto
    */
   auto begin() const { return mapview.begin(); }
 
   /**
-   * @brief 
-   * 
-   * @return auto 
+   * @brief
+   *
+   * @return auto
    */
   auto end() const { return mapview.end(); }
 };
