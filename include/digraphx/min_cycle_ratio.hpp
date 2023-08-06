@@ -9,7 +9,7 @@ correctly by the compiler or interpreter. */
 #include <algorithm>
 #include <numeric>
 
-#include "parametric.hpp" // import max_parametric
+#include "parametric.hpp"  // import max_parametric
 
 /**
  * @brief CycleRatioAPI
@@ -142,8 +142,8 @@ template <typename DiGraph, typename Ratio> class MinCycleRatioSolver {
      * @param r0
      * @return Cycle
      */
-    template <typename Mapping, typename Domain>
-    auto run(Ratio &r0, Mapping &dist, Domain dummy) -> Cycle {
+    template <typename Mapping, typename Domain> auto run(Ratio &r0, Mapping &dist, Domain dummy)
+        -> Cycle {
         auto omega = CycleRatioAPI<DiGraph, Ratio>(gra);
         auto solver = MaxParametricSolver(gra, omega);
         return solver.run(dist, r0, std::move(dummy));
@@ -170,10 +170,10 @@ template <typename DiGraph, typename Ratio> class MinCycleRatioSolver {
  * @param[in,out] dist
  * @return auto
  */
-template <typename DiGraph, typename Ratio, typename Fn1, typename Fn2,
-          typename Mapping, typename Domain>
-auto min_cycle_ratio(const DiGraph &gra, Ratio &r0, Fn1 &&get_cost,
-                     Fn2 &&get_time, Mapping &dist, Domain dummy) {
+template <typename DiGraph, typename Ratio, typename Fn1, typename Fn2, typename Mapping,
+          typename Domain>
+auto min_cycle_ratio(const DiGraph &gra, Ratio &r0, Fn1 &&get_cost, Fn2 &&get_time, Mapping &dist,
+                     Domain dummy) {
     using Nbrs1 = decltype((*std::declval<DiGraph>().begin()).second);
     using Nbrs = std::remove_cv_t<std::remove_reference_t<Nbrs1>>;
     using Edge1 = decltype((*std::declval<Nbrs>().begin()).second);
@@ -198,11 +198,9 @@ auto min_cycle_ratio(const DiGraph &gra, Ratio &r0, Fn1 &&get_cost,
         return Ratio(std::move(total_cost)) / std::move(total_time);
     };
 
-    auto calc_weight = [&get_cost, &get_time](Ratio &ratio,
-                                              const Edge &edge) -> Ratio {
+    auto calc_weight = [&get_cost, &get_time](Ratio &ratio, const Edge &edge) -> Ratio {
         return get_cost(edge) - ratio * get_time(edge);
     };
 
-    return max_parametric(gra, r0, std::move(calc_weight),
-                          std::move(calc_ratio), dist, dummy);
+    return max_parametric(gra, r0, std::move(calc_weight), std::move(calc_ratio), dist, dummy);
 }

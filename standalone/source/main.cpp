@@ -1,11 +1,11 @@
-#include <digraphx/greeter.h> // for LanguageCode, LanguageCode::DE, Langua...
-#include <digraphx/version.h> // for DIGRAPHX_VERSION
+#include <digraphx/greeter.h>  // for LanguageCode, LanguageCode::DE, Langua...
+#include <digraphx/version.h>  // for DIGRAPHX_VERSION
 
-#include <cxxopts.hpp>   // for value, OptionAdder, Options, OptionValue
-#include <iostream>      // for string, operator<<, endl, basic_ostream
-#include <memory>        // for shared_ptr
-#include <string>        // for char_traits, hash, operator==
-#include <unordered_map> // for operator==, unordered_map, __hash_map_...
+#include <cxxopts.hpp>    // for value, OptionAdder, Options, OptionValue
+#include <iostream>       // for string, operator<<, endl, basic_ostream
+#include <memory>         // for shared_ptr
+#include <string>         // for char_traits, hash, operator==
+#include <unordered_map>  // for operator==, unordered_map, __hash_map_...
 
 auto main(int argc, char **argv) -> int {
     const std::unordered_map<std::string, digraphx::LanguageCode> languages{

@@ -1,8 +1,9 @@
 // -*- coding: utf-8 -*-
-#include <cstdint> // for uint32_t
+#include <doctest/doctest.h>  // for ResultBuilder, TestCase
+
+#include <cstdint>  // for uint32_t
 #include <digraphx/map_adapter.hpp>
-#include <digraphx/min_cycle_ratio.hpp> // for NegCycleFinder
-#include <doctest/doctest.h>            // for ResultBuilder, TestCase
+#include <digraphx/min_cycle_ratio.hpp>  // for NegCycleFinder
 #include <list>
 #include <unordered_map>
 #include <vector>
@@ -43,17 +44,12 @@ TEST_CASE("Test minimum cost-to-time ratio (dict of list's)") {
     const vector<int> edge_cost{5, 1, 1, 1, 1, 1};
     const vector<int> edge_time{1, 1, 1, 1, 1, 1};
 
-    auto get_cost = [&edge_cost](const auto &edge) -> int {
-        return edge_cost.at(edge);
-    };
-    auto get_time = [&edge_time](const auto &edge) -> int {
-        return edge_time.at(edge);
-    };
+    auto get_cost = [&edge_cost](const auto &edge) -> int { return edge_cost.at(edge); };
+    auto get_time = [&edge_time](const auto &edge) -> int { return edge_time.at(edge); };
 
     auto dist = vector<int>(gra.size(), 0);
     auto r = 100.0;
-    const auto c = min_cycle_ratio(gra, r, std::move(get_cost),
-                                   std::move(get_time), dist, 0);
+    const auto c = min_cycle_ratio(gra, r, std::move(get_cost), std::move(get_time), dist, 0);
     CHECK(!c.empty());
     // CHECK_EQ(c.size(), 2);
     CHECK_EQ(r, 1.0);

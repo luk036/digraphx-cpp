@@ -1,8 +1,9 @@
 #pragma once
 
-#include "neg_cycle.hpp" // import NegCycleFinder
 #include <tuple>
 #include <vector>
+
+#include "neg_cycle.hpp"  // import NegCycleFinder
 
 /**
  * @brief Maximum Parametric Solver
@@ -40,8 +41,7 @@ template <typename DiGraph, typename ParametricAPI> class MaxParametricSolver {
      * @param gra
      * @param omega
      */
-    MaxParametricSolver(const DiGraph &gra, ParametricAPI &omega)
-        : _ncf{gra}, _omega{omega} {}
+    MaxParametricSolver(const DiGraph &gra, ParametricAPI &omega) : _ncf{gra}, _omega{omega} {}
 
     /**
      * @brief Run
@@ -53,7 +53,7 @@ template <typename DiGraph, typename ParametricAPI> class MaxParametricSolver {
     template <typename Ratio, typename Mapping, typename Domain>
     auto run(Ratio &r_opt, Mapping &dist, Domain /* dist type */) {
         auto get_weight = [this,
-                           &r_opt](const Edge &edge) -> Domain { // note!!!
+                           &r_opt](const Edge &edge) -> Domain {  // note!!!
             return Domain(this->_omega.distance(r_opt, edge));
         };
 
@@ -100,24 +100,23 @@ template <typename DiGraph, typename ParametricAPI> class MaxParametricSolver {
  * @param[in,out] dist
  * @return optimal r and the critical cycle
  */
-template <typename DiGraph, typename T, typename Fn1, typename Fn2,
-          typename Mapping, typename D>
-auto max_parametric(const DiGraph &gra, T &r_opt, Fn1 &&distance,
-                    Fn2 &&zero_cancel, Mapping &dist, D /* dist type*/) {
+template <typename DiGraph, typename T, typename Fn1, typename Fn2, typename Mapping, typename D>
+auto max_parametric(const DiGraph &gra, T &r_opt, Fn1 &&distance, Fn2 &&zero_cancel, Mapping &dist,
+                    D /* dist type*/) {
     using Nbrs1 = decltype((*std::declval<DiGraph>().begin()).second);
     using Nbrs = std::remove_cv_t<std::remove_reference_t<Nbrs1>>;
     using Edge1 = decltype((*std::declval<Nbrs>().begin()).second);
     using Edge = std::remove_cv_t<std::remove_reference_t<Edge1>>;
     using Cycle = std::vector<Edge>;
 
-    auto get_weight = [&distance, &r_opt](const Edge &edge) -> D { // note!!!
+    auto get_weight = [&distance, &r_opt](const Edge &edge) -> D {  // note!!!
         return static_cast<D>(distance(r_opt, edge));
     };
 
     auto ncf = NegCycleFinder<DiGraph>(gra);
     auto r_min = r_opt;
     auto c_min = Cycle{};
-    auto c_opt = Cycle{}; // should initial outside
+    auto c_opt = Cycle{};  // should initial outside
 
     while (true) {
         for (auto ci : ncf.howard(dist, std::move(get_weight))) {

@@ -25,8 +25,7 @@ template <typename Container> class MapAdapterBase {
      *
      * @param lst
      */
-    explicit MapAdapterBase(Container &lst)
-        : _rng{py::range(lst.size())}, _lst(lst) {}
+    explicit MapAdapterBase(Container &lst) : _rng{py::range(lst.size())}, _lst(lst) {}
 
     /**
      * @brief
@@ -42,9 +41,7 @@ template <typename Container> class MapAdapterBase {
      * @param key
      * @return const T&
      */
-    const mapped_type &operator[](const key_type &key) const {
-        return this->_lst.at(key);
-    }
+    const mapped_type &operator[](const key_type &key) const { return this->_lst.at(key); }
 
     /**
      * @brief
@@ -52,9 +49,7 @@ template <typename Container> class MapAdapterBase {
      * @param key
      * @return const T&
      */
-    const mapped_type &at(const key_type &key) const {
-        return this->_lst.at(key);
-    }
+    const mapped_type &at(const key_type &key) const { return this->_lst.at(key); }
 
     // void erase() { throw std::runtime_error("NotImplementedError"); }
 
@@ -65,9 +60,7 @@ template <typename Container> class MapAdapterBase {
      * @return true
      * @return false
      */
-    bool contains(const key_type &key) const {
-        return this->_rng.contains(key);
-    }
+    bool contains(const key_type &key) const { return this->_rng.contains(key); }
 
     /**
      * @brief
@@ -82,8 +75,7 @@ template <typename Container> class MapAdapterBase {
  *
  * @tparam T
  */
-template <typename Container>
-class MapAdapter : public MapAdapterBase<Container> {
+template <typename Container> class MapAdapter : public MapAdapterBase<Container> {
   public:
     using key_type = size_t;
     using mapped_type = Container::value_type;
@@ -101,8 +93,7 @@ class MapAdapter : public MapAdapterBase<Container> {
      * @param lst
      */
     explicit MapAdapter(Container &lst)
-        : Base(std::forward<Container>(lst)),
-          mapview(py::enumerate(this->_lst)) {}
+        : Base(std::forward<Container>(lst)), mapview(py::enumerate(this->_lst)) {}
 
     auto begin() const { return mapview.begin(); }
     auto end() const { return mapview.end(); }
@@ -132,8 +123,7 @@ template <typename Container> class MapConstAdapter {
      * @param lst
      */
     explicit MapConstAdapter(const Container &lst)
-        : _rng{py::range(lst.size())}, _lst(lst),
-          mapview(py::const_enumerate(_lst)) {}
+        : _rng{py::range(lst.size())}, _lst(lst), mapview(py::const_enumerate(_lst)) {}
 
     /**
      * @brief
@@ -149,9 +139,7 @@ template <typename Container> class MapConstAdapter {
      * @param key
      * @return const T&
      */
-    const mapped_type &operator[](const key_type &key) const {
-        return this->_lst.at(key);
-    }
+    const mapped_type &operator[](const key_type &key) const { return this->_lst.at(key); }
 
     /**
      * @brief
@@ -159,9 +147,7 @@ template <typename Container> class MapConstAdapter {
      * @param key
      * @return const T&
      */
-    const mapped_type &at(const key_type &key) const {
-        return this->_lst.at(key);
-    }
+    const mapped_type &at(const key_type &key) const { return this->_lst.at(key); }
 
     // void erase() { throw std::runtime_error("NotImplementedError"); }
 
@@ -172,9 +158,7 @@ template <typename Container> class MapConstAdapter {
      * @return true
      * @return false
      */
-    bool contains(const key_type &key) const {
-        return this->_rng.contains(key);
-    }
+    bool contains(const key_type &key) const { return this->_rng.contains(key); }
 
     /**
      * @brief

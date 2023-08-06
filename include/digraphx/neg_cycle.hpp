@@ -8,9 +8,9 @@ Negative cycle detection for weighed graphs.
 #include <cppcoro/generator.hpp>
 #include <functional>
 #include <optional>
-#include <type_traits> // for is_same_v
+#include <type_traits>  // for is_same_v
 #include <unordered_map>
-#include <utility> // for pair
+#include <utility>  // for pair
 #include <vector>
 
 /*!
@@ -35,7 +35,7 @@ Negative cycle detection for weighed graphs.
  *
  * @tparam DiGraph
  */
-template <typename DiGraph> //
+template <typename DiGraph>  //
 class NegCycleFinder {
     using Node1 = decltype((*std::declval<DiGraph>().begin()).first);
     using Node = std::remove_cv_t<std::remove_reference_t<Node1>>;
@@ -46,8 +46,7 @@ class NegCycleFinder {
     using Cycle = std::vector<Edge>;
     using Node2 = decltype((*std::declval<Nbrs>().begin()).first);
     using NodeTo = std::remove_cv_t<std::remove_reference_t<Node2>>;
-    static_assert(std::is_same_v<Node, NodeTo>,
-                  "NodeFrom should be equal to NodeTo");
+    static_assert(std::is_same_v<Node, NodeTo>, "NodeFrom should be equal to NodeTo");
 
   private:
     std::unordered_map<Node, std::pair<Node, Edge>> _pred;
@@ -70,8 +69,7 @@ class NegCycleFinder {
      * @param[in] get_weight
      * @return cppcoro::generator<Cycle>
      */
-    template <typename Mapping, typename Callable>
-    auto howard(Mapping &dist, Callable &&get_weight)
+    template <typename Mapping, typename Callable> auto howard(Mapping &dist, Callable &&get_weight)
         -> cppcoro::generator<Cycle> {
         this->_pred.clear();
         auto found = false;
@@ -95,18 +93,17 @@ class NegCycleFinder {
         auto visited = std::unordered_map<Node, Node>{};
         for (const auto &result : this->_digraph) {
             const auto &vtx = result.first;
-            if (visited.find(vtx) != visited.end()) { // contains vtx
+            if (visited.find(vtx) != visited.end()) {  // contains vtx
                 continue;
             }
             auto utx = vtx;
             while (true) {
                 visited[utx] = vtx;
-                if (this->_pred.find(utx) ==
-                    this->_pred.end()) { // not contains utx
+                if (this->_pred.find(utx) == this->_pred.end()) {  // not contains utx
                     break;
                 }
                 utx = this->_pred[utx].first;
-                if (visited.find(utx) != visited.end()) { // contains utx
+                if (visited.find(utx) != visited.end()) {  // contains utx
                     if (visited[utx] == vtx) {
                         co_yield utx;
                     }
@@ -127,8 +124,8 @@ class NegCycleFinder {
      * @return true
      * @return false
      */
-    template <typename Mapping, typename Callable>
-    auto _relax(Mapping &dist, Callable &&get_weight) -> bool {
+    template <typename Mapping, typename Callable> auto _relax(Mapping &dist, Callable &&get_weight)
+        -> bool {
         auto changed = false;
         for (const auto &[utx, nbrs] : this->_digraph) {
             for (const auto &[vtx, edge] : nbrs) {
@@ -151,7 +148,7 @@ class NegCycleFinder {
      */
     auto _cycle_list(const Node &handle) const -> Cycle {
         auto vtx = handle;
-        auto cycle = Cycle{}; // TODO
+        auto cycle = Cycle{};  // TODO
         while (true) {
             const auto &[utx, edge] = this->_pred.at(vtx);
             cycle.push_back(edge);
@@ -175,8 +172,8 @@ class NegCycleFinder {
      * @return false
      */
     template <typename Mapping, typename Callable>
-    auto _is_negative(const Node &handle, const Mapping &dist,
-                      Callable &&get_weight) const -> bool {
+    auto _is_negative(const Node &handle, const Mapping &dist, Callable &&get_weight) const
+        -> bool {
         auto vtx = handle;
         while (true) {
             const auto &[utx, edge] = this->_pred.at(vtx);
