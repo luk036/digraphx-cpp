@@ -51,8 +51,6 @@ template <typename Container> class MapAdapterBase {
      */
     const mapped_type &at(const key_type &key) const { return this->_lst.at(key); }
 
-    // void erase() { throw std::runtime_error("NotImplementedError"); }
-
     /**
      * @brief
      *
@@ -92,8 +90,7 @@ template <typename Container> class MapAdapter : public MapAdapterBase<Container
      *
      * @param lst
      */
-    explicit MapAdapter(Container &lst)
-        : Base(std::forward<Container>(lst)), mapview(py::enumerate(this->_lst)) {}
+    explicit MapAdapter(Container &lst) : Base(lst), mapview(py::enumerate(this->_lst)) {}
 
     auto begin() const { return mapview.begin(); }
     auto end() const { return mapview.end(); }
@@ -148,8 +145,6 @@ template <typename Container> class MapConstAdapter {
      * @return const T&
      */
     const mapped_type &at(const key_type &key) const { return this->_lst.at(key); }
-
-    // void erase() { throw std::runtime_error("NotImplementedError"); }
 
     /**
      * @brief

@@ -50,7 +50,7 @@ template <typename DiGraph, typename Ratio> class CycleRatioAPI {
      *
      * @param gra
      */
-    CycleRatioAPI(const DiGraph &gra) : gra(gra) {}
+    explicit CycleRatioAPI(const DiGraph &gra) : gra(gra) {}
 
     /**
      * @brief distance between two end points of an edge
@@ -85,15 +85,6 @@ template <typename DiGraph, typename Ratio> class CycleRatioAPI {
             total_cost += edge.at("cost");
             total_time += edge.at("time");
         }
-        // Ratio total_cost =
-        //     std::accumulate(cycle.begin(), cycle.end(), Ratio(0),
-        //                     [](const Edge &edge) { return edge.at("cost");
-        //                     });
-        // Ratio total_time =
-        //     std::accumulate(cycle.begin(), cycle.end(), Ratio(0),
-        //                     [](const Edge &edge) { return edge.at("time");
-        //                     });
-
         return Ratio(total_cost) / total_time;
     }
 };
@@ -132,7 +123,7 @@ template <typename DiGraph, typename Ratio> class MinCycleRatioSolver {
      *
      * @param gra
      */
-    MinCycleRatioSolver(const DiGraph &gra) : gra(gra) {}
+    explicit MinCycleRatioSolver(const DiGraph &gra) : gra(gra) {}
 
     /**
      * @brief run
@@ -182,19 +173,13 @@ auto min_cycle_ratio(const DiGraph &gra, Ratio &r0, Fn1 &&get_cost, Fn2 &&get_ti
     using cost_T = decltype(get_cost(std::declval<Edge>()));
     using time_T = decltype(get_time(std::declval<Edge>()));
 
-    auto calc_ratio = [&](const Cycle &cycle) -> Ratio {
+    auto calc_ratio = [&get_cost, &get_time](const Cycle &cycle) -> Ratio {
         auto total_cost = cost_T(0);
         auto total_time = time_T(0);
         for (auto &&edge : cycle) {
             total_cost += get_cost(edge);
             total_time += get_time(edge);
         }
-        // cost_T total_cost = std::accumulate(
-        //     cycle.cbegin(), cycle.cend(), cost_T(0),
-        //     [&get_cost](const Edge &edge) { return get_cost(edge); });
-        // time_T total_time = std::accumulate(
-        //     cycle.cbegin(), cycle.cend(), time_T(0),
-        //     [&get_time](const Edge &edge) { return get_time(edge); });
         return Ratio(std::move(total_cost)) / std::move(total_time);
     };
 

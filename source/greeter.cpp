@@ -5,6 +5,16 @@ using namespace netoptim;
 
 NetOptim::NetOptim(std::string _name) : name(std::move(_name)) {}
 
+/**
+ * The `greet` function returns a greeting message based on the provided language code.
+ *
+ * @param lang The `lang` parameter is of type `LanguageCode`. It is an enumeration that represents
+ * different language codes. The `LanguageCode` enumeration is likely defined somewhere in the
+ * codebase and contains values such as `EN` (English), `DE` (German), `ES` (Spanish), and
+ *
+ * @return a string that is formatted based on the given language code. The specific greeting will
+ * vary depending on the language code provided.
+ */
 std::string NetOptim::greet(LanguageCode lang) const {
     switch (lang) {
         default:

@@ -48,17 +48,21 @@ class NegCycleFinder {
     using NodeTo = std::remove_cv_t<std::remove_reference_t<Node2>>;
     static_assert(std::is_same_v<Node, NodeTo>, "NodeFrom should be equal to NodeTo");
 
-  private:
-    std::unordered_map<Node, std::pair<Node, Edge>> _pred;
+    std::unordered_map<Node, std::pair<Node, Edge>> _pred{};
     const DiGraph &_digraph;
 
   public:
     /*!
      * @brief Construct a new neg Cycle Finder object
      *
+     * This is the constructor of the `NegCycleFinder` class. It takes a `DiGraph` object as a
+     * parameter and initializes the `_digraph` member variable with the provided graph. The
+     * `DiGraph` type represents a directed graph, and the constructor creates a new
+     * `NegCycleFinder` object for finding negative cycles in this graph.
+     *
      * @param[in] gra
      */
-    explicit NegCycleFinder(const DiGraph &gra) : _pred(), _digraph{gra} {}
+    explicit NegCycleFinder(const DiGraph &gra) : _digraph{gra} {}
 
     /*!
      * @brief find negative cycle

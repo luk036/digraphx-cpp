@@ -30,7 +30,6 @@ template <typename DiGraph, typename ParametricAPI> class MaxParametricSolver {
     using Cycle = std::vector<Edge>;
 
   private:
-    // const DiGraph &_gra;
     NegCycleFinder<DiGraph> _ncf;
     ParametricAPI &_omega;
 
