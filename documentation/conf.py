@@ -1,8 +1,8 @@
-DOXYFILE = "Doxyfile"
+DOXYFILE = 'Doxyfile'
 
 LINKS_NAVBAR1 = [
-    (None, "pages", [(None, "about")]),
-    (None, "namespaces", []),
+    (None, 'pages', [(None, 'about')]),
+    (None, 'namespaces', []),
 ]
 
 # Add your own navbar links using the code below.
@@ -10,10 +10,10 @@ LINKS_NAVBAR1 = [
 
 # LINKS_NAVBAR1 = [
 #     (None, 'pages', [(None, 'about')]),
-#     (None, 'namespaces', [(None, 'namespacenetoptim')]),
+#     (None, 'namespaces', [(None, 'namespacedigraphx')]),
 # ]
 #
 # LINKS_NAVBAR2 = [
-#     (None, 'annotated', [(None, 'classnetoptim_1_1_netoptim')]),
-#     (None, 'files', [(None, 'netoptim_8h')]),
+#     (None, 'annotated', [(None, 'classdigraphx_1_1_digraphx')]),
+#     (None, 'files', [(None, 'digraphx_8h')]),
 # ]
