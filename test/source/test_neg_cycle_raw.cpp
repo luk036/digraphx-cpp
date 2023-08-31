@@ -14,10 +14,6 @@ using std::unordered_map;
 using std::unordered_multimap;
 using std::vector;
 
-/*!
- * @brief
- *
- */
 TEST_CASE("Test Negative Cycle (list of lists)") {
     // contains multiple edges
     list<pair<size_t, list<pair<size_t, double>>>> gra{
@@ -33,10 +29,6 @@ TEST_CASE("Test Negative Cycle (list of lists)") {
     CHECK(cycle.empty());
 }
 
-/*!
- * @brief
- *
- */
 TEST_CASE("Test Negative Cycle (dict of list's)") {
     const unordered_map<uint32_t, list<pair<uint32_t, uint32_t>>> gra{
         {0, {{1, 0}, {2, 1}}}, {1, {{0, 2}, {2, 3}}}, {2, {{1, 4}, {0, 5}, {0, 6}}}};
