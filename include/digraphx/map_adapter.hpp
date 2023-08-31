@@ -76,7 +76,7 @@ template <typename Container> class MapAdapterBase {
 template <typename Container> class MapAdapter : public MapAdapterBase<Container> {
   public:
     using key_type = size_t;
-    using mapped_type = Container::value_type;
+    using mapped_type = typename Container::value_type;
     using value_type = std::pair<key_type, mapped_type>;
     using Base = MapAdapterBase<Container>;
     using E = decltype(py::enumerate(Base::_lst));
@@ -104,7 +104,7 @@ template <typename Container> class MapAdapter : public MapAdapterBase<Container
 template <typename Container> class MapConstAdapter {
   public:
     using key_type = size_t;
-    using mapped_type = Container::value_type;
+    using mapped_type = typename Container::value_type;
     using value_type = std::pair<key_type, mapped_type>;
     using E = decltype(py::const_enumerate(std::declval<Container>()));
 
