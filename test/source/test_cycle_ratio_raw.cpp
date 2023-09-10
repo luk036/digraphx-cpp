@@ -1,4 +1,3 @@
-// -*- coding: utf-8 -*-
 #include <doctest/doctest.h>  // for ResultBuilder, TestCase
 
 #include <cstdint>  // for uint32_t
@@ -11,7 +10,6 @@
 using std::list;
 using std::pair;
 using std::unordered_map;
-// using std::unordered_multimap;
 using std::vector;
 
 /*!
@@ -23,14 +21,13 @@ TEST_CASE("Test minimum mean cycle (list of lists)") {
     list<pair<size_t, list<pair<size_t, int>>>> gra{
         {0, {{1, 5}, {2, 1}}}, {1, {{0, 1}, {2, 1}}}, {2, {{1, 1}, {0, 1}}}};
 
-    const auto get_cost = [&](const auto &edge) -> int { return edge; };
-    const auto get_time = [&](const auto & /*edge*/) -> int { return 1; };
+    const auto get_cost = [](const auto &edge) -> int { return edge; };
+    const auto get_time = [](const auto & /*edge*/) { return 1; };
 
     auto dist = vector<int>(gra.size(), 0);
     auto r = 100.0;
     const auto c = min_cycle_ratio(gra, r, get_cost, get_time, dist, 0);
     CHECK(!c.empty());
-    // CHECK_EQ(c.size(), 2);
     CHECK_EQ(r, 1.0);
 }
 
@@ -49,48 +46,8 @@ TEST_CASE("Test minimum cost-to-time ratio (dict of list's)") {
 
     auto dist = vector<int>(gra.size(), 0);
     auto r = 100.0;
-    const auto c = min_cycle_ratio(gra, r, std::move(get_cost), std::move(get_time), dist, 0);
-    CHECK(!c.empty());
-    // CHECK_EQ(c.size(), 2);
+    const auto cycle = min_cycle_ratio(gra, r, std::move(get_cost), std::move(get_time), dist, 0);
+    CHECK(!cycle.empty());
     CHECK_EQ(r, 1.0);
 }
 
-// /*!
-//  * @brief
-//  *
-//  */
-// TEST_CASE("Test Negative Cycle (list of unordered_multimap's)") {
-//   // contains multiple edges
-//   list<pair<size_t, unordered_multimap<size_t, size_t>>> gra{
-//       {0, {{1, 0}, {2, 1}}},
-//       {1, {{0, 2}, {2, 3}}},
-//       {2, {{1, 4}, {0, 5}, {0, 6}}}};
-
-//   const vector<double> edge_weight{7.0, 5.0, 0.0, 3.0, 1.0, 2.0, 1.0};
-
-//   const auto get_weight = [&edge_weight](const auto &edge) -> double {
-//     return edge_weight.at(edge);
-//   };
-
-//   auto dist = vector<double>{0.0, 0.0, 0.0};
-//   NegCycleFinder ncf(gra);
-//   const auto cycle = ncf.howard(dist, std::move(get_weight));
-//   CHECK(cycle.empty());
-// }
-
-// /*!
-//  * @brief
-//  *
-//  */
-// TEST_CASE("Test Negative Cycle (MapAdapter of list's)") {
-//   // contains multiple edges
-//   vector<list<pair<size_t, double>>> gra{{{1, 7.0}, {2, 5.0}},
-//                                          {{0, 0.0}, {2, 3.0}},
-//                                          {{1, 1.0}, {0, 2.0}, {0, 1.0}}};
-//   auto get_weight = [](const auto &edge) -> double { return edge; };
-//   auto dist = vector<double>{0.0, 0.0, 0.0};
-//   auto ga = MapConstAdapter{gra};
-//   NegCycleFinder ncf(ga);
-//   const auto cycle = ncf.howard(dist, std::move(get_weight));
-//   CHECK(cycle.empty());
-// }

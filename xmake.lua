@@ -19,6 +19,7 @@ end
 target("DiGraphX")
     set_kind("static")
     add_includedirs("include", {public = true})
+    add_includedirs("../py2cpp/include", {public = true})
     add_files("source/*.cpp")
     add_packages("fmt")
 
