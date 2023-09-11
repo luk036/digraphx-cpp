@@ -11,7 +11,7 @@ end
 
 if is_plat("linux") then
     set_warnings("all", "error")
-    add_cxflags("-Wconversion", {force = true})
+    add_cxflags("-Wconversion -Wno-deprecated-experimental-coroutine", {force = true})
 elseif is_plat("windows") then
     add_cxflags("/W4 /WX /wd4819 /wd4127", {force = true})
 end
