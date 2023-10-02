@@ -1,5 +1,5 @@
-#include <doctest/doctest.h>
 #include <digraphx/greeter.h>
+#include <doctest/doctest.h>
 // #include <digraphx/version.h>
 
 #include <string>

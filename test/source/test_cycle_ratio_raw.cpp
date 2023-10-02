@@ -50,4 +50,3 @@ TEST_CASE("Test minimum cost-to-time ratio (dict of list's)") {
     CHECK(!cycle.empty());
     CHECK_EQ(r, 1.0);
 }
-
