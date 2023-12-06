@@ -19,51 +19,61 @@ template <typename Container> class MapAdapterBase {
     py::Range<key_type> _rng;
     Container &_lst;
 
-  public:
     /**
      * @brief Construct a new MapAdapter object
      *
-     * @param lst
+     * The function constructs a new MapAdapter object with a given container.
+     * 
+     * @param[in] lst The parameter `lst` is a reference to a container object.
      */
     explicit MapAdapterBase(Container &lst) : _rng{py::range(lst.size())}, _lst(lst) {}
 
     /**
-     * @brief
-     *
-     * @param key
-     * @return T&
+     * The function overloads the subscript operator to access and modify the value associated with a
+     * given key in a map-like container.
+     * 
+     * @param[in] key The parameter "key" is of type "key_type", which is a data type that represents the
+     * key used to search for an element in the container.
+     * 
+     * @return The operator[] is returning a reference to the mapped_type value associated with the
+     * given key.
      */
     mapped_type &operator[](const key_type &key) { return this->_lst[key]; }
 
     /**
-     * @brief
-     *
-     * @param key
-     * @return const T&
+     * The function returns a constant reference to the value associated with the given key in a
+     * map-like container.
+     * 
+     * @param[in] key The parameter "key" is of type "key_type", which is a data type that represents the
+     * key used to search for an element in the container.
+     * 
+     * @return a constant reference to the value associated with the given key in the `_lst` container.
      */
     const mapped_type &operator[](const key_type &key) const { return this->_lst.at(key); }
 
     /**
-     * @brief
-     *
-     * @param key
-     * @return const T&
+     * The function at() returns a constant reference to the value associated with a given key in a
+     * map.
+     * 
+     * @return a constant reference to the value associated with the given key.
      */
     const mapped_type &at(const key_type &key) const { return this->_lst.at(key); }
 
     /**
-     * @brief
-     *
-     * @param key
-     * @return true
-     * @return false
+     * The function checks if a given key is present in a data structure.
+     * 
+     * @param[in] key The parameter "key" is of type "key_type", which is a data type that represents the
+     * key used to search for an element in the container.
+     * 
+     * @return a boolean value. It will return true if the key is contained in the data structure, and
+     * false otherwise.
      */
     bool contains(const key_type &key) const { return this->_rng.contains(key); }
 
     /**
-     * @brief
-     *
-     * @return size_t
+     * The size() function returns the size of the _rng container.
+     * 
+     * @return The size of the `_rng` object is being returned.
      */
     size_t size() const { return this->_rng.size(); }
 };
@@ -86,13 +96,26 @@ template <typename Container> class MapAdapter : public MapAdapterBase<Container
 
   public:
     /**
-     * @brief Construct a new MapAdapter object
-     *
-     * @param lst
+     * The function constructs a new MapAdapter object with a given container and creates a mapview
+     * using py::enumerate.
+     * 
+     * @param[in] lst The `lst` parameter is a reference to a container object.
      */
     explicit MapAdapter(Container &lst) : Base(lst), mapview(py::enumerate(this->_lst)) {}
 
+    /**
+     * The function returns an iterator pointing to the beginning of the mapview.
+     * 
+     * @return The `begin()` function is returning an iterator pointing to the beginning of the
+     * `mapview` container.
+     */
     auto begin() const { return mapview.begin(); }
+
+    /**
+     * The function returns an iterator pointing to the end of the mapview.
+     * 
+     * @return The end iterator of the mapview.
+     */
     auto end() const { return mapview.end(); }
 };
 
@@ -115,64 +138,74 @@ template <typename Container> class MapConstAdapter {
 
   public:
     /**
-     * @brief Construct a new MapAdapter object
-     *
-     * @param lst
+     * The function constructs a MapConstAdapter object using a given container.
+     * 
+     * @param[in] lst The parameter `lst` is a reference to a container object.
      */
     explicit MapConstAdapter(const Container &lst)
         : _rng{py::range(lst.size())}, _lst(lst), mapview(py::const_enumerate(_lst)) {}
 
     /**
-     * @brief
-     *
-     * @param key
-     * @return T&
+     * The function overloads the subscript operator to access and modify the value associated with a
+     * given key in a map-like container.
+     * 
+     * @param[in] key The parameter "key" is of type "key_type", which is a data type that represents the
+     * key used to search for an element in the container.
+     * 
+     * @return The operator[] is returning a reference to the mapped_type value associated with the
+     * given key.
      */
     mapped_type &operator[](const key_type &key) { return this->_lst[key]; }
 
     /**
-     * @brief
-     *
-     * @param key
-     * @return const T&
+     * The function returns a constant reference to the value associated with the given key in a
+     * map-like container.
+     * 
+     * @param[in] key The parameter "key" is of type "key_type", which is a data type that represents the
+     * key used to search for an element in the container.
+     * 
+     * @return a constant reference to the value associated with the given key in the `_lst` container.
      */
     const mapped_type &operator[](const key_type &key) const { return this->_lst.at(key); }
 
     /**
-     * @brief
-     *
-     * @param key
-     * @return const T&
+     * The function at() returns a constant reference to the value associated with a given key in a
+     * map.
+     * 
+     * @return a constant reference to the value associated with the given key.
      */
     const mapped_type &at(const key_type &key) const { return this->_lst.at(key); }
 
     /**
-     * @brief
-     *
-     * @param key
-     * @return true
-     * @return false
+     * The function checks if a given key is present in a data structure.
+     * 
+     * @param[in] key The parameter "key" is of type "key_type", which is a data type that represents the
+     * key used to search for an element in the container.
+     * 
+     * @return a boolean value. It will return true if the key is contained in the data structure, and
+     * false otherwise.
      */
     bool contains(const key_type &key) const { return this->_rng.contains(key); }
 
     /**
-     * @brief
-     *
-     * @return size_t
+     * The size() function returns the size of the _rng container.
+     * 
+     * @return The size of the `_rng` object is being returned.
      */
     size_t size() const { return this->_rng.size(); }
 
     /**
-     * @brief
-     *
-     * @return auto
+     * The function returns an iterator pointing to the beginning of the mapview.
+     * 
+     * @return The `begin()` function is returning an iterator pointing to the beginning of the
+     * `mapview` container.
      */
     auto begin() const { return mapview.begin(); }
 
     /**
-     * @brief
-     *
-     * @return auto
+     * The function returns an iterator pointing to the end of the mapview.
+     * 
+     * @return The end iterator of the mapview.
      */
     auto end() const { return mapview.end(); }
 };

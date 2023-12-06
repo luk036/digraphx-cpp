@@ -52,28 +52,25 @@ class NegCycleFinder {
     const DiGraph &_digraph;
 
   public:
-    /*!
-     * @brief Construct a new neg Cycle Finder object
-     *
-     * This is the constructor of the `NegCycleFinder` class. It takes a `DiGraph` object as a
-     * parameter and initializes the `_digraph` member variable with the provided graph. The
-     * `DiGraph` type represents a directed graph, and the constructor creates a new
-     * `NegCycleFinder` object for finding negative cycles in this graph.
-     *
-     * @param[in] gra
+    /**
+     * The constructor initializes a `NegCycleFinder` object with a given `DiGraph` object.
+     * 
+     * @param[in] gra The `gra` parameter is of type `DiGraph` and represents a directed graph. It is used
+     * to initialize the `_digraph` member variable of the `NegCycleFinder` class.
      */
     explicit NegCycleFinder(const DiGraph &gra) : _digraph{gra} {}
 
-    /*!
-     * @brief find negative cycle
-     *
+    /**
+     * The function "howard" finds a negative cycle in a graph using the Howard's algorithm.
+     * 
      * @tparam Mapping
      * @tparam Callable
-     * @param[in,out] dist
-     * @param[in] get_weight
-     * @return cppcoro::generator<Cycle>
+     * @param[in,out] dist A mapping object that stores the distances between vertices in the graph.
+     * @param[in] get_weight The `get_weight` parameter is a callable object that is used to retrieve the
+     * weight of an edge in the graph. It takes in two arguments: the source vertex and the destination
+     * vertex of the edge, and returns the weight of the edge.
      */
-    template <typename Mapping, typename Callable> auto howard(Mapping &dist, Callable &&get_weight)
+    template <typename Mapping, typename Callable> auto howard(Mapping &dist, Callable get_weight)
         -> cppcoro::generator<Cycle> {
         this->_pred.clear();
         auto found = false;
@@ -88,10 +85,10 @@ class NegCycleFinder {
     }
 
   private:
-    /*!
+    /**
      * @brief Find a cycle on policy graph
      *
-     * @return cppcoro::generator<Cycle>
+     * The function `_find_cycle` finds a cycle on a policy graph and returns it as a generator.
      */
     auto _find_cycle() -> cppcoro::generator<Node> {
         auto visited = std::unordered_map<Node, Node>{};
@@ -101,11 +98,8 @@ class NegCycleFinder {
                 continue;
             }
             auto utx = vtx;
-            while (true) {
-                visited[utx] = vtx;
-                if (this->_pred.find(utx) == this->_pred.end()) {  // not contains utx
-                    break;
-                }
+            visited[utx] = vtx;
+            while (this->_pred.find(utx) != this->_pred.end()) {
                 utx = this->_pred[utx].first;
                 if (visited.find(utx) != visited.end()) {  // contains utx
                     if (visited[utx] == vtx) {
@@ -113,20 +107,24 @@ class NegCycleFinder {
                     }
                     break;
                 }
+                visited[utx] = vtx;
             }
         }
         co_return;
     }
 
-    /*!
-     * @brief Perform one relaxation
-     *
+    /**
+     * The function performs one relaxation step in a graph algorithm.
+     * 
      * @tparam Mapping
      * @tparam Callable
-     * @param[in,out] dist
-     * @param[in] get_weight
-     * @return true
-     * @return false
+     * @param[in,out] dist A mapping object that stores the current distances from a source vertex to each
+     * vertex in the graph.
+     * @param[in] get_weight The `get_weight` parameter is a callable object that takes an edge as input
+     * and returns the weight of that edge. It is used to calculate the distance between two vertices
+     * during the relaxation process.
+     * 
+     * @return a boolean value.
      */
     template <typename Mapping, typename Callable> auto _relax(Mapping &dist, Callable &&get_weight)
         -> bool {
@@ -144,15 +142,17 @@ class NegCycleFinder {
         return changed;
     }
 
-    /*!
-     * @brief generate a cycle list
-     *
-     * @param[in] handle
-     * @return Cycle
+    /**
+     * The function `_cycle_list` generates a cycle list by traversing a graph starting from a given
+     * node.
+     * 
+     * @param[in] handle The `handle` parameter is of type `Node` and represents a node in a graph.
+     * 
+     * @return a `Cycle` object.
      */
     auto _cycle_list(const Node &handle) const -> Cycle {
         auto vtx = handle;
-        auto cycle = Cycle{};  // TODO
+        auto cycle = Cycle{};
         while (true) {
             const auto &[utx, edge] = this->_pred.at(vtx);
             cycle.push_back(edge);
@@ -164,16 +164,17 @@ class NegCycleFinder {
         return cycle;
     }
 
-    /*!
-     * @brief check if it is really a negative cycle???
-     *
+    /**
+     * The function checks if there is a negative cycle in a graph.
+     * 
      * @tparam Mapping
      * @tparam Callable
-     * @param[in] handle
-     * @param[in] dist
-     * @param[in] get_weight
-     * @return true
-     * @return false
+     * @param[in] handle The handle parameter is a reference to a Node object.
+     * @param[in] dist A mapping that stores the distances from a source node to each node in the graph.
+     * @param[in] get_weight The `get_weight` parameter is a callable object that takes an edge as input
+     * and returns the weight of that edge.
+     * 
+     * @return a boolean value. It returns `true` if it is a negative cycle and `false` otherwise.
      */
     template <typename Mapping, typename Callable>
     auto _is_negative(const Node &handle, const Mapping &dist, Callable &&get_weight) const
