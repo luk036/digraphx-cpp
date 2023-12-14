@@ -37,25 +37,26 @@ template <typename DiGraph, typename ParametricAPI> class MaxParametricSolver {
     /**
      * The MaxParametricSolver constructor initializes the MaxParametricSolver object with a given
      * DiGraph and ParametricAPI.
-     * 
-     * @param[in] gra The parameter "gra" is of type DiGraph and it represents a directed graph. It is used
-     * as input for the constructor of the MaxParametricSolver class.
+     *
+     * @param[in] gra The parameter "gra" is of type DiGraph and it represents a directed graph. It
+     * is used as input for the constructor of the MaxParametricSolver class.
      * @param[in] omega omega is an object of type ParametricAPI.
      */
     MaxParametricSolver(const DiGraph &gra, ParametricAPI &omega) : _ncf{gra}, _omega{omega} {}
 
     /**
-     * The function "run" iteratively finds the minimum weight cycle in a graph until the weight of the
-     * current minimum cycle is greater than or equal to a given ratio.
-     * 
+     * The function "run" iteratively finds the minimum weight cycle in a graph until the weight of
+     * the current minimum cycle is greater than or equal to a given ratio.
+     *
      * @tparam Ratio
      * @tparam Mapping
      * @tparam Domain
      * @param[in] r_opt r_opt is a reference to a variable of type Ratio.
-     * @param[in] dist The `dist` parameter is a mapping that represents the distance between two elements
-     * in a domain. It is used in the `get_weight` lambda function to calculate the weight of an edge.
+     * @param[in] dist The `dist` parameter is a mapping that represents the distance between two
+     * elements in a domain. It is used in the `get_weight` lambda function to calculate the weight
+     * of an edge.
      * @param[in]  - `Ratio`: A type representing a ratio or a fraction.
-     * 
+     *
      * @return The function `run` returns an object of type `Cycle`.
      */
     template <typename Ratio, typename Mapping, typename Domain>
@@ -90,9 +91,9 @@ template <typename DiGraph, typename ParametricAPI> class MaxParametricSolver {
 };
 
 /**
- * The function solves a network parametric problem by maximizing a parameter while satisfying a set of
- * constraints:
- * 
+ * The function solves a network parametric problem by maximizing a parameter while satisfying a set
+ * of constraints:
+ *
  *  max  r
  *  s.t. dist[v] - dist[u] <= distrance(e, r)
  *       \forall e(u, v) \in gra(V, E)
@@ -103,16 +104,18 @@ template <typename DiGraph, typename ParametricAPI> class MaxParametricSolver {
  * @tparam Fn2
  * @tparam Mapping
  * @param[in] gra The parameter "gra" is a directed graph.
- * @param[in,out] r_opt The parameter `r_opt` is the parameter to be maximized in the network parametric
- * problem. It is initially set to a large number and will be updated during the optimization process.
- * @param[in] distance A monotone decreasing function that calculates the distance between two vertices in
- * the graph given a parameter r. It takes in two arguments: the parameter r and an edge of the graph.
- * @param[in] zero_cancel The `zero_cancel` parameter is a function that takes a critical cycle `ci` and
- * returns a modified version of it. This function is used to cancel out any zero-weight edges in the
- * critical cycle.
+ * @param[in,out] r_opt The parameter `r_opt` is the parameter to be maximized in the network
+ * parametric problem. It is initially set to a large number and will be updated during the
+ * optimization process.
+ * @param[in] distance A monotone decreasing function that calculates the distance between two
+ * vertices in the graph given a parameter r. It takes in two arguments: the parameter r and an edge
+ * of the graph.
+ * @param[in] zero_cancel The `zero_cancel` parameter is a function that takes a critical cycle `ci`
+ * and returns a modified version of it. This function is used to cancel out any zero-weight edges
+ * in the critical cycle.
  * @param[in] dist A mapping from vertices to their distances from a source vertex in the graph.
  * @param[in]  - `Graph`: The type of the directed graph.
- * 
+ *
  * @return the optimal value of parameter r and the critical cycle.
  */
 template <typename DiGraph, typename T, typename Fn1, typename Fn2, typename Mapping, typename D>

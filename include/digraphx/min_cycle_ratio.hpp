@@ -43,10 +43,10 @@ template <typename DiGraph, typename Ratio> class CycleRatioAPI {
      *
      * The `CycleRatioAPI` class constructor takes a reference to a `DiGraph` object and initializes
      * its `gra` member variable.
-     * 
-     * @param[in] gra The `gra` parameter is a reference to a `DiGraph` object. It is used to initialize
-     * the `gra` member variable of the `CycleRatioAPI` class. The `gra` member variable is a constant
-     * reference to a `DiGraph` object, which means it cannot be modified
+     *
+     * @param[in] gra The `gra` parameter is a reference to a `DiGraph` object. It is used to
+     * initialize the `gra` member variable of the `CycleRatioAPI` class. The `gra` member variable
+     * is a constant reference to a `DiGraph` object, which means it cannot be modified
      */
     explicit CycleRatioAPI(const DiGraph &gra) : gra(gra) {}
 
@@ -55,11 +55,11 @@ template <typename DiGraph, typename Ratio> class CycleRatioAPI {
      *
      * The `distance` function calculates the distance between two vertices in a graph based on the
      * cost and time values associated with the edge connecting them.
-     * 
+     *
      * @param[in] ratio A reference to a `Ratio` object named `ratio`.
-     * @param[in] edge The `edge` parameter is a constant reference to an `Edge` object. It represents an
-     * edge in a graph connecting two vertices.
-     * 
+     * @param[in] edge The `edge` parameter is a constant reference to an `Edge` object. It
+     * represents an edge in a graph connecting two vertices.
+     *
      * @return a `Ratio` object.
      */
     auto distance(Ratio &ratio, const Edge &edge) const -> Ratio {
@@ -67,15 +67,15 @@ template <typename DiGraph, typename Ratio> class CycleRatioAPI {
     }
 
     /**
-     * The `zero_cancel` function calculates the ratio of the total cost to the total time for a given
-     * cycle.
-     * 
-     * @param[in] cycle The `cycle` parameter is of type `Cycle`, which is likely a container or data
-     * structure that represents a cycle in a graph. It is used to calculate the ratio of the total
-     * cost to the total time for the given cycle.
-     * 
-     * @return The `zero_cancel` function returns the ratio of the total cost to the total time for a
+     * The `zero_cancel` function calculates the ratio of the total cost to the total time for a
      * given cycle.
+     *
+     * @param[in] cycle The `cycle` parameter is of type `Cycle`, which is likely a container or
+     * data structure that represents a cycle in a graph. It is used to calculate the ratio of the
+     * total cost to the total time for the given cycle.
+     *
+     * @return The `zero_cancel` function returns the ratio of the total cost to the total time for
+     * a given cycle.
      */
     auto zero_cancel(const Cycle &cycle) const -> Ratio {
         Ratio total_cost = 0;
@@ -119,9 +119,9 @@ template <typename DiGraph, typename Ratio> class MinCycleRatioSolver {
   public:
     /**
      * This function constructs a new MinCycleRatioSolver object with a given DiGraph.
-     * 
-     * @param[in] gra The parameter "gra" is of type DiGraph, which is a directed graph. It is used to
-     * represent the graph on which the Min Cycle Ratio Solver operates.
+     *
+     * @param[in] gra The parameter "gra" is of type DiGraph, which is a directed graph. It is used
+     * to represent the graph on which the Min Cycle Ratio Solver operates.
      */
     explicit MinCycleRatioSolver(const DiGraph &gra) : gra(gra) {}
 

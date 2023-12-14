@@ -1,13 +1,12 @@
+#include <algorithm>
+#include <cassert>
+#include <cmath>
 #include <iostream>
-#include <vector>
 #include <map>
 #include <unordered_map>
-#include <algorithm>
-#include <cmath>
-#include <cassert>
+#include <vector>
 
-template <typename Node, typename Edge, typename Domain>
-class NegCycleFinder {
+template <typename Node, typename Edge, typename Domain> class NegCycleFinder {
     using Cycle = std::vector<Edge>;
     using Graph = std::map<Node, std::map<Node, Edge>>;
     using DistMap = std::unordered_map<Node, Domain>;
@@ -15,7 +14,7 @@ class NegCycleFinder {
     std::unordered_map<Node, std::pair<Node, Edge>> pred;
     Graph digraph;
 
-public:
+  public:
     NegCycleFinder(const Graph& gra) : digraph(gra) {}
 
     std::vector<Node> find_cycle() {
@@ -68,8 +67,7 @@ public:
             if (!cycle.empty()) {
                 assert(is_negative(cycle[0], dist, get_weight));
                 cycles.push_back(cycle);
-            }
-            else {
+            } else {
                 break;
             }
         }
@@ -107,15 +105,13 @@ public:
     }
 };
 
-template <typename Node, typename Edge, typename Ratio>
-class ParametricAPI {
-public:
+template <typename Node, typename Edge, typename Ratio> class ParametricAPI {
+  public:
     virtual Ratio distance(Ratio ratio, Edge edge) = 0;
     virtual Ratio zero_cancel(std::vector<Edge> cycle) = 0;
 };
 
-template <typename Node, typename Edge, typename Ratio>
-class MaxParametricSolver {
+template <typename Node, typename Edge, typename Ratio> class MaxParametricSolver {
     using Graph = std::map<Node, std::map<Node, Edge>>;
     using DistMap = std::unordered_map<Node, typename Ratio::value_type>;
     using Cycle = std::vector<Edge>;
@@ -123,8 +119,9 @@ class MaxParametricSolver {
     NegCycleFinder<Node, Edge, typename Ratio::value_type> ncf;
     ParametricAPI<Node, Edge, Ratio>& omega;
 
-public:
-    MaxParametricSolver(const Graph& gra, ParametricAPI<Node, Edge, Ratio>& api) : ncf(gra), omega(api) {}
+  public:
+    MaxParametricSolver(const Graph& gra, ParametricAPI<Node, Edge, Ratio>& api)
+        : ncf(gra), omega(api) {}
 
     std::pair<Ratio, Cycle> run(DistMap& dist, Ratio ratio) {
         using D = typename Ratio::value_type;
@@ -152,21 +149,22 @@ public:
     }
 };
 
-template <typename Node, typename Edge, typename Ratio>
-class CycleRatioAPI : public ParametricAPI<Node, std::map<std::string, typename Ratio::value_type>, Ratio> {
+template <typename Node, typename Edge, typename Ratio> class CycleRatioAPI
+    : public ParametricAPI<Node, std::map<std::string, typename Ratio::value_type>, Ratio> {
     using Graph = std::map<Node, std::map<Node, std::map<std::string, typename Ratio::value_type>>>;
 
     Graph gra;
     using K = typename Ratio::value_type;
 
-public:
+  public:
     CycleRatioAPI(const Graph& gra) : gra(gra) {}
 
     Ratio distance(Ratio ratio, std::map<std::string, typename Ratio::value_type> edge) override {
         return K(edge["cost"]) - ratio * edge["time"];
     }
 
-    Ratio zero_cancel(std::vector<std::map<std::string, typename Ratio::value_type>> cycle) override {
+    Ratio zero_cancel(
+        std::vector<std::map<std::string, typename Ratio::value_type>> cycle) override {
         K total_cost = 0;
         K total_time = 0;
         for (const auto& edge : cycle) {
@@ -177,15 +175,14 @@ public:
     }
 };
 
-template <typename Node, typename Edge, typename Ratio>
-class MinCycleRatioSolver {
+template <typename Node, typename Edge, typename Ratio> class MinCycleRatioSolver {
     using Graph = std::map<Node, std::map<Node, std::map<std::string, typename Ratio::value_type>>>;
     using DistMap = std::unordered_map<Node, typename Ratio::value_type>;
     using Cycle = std::vector<Edge>;
 
     Graph gra;
 
-public:
+  public:
     MinCycleRatioSolver(const Graph& gra) : gra(gra) {}
 
     std::pair<Ratio, Cycle> run(DistMap& dist, Ratio r0) {

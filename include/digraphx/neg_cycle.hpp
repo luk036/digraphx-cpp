@@ -54,21 +54,21 @@ class NegCycleFinder {
   public:
     /**
      * The constructor initializes a `NegCycleFinder` object with a given `DiGraph` object.
-     * 
-     * @param[in] gra The `gra` parameter is of type `DiGraph` and represents a directed graph. It is used
-     * to initialize the `_digraph` member variable of the `NegCycleFinder` class.
+     *
+     * @param[in] gra The `gra` parameter is of type `DiGraph` and represents a directed graph. It
+     * is used to initialize the `_digraph` member variable of the `NegCycleFinder` class.
      */
     explicit NegCycleFinder(const DiGraph &gra) : _digraph{gra} {}
 
     /**
      * The function "howard" finds a negative cycle in a graph using the Howard's algorithm.
-     * 
+     *
      * @tparam Mapping
      * @tparam Callable
      * @param[in,out] dist A mapping object that stores the distances between vertices in the graph.
-     * @param[in] get_weight The `get_weight` parameter is a callable object that is used to retrieve the
-     * weight of an edge in the graph. It takes in two arguments: the source vertex and the destination
-     * vertex of the edge, and returns the weight of the edge.
+     * @param[in] get_weight The `get_weight` parameter is a callable object that is used to
+     * retrieve the weight of an edge in the graph. It takes in two arguments: the source vertex and
+     * the destination vertex of the edge, and returns the weight of the edge.
      */
     template <typename Mapping, typename Callable> auto howard(Mapping &dist, Callable get_weight)
         -> cppcoro::generator<Cycle> {
@@ -115,15 +115,15 @@ class NegCycleFinder {
 
     /**
      * The function performs one relaxation step in a graph algorithm.
-     * 
+     *
      * @tparam Mapping
      * @tparam Callable
-     * @param[in,out] dist A mapping object that stores the current distances from a source vertex to each
-     * vertex in the graph.
-     * @param[in] get_weight The `get_weight` parameter is a callable object that takes an edge as input
-     * and returns the weight of that edge. It is used to calculate the distance between two vertices
-     * during the relaxation process.
-     * 
+     * @param[in,out] dist A mapping object that stores the current distances from a source vertex
+     * to each vertex in the graph.
+     * @param[in] get_weight The `get_weight` parameter is a callable object that takes an edge as
+     * input and returns the weight of that edge. It is used to calculate the distance between two
+     * vertices during the relaxation process.
+     *
      * @return a boolean value.
      */
     template <typename Mapping, typename Callable> auto _relax(Mapping &dist, Callable &&get_weight)
@@ -145,9 +145,9 @@ class NegCycleFinder {
     /**
      * The function `_cycle_list` generates a cycle list by traversing a graph starting from a given
      * node.
-     * 
+     *
      * @param[in] handle The `handle` parameter is of type `Node` and represents a node in a graph.
-     * 
+     *
      * @return a `Cycle` object.
      */
     auto _cycle_list(const Node &handle) const -> Cycle {
@@ -166,14 +166,15 @@ class NegCycleFinder {
 
     /**
      * The function checks if there is a negative cycle in a graph.
-     * 
+     *
      * @tparam Mapping
      * @tparam Callable
      * @param[in] handle The handle parameter is a reference to a Node object.
-     * @param[in] dist A mapping that stores the distances from a source node to each node in the graph.
-     * @param[in] get_weight The `get_weight` parameter is a callable object that takes an edge as input
-     * and returns the weight of that edge.
-     * 
+     * @param[in] dist A mapping that stores the distances from a source node to each node in the
+     * graph.
+     * @param[in] get_weight The `get_weight` parameter is a callable object that takes an edge as
+     * input and returns the weight of that edge.
+     *
      * @return a boolean value. It returns `true` if it is a negative cycle and `false` otherwise.
      */
     template <typename Mapping, typename Callable>
