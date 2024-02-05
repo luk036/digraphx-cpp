@@ -7,7 +7,6 @@ correctly by the compiler or interpreter. */
 #pragma once
 
 #include <algorithm>
-#include <numeric>
 
 #include "parametric.hpp"  // import max_parametric
 

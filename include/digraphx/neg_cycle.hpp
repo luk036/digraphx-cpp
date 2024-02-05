@@ -6,8 +6,6 @@ Negative cycle detection for weighed graphs.
 **/
 #include <cassert>
 #include <cppcoro/generator.hpp>
-#include <functional>
-#include <optional>
 #include <type_traits>  // for is_same_v
 #include <unordered_map>
 #include <utility>  // for pair
