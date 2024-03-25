@@ -52,7 +52,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
   target_compile_options(DiGraphX PUBLIC -fcoroutines -Wall -Wpedantic -Wextra -Werror)
 elseif(MSVC)
-  target_compile_options(DiGraphX PUBLIC /W4 /WX)
+  target_compile_options(DiGraphX PUBLIC /W4 /WX /wd4996)
   target_compile_definitions(${PROJECT_NAME} PUBLIC DOCTEST_CONFIG_USE_STD_HEADERS)
 endif()
 
