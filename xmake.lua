@@ -13,7 +13,7 @@ if is_plat("linux") then
     set_warnings("all", "error")
     add_cxflags("-Wconversion -Wno-deprecated-experimental-coroutine -Wno-deprecated-coroutine -Wno-unknown-warning-option", {force = true})
 elseif is_plat("windows") then
-    add_cxflags("/W4 /WX /wd4819 /wd4127 /wd4530", {force = true})
+    add_cxflags("/W4 /WX /wd4819 /wd4127 /wd4530 /wd4996", {force = true})
 end
 
 target("DiGraphX")
