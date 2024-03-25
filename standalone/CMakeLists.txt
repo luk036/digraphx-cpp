@@ -12,7 +12,7 @@ include(../cmake/CPM.cmake)
 
 CPMAddPackage(
   GITHUB_REPOSITORY jarro2783/cxxopts
-  VERSION 3.0.0
+  VERSION 3.2.1
   OPTIONS "CXXOPTS_BUILD_EXAMPLES NO" "CXXOPTS_BUILD_TESTS NO" "CXXOPTS_ENABLE_INSTALL YES"
 )
 
@@ -26,4 +26,4 @@ add_executable(${PROJECT_NAME} ${sources})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 20 OUTPUT_NAME "DiGraphX")
 
-target_link_libraries(${PROJECT_NAME} DiGraphX::DiGraphX cxxopts ${SPECIFIC_LIBS})
+target_link_libraries(${PROJECT_NAME} DiGraphX::DiGraphX cxxopts::cxxopts ${SPECIFIC_LIBS})
