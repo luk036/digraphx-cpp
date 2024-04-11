@@ -49,6 +49,115 @@ class NegCycleFinder {
     std::unordered_map<Node, std::pair<Node, Edge>> _pred{};
     const DiGraph &_digraph;
 
+    /**
+     * The function performs one relaxation step in a graph algorithm.
+     *
+     * @tparam Mapping
+     * @tparam Callable
+     * @param[in,out] dist A mapping object that stores the current distances from a source vertex
+     * to each vertex in the graph.
+     * @param[in] get_weight The `get_weight` parameter is a callable object that takes an edge as
+     * input and returns the weight of that edge. It is used to calculate the distance between two
+     * vertices during the relaxation process.
+     *
+     * @return a boolean value.
+     */
+    template <typename Mapping, typename Callable> auto _relax(Mapping &dist, Callable &&get_weight)
+        -> bool {
+        auto changed = false;
+        for (const auto &[utx, neighbors] : this->_digraph) {
+            for (const auto &[vtx, edge] : neighbors) {
+                auto distance = dist[utx] + get_weight(edge);
+                if (dist[vtx] > distance) {
+                    dist[vtx] = distance;
+                    this->_pred[vtx] = std::make_pair(utx, edge);
+                    changed = true;
+                }
+            }
+        }
+        return changed;
+    }
+
+    /**
+     * The function checks if there is a negative cycle in a graph.
+     *
+     * @tparam Mapping
+     * @tparam Callable
+     * @param[in] handle The handle parameter is a reference to a Node object.
+     * @param[in] dist A mapping that stores the distances from a source node to each node in the
+     * graph.
+     * @param[in] get_weight The `get_weight` parameter is a callable object that takes an edge as
+     * input and returns the weight of that edge.
+     *
+     * @return a boolean value. It returns `true` if it is a negative cycle and `false` otherwise.
+     */
+    template <typename Mapping, typename Callable>
+    auto _is_negative(const Node &handle, const Mapping &dist, Callable &&get_weight) const
+        -> bool {
+        auto vtx = handle;
+        while (true) {
+            const auto &[utx, edge] = this->_pred.at(vtx);
+            if (dist.at(vtx) > dist.at(utx) + get_weight(edge)) {
+                return true;
+            }
+            vtx = utx;
+            if (vtx == handle) {
+                break;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * The function `_cycle_list` generates a cycle list by traversing a graph starting from a given
+     * node.
+     *
+     * @param[in] handle The `handle` parameter is of type `Node` and represents a node in a graph.
+     *
+     * @return a `Cycle` object.
+     */
+    auto _cycle_list(const Node &handle) const -> Cycle {
+        auto vtx = handle;
+        auto cycle = Cycle{};
+        while (true) {
+            const auto &[utx, edge] = this->_pred.at(vtx);
+            cycle.push_back(edge);
+            vtx = utx;
+            if (vtx == handle) {
+                break;
+            }
+        }
+        return cycle;
+    }
+
+    /**
+     * @brief Find a cycle on policy graph
+     *
+     * The function `_find_cycle` finds a cycle on a policy graph and returns it as a generator.
+     */
+    auto _find_cycle() -> cppcoro::generator<Node> {
+        auto visited = std::unordered_map<Node, Node>{};
+        for (const auto &result : this->_digraph) {
+            const auto &vtx = result.first;
+            if (visited.find(vtx) != visited.end()) {  // contains vtx
+                continue;
+            }
+            auto utx = vtx;
+            visited[utx] = vtx;
+            while (this->_pred.find(utx) != this->_pred.end()) {
+                utx = this->_pred[utx].first;
+                if (visited.find(utx) != visited.end()) {  // contains utx
+                    if (visited[utx] == vtx) {
+                        co_yield utx;
+                    }
+                    break;
+                }
+                visited[utx] = vtx;
+            }
+        }
+        co_return;
+    }
+
   public:
     /**
      * The constructor initializes a `NegCycleFinder` object with a given `DiGraph` object.
@@ -80,115 +189,5 @@ class NegCycleFinder {
             }
         }
         co_return;
-    }
-
-  private:
-    /**
-     * @brief Find a cycle on policy graph
-     *
-     * The function `_find_cycle` finds a cycle on a policy graph and returns it as a generator.
-     */
-    auto _find_cycle() -> cppcoro::generator<Node> {
-        auto visited = std::unordered_map<Node, Node>{};
-        for (const auto &result : this->_digraph) {
-            const auto &vtx = result.first;
-            if (visited.find(vtx) != visited.end()) {  // contains vtx
-                continue;
-            }
-            auto utx = vtx;
-            visited[utx] = vtx;
-            while (this->_pred.find(utx) != this->_pred.end()) {
-                utx = this->_pred[utx].first;
-                if (visited.find(utx) != visited.end()) {  // contains utx
-                    if (visited[utx] == vtx) {
-                        co_yield utx;
-                    }
-                    break;
-                }
-                visited[utx] = vtx;
-            }
-        }
-        co_return;
-    }
-
-    /**
-     * The function performs one relaxation step in a graph algorithm.
-     *
-     * @tparam Mapping
-     * @tparam Callable
-     * @param[in,out] dist A mapping object that stores the current distances from a source vertex
-     * to each vertex in the graph.
-     * @param[in] get_weight The `get_weight` parameter is a callable object that takes an edge as
-     * input and returns the weight of that edge. It is used to calculate the distance between two
-     * vertices during the relaxation process.
-     *
-     * @return a boolean value.
-     */
-    template <typename Mapping, typename Callable> auto _relax(Mapping &dist, Callable &&get_weight)
-        -> bool {
-        auto changed = false;
-        for (const auto &[utx, nbrs] : this->_digraph) {
-            for (const auto &[vtx, edge] : nbrs) {
-                auto distance = dist[utx] + get_weight(edge);
-                if (dist[vtx] > distance) {
-                    this->_pred[vtx] = std::make_pair(utx, edge);
-                    dist[vtx] = distance;
-                    changed = true;
-                }
-            }
-        }
-        return changed;
-    }
-
-    /**
-     * The function `_cycle_list` generates a cycle list by traversing a graph starting from a given
-     * node.
-     *
-     * @param[in] handle The `handle` parameter is of type `Node` and represents a node in a graph.
-     *
-     * @return a `Cycle` object.
-     */
-    auto _cycle_list(const Node &handle) const -> Cycle {
-        auto vtx = handle;
-        auto cycle = Cycle{};
-        while (true) {
-            const auto &[utx, edge] = this->_pred.at(vtx);
-            cycle.push_back(edge);
-            vtx = utx;
-            if (vtx == handle) {
-                break;
-            }
-        }
-        return cycle;
-    }
-
-    /**
-     * The function checks if there is a negative cycle in a graph.
-     *
-     * @tparam Mapping
-     * @tparam Callable
-     * @param[in] handle The handle parameter is a reference to a Node object.
-     * @param[in] dist A mapping that stores the distances from a source node to each node in the
-     * graph.
-     * @param[in] get_weight The `get_weight` parameter is a callable object that takes an edge as
-     * input and returns the weight of that edge.
-     *
-     * @return a boolean value. It returns `true` if it is a negative cycle and `false` otherwise.
-     */
-    template <typename Mapping, typename Callable>
-    auto _is_negative(const Node &handle, const Mapping &dist, Callable &&get_weight) const
-        -> bool {
-        auto vtx = handle;
-        while (true) {
-            const auto &[utx, edge] = this->_pred.at(vtx);
-            if (dist.at(vtx) > dist.at(utx) + get_weight(edge)) {
-                return true;
-            }
-            vtx = utx;
-            if (vtx == handle) {
-                break;
-            }
-        }
-        return false;
     }
 };
