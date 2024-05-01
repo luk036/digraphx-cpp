@@ -28,8 +28,8 @@ jobs:
 
       - name: Before Install
         run: |
-          sudo apt-get install g++-10
-          sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 90
+          sudo apt-get install g++-11
+          sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-11 90
 
       - name: build and install library
         run: |
