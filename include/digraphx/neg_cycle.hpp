@@ -62,8 +62,8 @@ class NegCycleFinder {
      *
      * @return a boolean value.
      */
-    template <typename Mapping, typename Callable>
-    auto _relax(Mapping &dist, Callable &&get_weight) -> bool {
+    template <typename Mapping, typename Callable> auto _relax(Mapping &dist, Callable &&get_weight)
+        -> bool {
         auto changed = false;
         for (const auto &[utx, neighbors] : this->_digraph) {
             for (const auto &[vtx, edge] : neighbors) {
@@ -92,8 +92,8 @@ class NegCycleFinder {
      * @return a boolean value. It returns `true` if it is a negative cycle and `false` otherwise.
      */
     template <typename Mapping, typename Callable>
-    auto _is_negative(const Node &handle, const Mapping &dist,
-                      Callable &&get_weight) const -> bool {
+    auto _is_negative(const Node &handle, const Mapping &dist, Callable &&get_weight) const
+        -> bool {
         auto vtx = handle;
         while (true) {
             const auto &[utx, edge] = this->_pred.at(vtx);
@@ -177,8 +177,8 @@ class NegCycleFinder {
      * retrieve the weight of an edge in the graph. It takes in two arguments: the source vertex and
      * the destination vertex of the edge, and returns the weight of the edge.
      */
-    template <typename Mapping, typename Callable>
-    auto howard(Mapping &dist, Callable get_weight) -> cppcoro::generator<Cycle> {
+    template <typename Mapping, typename Callable> auto howard(Mapping &dist, Callable get_weight)
+        -> cppcoro::generator<Cycle> {
         this->_pred.clear();
         auto found = false;
         while (!found && this->_relax(dist, get_weight)) {

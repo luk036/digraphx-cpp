@@ -133,8 +133,8 @@ template <typename DiGraph, typename Ratio> class MinCycleRatioSolver {
      * @param[in] dummy
      * @return Cycle
      */
-    template <typename Mapping, typename Domain>
-    auto run(Ratio &r0, Mapping &dist, Domain dummy) -> Cycle {
+    template <typename Mapping, typename Domain> auto run(Ratio &r0, Mapping &dist, Domain dummy)
+        -> Cycle {
         auto omega = CycleRatioAPI<DiGraph, Ratio>(gra);
         auto solver = MaxParametricSolver(gra, omega);
         return solver.run(dist, r0, std::move(dummy));
