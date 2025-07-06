@@ -16,16 +16,17 @@ elseif is_plat("windows") then
     add_cxflags("/W4 /WX /wd4819 /wd4127 /wd4530 /wd4996", {force = true})
 end
 
-target("DiGraphX")
-    set_kind("static")
-    add_includedirs("include", {public = true})
-    add_includedirs("../py2cpp/include", {public = true})
-    add_files("source/*.cpp")
-    add_packages("fmt")
+-- target("DiGraphX")
+--     set_kind("static")
+--     add_includedirs("include", {public = true})
+--     add_includedirs("../py2cpp/include", {public = true})
+--     add_files("source/*.cpp")
+--     add_packages("fmt")
 
 target("test_digraphx")
     set_kind("binary")
-    add_deps("DiGraphX")
+    add_includedirs("include", {public = true})
+    add_includedirs("../py2cpp/include", {public = true})
     add_files("test/source/*.cpp")
     add_packages("doctest", "fmt")
 
