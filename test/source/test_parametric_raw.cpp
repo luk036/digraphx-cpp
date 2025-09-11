@@ -1,4 +1,5 @@
 #include <doctest/doctest.h>
+#include <cstdint>  // for uint32_t
 #include <digraphx/parametric.hpp>
 #include <list>
 #include <vector>
