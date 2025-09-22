@@ -3,7 +3,7 @@ find_package(Threads REQUIRED)
 
 CPMAddPackage(
   NAME fmt
-  GIT_TAG 10.2.1
+  GIT_TAG 11.0.2
   GITHUB_REPOSITORY fmtlib/fmt
   OPTIONS "FMT_INSTALL YES" # create an installable target
 )
