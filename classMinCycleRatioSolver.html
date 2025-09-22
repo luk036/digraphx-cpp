@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>MaxParametricSolver class | DiGraphX</title>
+  <title>MinCycleRatioSolver class | DiGraphX</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
   <link rel="stylesheet" href="m-dark+documentation.compiled.css" />
   <link rel="icon" href="favicon-dark.png" type="image/png" />
@@ -49,11 +49,11 @@
     <div class="m-row">
       <div class="m-col-l-10 m-push-l-1">
         <h1>
-          <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="parametric_8hpp.html">&lt;digraphx/parametric.hpp&gt;</a></div>
-          <div class="m-doc-template">template&lt;typename DiGraph, typename ParametricAPI&gt;</div>
-          MaxParametricSolver <span class="m-thin">class</span>
+          <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="min__cycle__ratio_8hpp.html">&lt;digraphx/min_cycle_ratio.hpp&gt;</a></div>
+          <div class="m-doc-template">template&lt;typename DiGraph, typename Ratio&gt;</div>
+          MinCycleRatioSolver <span class="m-thin">class</span>
         </h1>
-        <p>Maximum Parametric Solver.</p>
+        <p>Minimum Cycle Ratio Solver.</p>
         <table class="m-table m-fullwidth m-flat">
           <thead>
             <tr><th colspan="2">Template parameters</th></tr>
@@ -64,7 +64,7 @@
               <td></td>
             </tr>
             <tr>
-              <td>ParametricAPI</td>
+              <td>Ratio</td>
               <td></td>
             </tr>
           </tbody>
@@ -75,45 +75,18 @@
             <li>
               Reference
               <ul>
-                <li><a href="#pub-types">Public types</a></li>
                 <li><a href="#typeless-methods">Constructors, destructors, conversion operators</a></li>
                 <li><a href="#pub-methods">Public functions</a></li>
               </ul>
             </li>
           </ul>
         </nav>
-<p>This class solves the following parametric network problem:</p><p>max r s.t. dist[v] - dist[u] &lt;= distrance(e, r) \forall e(u, v) \in gra(V, E)</p><p>A parametric network problem refers to a type of optimization problem that involves finding the optimal solution to a network flow problem as a function of one single parameter.</p>
-        <section id="pub-types">
-          <h2><a href="#pub-types">Public types</a></h2>
-          <dl class="m-doc">
-            <dt id="a8f4b3219d8e2de2ab1611cc417b45ba8">
-              using <a href="#a8f4b3219d8e2de2ab1611cc417b45ba8" class="m-doc-self">Nbrs1</a> = decltype((*std::declval&lt;DiGraph&gt;().begin()).second)
-            </dt>
-            <dd><span></span></dd>
-            <dt id="a1755361c879df1fbdb5b2b535ede8b71">
-              using <a href="#a1755361c879df1fbdb5b2b535ede8b71" class="m-doc-self">Nbrs</a> = std::remove_cv_t&lt;std::remove_reference_t&lt;<a href="class_max_parametric_solver.html#a8f4b3219d8e2de2ab1611cc417b45ba8" class="m-doc">Nbrs1</a>&gt;&gt;
-            </dt>
-            <dd><span></span></dd>
-            <dt id="af93a5c9df49e84afb24667a799e3f1f6">
-              using <a href="#af93a5c9df49e84afb24667a799e3f1f6" class="m-doc-self">Edge1</a> = decltype((*std::declval&lt;<a href="class_max_parametric_solver.html#a1755361c879df1fbdb5b2b535ede8b71" class="m-doc">Nbrs</a>&gt;().begin()).second)
-            </dt>
-            <dd><span></span></dd>
-            <dt id="a966be7c332d039290440ad3e69d109e7">
-              using <a href="#a966be7c332d039290440ad3e69d109e7" class="m-doc-self">Edge</a> = std::remove_cv_t&lt;std::remove_reference_t&lt;<a href="class_max_parametric_solver.html#af93a5c9df49e84afb24667a799e3f1f6" class="m-doc">Edge1</a>&gt;&gt;
-            </dt>
-            <dd><span></span></dd>
-            <dt id="a8350155e915c19d1ce68eaefdc6756cf">
-              using <a href="#a8350155e915c19d1ce68eaefdc6756cf" class="m-doc-self">Cycle</a> = std::vector&lt;<a href="class_max_parametric_solver.html#a966be7c332d039290440ad3e69d109e7" class="m-doc">Edge</a>&gt;
-            </dt>
-            <dd><span></span></dd>
-          </dl>
-        </section>
+<p>The minimum cycle ratio (MCR) problem is a fundamental problem in the analysis of directed graphs. Given a directed graph, the MCR problem seeks to find the cycle with the minimum ratio of the sum of edge weights to the number of edges in the cycle. In other words, the MCR problem seeks to find the &quot;tightest&quot; cycle in the graph, where the tightness of a cycle is measured by the ratio of the total weight of the cycle to its length.</p><p>The MCR problem has many applications in the analysis of discrete event systems, such as digital circuits and communication networks. It is closely related to other problems in graph theory, such as the shortest path problem and the maximum flow problem. Efficient algorithms for solving the MCR problem are therefore of great practical importance.</p>
         <section id="typeless-methods">
           <h2><a href="#typeless-methods">Constructors, destructors, conversion operators</a></h2>
           <dl class="m-doc">
             <dt>
-              <span class="m-doc-wrap-bumper"><a href="#afcfb8b2ec24b2d175079533ed359dd45" class="m-doc">MaxParametricSolver</a>(</span><span class="m-doc-wrap">const DiGraph&amp; gra,
-              ParametricAPI&amp; omega)</span>
+              <span class="m-doc-wrap-bumper"><a href="#ae753e7637fad12de070547c190a4ff60" class="m-doc">MinCycleRatioSolver</a>(</span><span class="m-doc-wrap">const DiGraph&amp; gra) <span class="m-label m-flat m-info">explicit</span> </span>
             </dt>
             <dd></dd>
           </dl>
@@ -122,23 +95,22 @@
           <h2><a href="#pub-methods">Public functions</a></h2>
           <dl class="m-doc">
             <dt>
-              <div class="m-doc-template">template&lt;typename Ratio, typename Mapping, typename Domain&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#aca2485541f7c81a86e5aa85c10c8b3f6" class="m-doc">run</a>(</span><span class="m-doc-wrap">Ratio&amp; r_opt,
+              <div class="m-doc-template">template&lt;typename Mapping, typename Domain&gt;</div>
+              <span class="m-doc-wrap-bumper">auto <a href="#a964c6a660aebb5b24b29c6e8cb0bb97d" class="m-doc">run</a>(</span><span class="m-doc-wrap">Ratio&amp; r0,
               Mapping&amp; dist,
-              Domain) -&gt; auto</span>
+              Domain dummy) -&gt; Cycle -&gt; auto</span>
             </dt>
-            <dd></dd>
+            <dd>run</dd>
           </dl>
         </section>
         <section>
           <h2>Function documentation</h2>
-          <section class="m-doc-details" id="afcfb8b2ec24b2d175079533ed359dd45"><div>
+          <section class="m-doc-details" id="ae753e7637fad12de070547c190a4ff60"><div>
             <h3>
               <div class="m-doc-template">
-                template&lt;typename DiGraph, typename ParametricAPI&gt;
+                template&lt;typename DiGraph, typename Ratio&gt;
               </div>
-              <span class="m-doc-wrap-bumper"> MaxParametricSolver&lt;DiGraph, ParametricAPI&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#afcfb8b2ec24b2d175079533ed359dd45" class="m-doc-self">MaxParametricSolver</a>(</span><span class="m-doc-wrap">const DiGraph&amp; gra,
-              ParametricAPI&amp; omega)</span></span>
+              <span class="m-doc-wrap-bumper"> MinCycleRatioSolver&lt;DiGraph, Ratio&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ae753e7637fad12de070547c190a4ff60" class="m-doc-self">MinCycleRatioSolver</a>(</span><span class="m-doc-wrap">const DiGraph&amp; gra) <span class="m-label m-info">explicit</span> </span></span>
             </h3>
             <table class="m-table m-fullwidth m-flat">
               <thead>
@@ -147,37 +119,30 @@
               <tbody>
                 <tr>
                   <td style="width: 1%">gra&nbsp;<span class="m-label m-flat m-info">in</span></td>
-                  <td>The parameter &quot;gra&quot; is of type DiGraph and it represents a directed graph. It is used as input for the constructor of the <a href="class_max_parametric_solver.html" class="m-doc">MaxParametricSolver</a> class.</td>
-                </tr>
-                <tr>
-                  <td>omega&nbsp;<span class="m-label m-flat m-info">in</span></td>
-                  <td>omega is an object of type ParametricAPI.</td>
+                  <td>The parameter &quot;gra&quot; is of type DiGraph, which is a directed graph. It is used to represent the graph on which the Min Cycle Ratio Solver operates.</td>
                 </tr>
               </tbody>
             </table>
-<p>The <a href="class_max_parametric_solver.html" class="m-doc">MaxParametricSolver</a> constructor initializes the <a href="class_max_parametric_solver.html" class="m-doc">MaxParametricSolver</a> object with a given DiGraph and ParametricAPI.</p>
+<p>This function constructs a new <a href="classMinCycleRatioSolver.html" class="m-doc">MinCycleRatioSolver</a> object with a given DiGraph.</p>
           </div></section>
-          <section class="m-doc-details" id="aca2485541f7c81a86e5aa85c10c8b3f6"><div>
+          <section class="m-doc-details" id="a964c6a660aebb5b24b29c6e8cb0bb97d"><div>
             <h3>
               <div class="m-doc-template">
-                template&lt;typename DiGraph, typename ParametricAPI&gt;
-                template&lt;typename Ratio, typename Mapping, typename Domain&gt;
+                template&lt;typename DiGraph, typename Ratio&gt;
+                template&lt;typename Mapping, typename Domain&gt;
               </div>
-              <span class="m-doc-wrap-bumper">auto MaxParametricSolver&lt;DiGraph, ParametricAPI&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#aca2485541f7c81a86e5aa85c10c8b3f6" class="m-doc-self">run</a>(</span><span class="m-doc-wrap">Ratio&amp; r_opt,
+              <span class="m-doc-wrap-bumper">auto MinCycleRatioSolver&lt;DiGraph, Ratio&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a964c6a660aebb5b24b29c6e8cb0bb97d" class="m-doc-self">run</a>(</span><span class="m-doc-wrap">Ratio&amp; r0,
               Mapping&amp; dist,
-              Domain)</span></span>
+              Domain dummy) -&gt; Cycle</span></span>
             </h3>
+            <p>run</p>
             <table class="m-table m-fullwidth m-flat">
               <thead>
                 <tr><th colspan="2">Template parameters</th></tr>
               </thead>
               <tbody>
                 <tr>
-                  <td style="width: 1%">Ratio</td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td>Mapping</td>
+                  <td style="width: 1%">Mapping</td>
                   <td></td>
                 </tr>
                 <tr>
@@ -190,22 +155,25 @@
               </thead>
               <tbody>
                 <tr>
-                  <td>r_opt&nbsp;<span class="m-label m-flat m-info">in</span></td>
-                  <td>r_opt is a reference to a variable of type Ratio.</td>
+                  <td>r0&nbsp;<span class="m-label m-flat m-info">in</span></td>
+                  <td></td>
                 </tr>
                 <tr>
                   <td>dist&nbsp;<span class="m-label m-flat m-info">in</span></td>
-                  <td>The <code>dist</code> parameter is a mapping that represents the distance between two elements in a domain. It is used in the <code>get_weight</code> lambda function to calculate the weight of an edge.</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>dummy&nbsp;<span class="m-label m-flat m-info">in</span></td>
+                  <td></td>
                 </tr>
               </tbody>
               <tfoot>
                 <tr>
                   <th>Returns</th>
-                  <td>The function <code>run</code> returns an object of type <code>Cycle</code>.</td>
+                  <td>Cycle</td>
                 </tr>
               </tfoot>
             </table>
-<p>The function &quot;run&quot; iteratively finds the minimum weight cycle in a graph until the weight of the current minimum cycle is greater than or equal to a given ratio.</p>
           </div></section>
         </section>
       </div>
@@ -252,7 +220,7 @@
   <div class="m-container">
     <div class="m-row">
       <div class="m-col-l-10 m-push-l-1">
-        <p>DiGraphX. Created with <a href="https://doxygen.org/">Doxygen</a> 1.10.0 and <a href="https://mcss.mosra.cz/">m.css</a>.</p>
+        <p>DiGraphX. Created with <a href="https://doxygen.org/">Doxygen</a> 1.9.8 and <a href="https://mcss.mosra.cz/">m.css</a>.</p>
       </div>
     </div>
   </div>

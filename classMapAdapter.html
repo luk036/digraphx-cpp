@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>NegCycleFinder class | DiGraphX</title>
+  <title>MapAdapter class | DiGraphX</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
   <link rel="stylesheet" href="m-dark+documentation.compiled.css" />
   <link rel="icon" href="favicon-dark.png" type="image/png" />
@@ -49,40 +49,65 @@
     <div class="m-row">
       <div class="m-col-l-10 m-push-l-1">
         <h1>
-          <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="neg__cycle_8hpp.html">&lt;digraphx/neg_cycle.hpp&gt;</a></div>
-          <div class="m-doc-template">template&lt;typename DiGraph&gt;</div>
-          NegCycleFinder <span class="m-thin">class</span>
+          <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="map__adapter_8hpp.html">&lt;digraphx/map_adapter.hpp&gt;</a></div>
+          <div class="m-doc-template">template&lt;typename Container&gt;</div>
+          MapAdapter <span class="m-thin">class</span>
         </h1>
-        <p>Negative Cycle Finder by Howard&#x27;s method.</p>
-        <table class="m-table m-fullwidth m-flat">
-          <thead>
-            <tr><th colspan="2">Template parameters</th></tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td style="width: 1%">DiGraph</td>
-              <td></td>
-            </tr>
-          </tbody>
-        </table>
+        <p>Dict-like data structure by std::vector and Range.</p>
         <nav class="m-block m-default">
           <h3>Contents</h3>
           <ul>
             <li>
               Reference
               <ul>
+                <li><a href="#base-classes">Base classes</a></li>
+                <li><a href="#pub-types">Public types</a></li>
                 <li><a href="#typeless-methods">Constructors, destructors, conversion operators</a></li>
                 <li><a href="#pub-methods">Public functions</a></li>
               </ul>
             </li>
           </ul>
         </nav>
-<p>Negative cycle detection for weighed graphs.</p><p>Howard&#x27;s method is a minimum cycle ratio (MCR) algorithm that uses a policy iteration algorithm to find the minimum cycle ratio of a directed graph. The algorithm maintains a set of candidate cycles and iteratively updates the cycle with the minimum ratio until convergence. To detect negative cycles, Howard&#x27;s method uses a cycle detection algorithm that is based on the Bellman-Ford relaxation algorithm. Specifically, the algorithm maintains a predecessor graph of the original graph and performs cycle detection on this graph using the Bellman-Ford relaxation algorithm. If a negative cycle is detected, the algorithm terminates and returns the cycle.</p><p>Note: Bellman-Ford&#x27;s shortest-path algorithm (BF) is NOT the best way to detect negative cycles, because</p><ol><li>BF needs a source node.</li><li>BF detect whether there is a negative cycle at the fianl stage.</li><li>BF restarts the solution (dist[utx]) every time.</li></ol>
+        <section id="base-classes">
+          <h2><a href="#base-classes">Base classes</a></h2>
+          <dl class="m-doc">
+            <dt>
+              <div class="m-doc-template">template&lt;typename Container&gt;</div>
+              class <a href="classMapAdapterBase.html" class="m-doc">MapAdapterBase&lt;Container&gt;</a>
+            </dt>
+            <dd>Dict-like data structure by std::vector and Range.</dd>
+          </dl>
+        </section>
+        <section id="pub-types">
+          <h2><a href="#pub-types">Public types</a></h2>
+          <dl class="m-doc">
+            <dt id="a8fb99030b7706c56bc75a9ae694b5d38">
+              using <a href="#a8fb99030b7706c56bc75a9ae694b5d38" class="m-doc-self">key_type</a> = size_t
+            </dt>
+            <dd><span></span></dd>
+            <dt id="ad5a66feb8fdde8bee3f04aea9956b510">
+              using <a href="#ad5a66feb8fdde8bee3f04aea9956b510" class="m-doc-self">mapped_type</a> = typename Container::value_type
+            </dt>
+            <dd><span></span></dd>
+            <dt id="ace736e64299823bec5787b3262e9b4bf">
+              using <a href="#ace736e64299823bec5787b3262e9b4bf" class="m-doc-self">value_type</a> = std::pair&lt;<a href="classMapAdapter.html#a8fb99030b7706c56bc75a9ae694b5d38" class="m-doc">key_<wbr />type</a>, <a href="classMapAdapter.html#ad5a66feb8fdde8bee3f04aea9956b510" class="m-doc">mapped_<wbr />type</a>&gt;
+            </dt>
+            <dd><span></span></dd>
+            <dt id="a3cbab5905c7250f7e79a45a3818c0264">
+              using <a href="#a3cbab5905c7250f7e79a45a3818c0264" class="m-doc-self">Base</a> = <a href="classMapAdapterBase.html" class="m-doc">MapAdapterBase</a>&lt;Container&gt;
+            </dt>
+            <dd><span></span></dd>
+            <dt id="adea3f37a360f906d3a5222efa38bfb68">
+              using <a href="#adea3f37a360f906d3a5222efa38bfb68" class="m-doc-self">E</a> = decltype(py::enumerate(<a href="classMapAdapterBase.html#a6889e1a79227c9230b37a2731336a242" class="m-doc">Base::<wbr />_lst</a>))
+            </dt>
+            <dd><span></span></dd>
+          </dl>
+        </section>
         <section id="typeless-methods">
           <h2><a href="#typeless-methods">Constructors, destructors, conversion operators</a></h2>
           <dl class="m-doc">
             <dt>
-              <span class="m-doc-wrap-bumper"><a href="#ac4e5f0d346217c9d33da3a30452b30e2" class="m-doc">NegCycleFinder</a>(</span><span class="m-doc-wrap">const DiGraph&amp; gra) <span class="m-label m-flat m-info">explicit</span> </span>
+              <span class="m-doc-wrap-bumper"><a href="#a6bec6c85b83b484cba6bbe5642f9caed" class="m-doc">MapAdapter</a>(</span><span class="m-doc-wrap">Container&amp; lst) <span class="m-label m-flat m-info">explicit</span> </span>
             </dt>
             <dd></dd>
           </dl>
@@ -91,21 +116,23 @@
           <h2><a href="#pub-methods">Public functions</a></h2>
           <dl class="m-doc">
             <dt>
-              <div class="m-doc-template">template&lt;typename Mapping, typename Callable&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#a3abf186701d345e4bda235acc33f514b" class="m-doc">howard</a>(</span><span class="m-doc-wrap">Mapping&amp; dist,
-              Callable get_weight) -&gt; cppcoro::generator&lt; Cycle &gt; -&gt; auto</span>
+              <span class="m-doc-wrap-bumper">auto <a href="#a5da9c98d5695e059cbc1396848df79c7" class="m-doc">begin</a>(</span><span class="m-doc-wrap">) const -&gt; auto</span>
+            </dt>
+            <dd></dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a43823445943724c0db7852ef94528bba" class="m-doc">end</a>(</span><span class="m-doc-wrap">) const -&gt; auto</span>
             </dt>
             <dd></dd>
           </dl>
         </section>
         <section>
           <h2>Function documentation</h2>
-          <section class="m-doc-details" id="ac4e5f0d346217c9d33da3a30452b30e2"><div>
+          <section class="m-doc-details" id="a6bec6c85b83b484cba6bbe5642f9caed"><div>
             <h3>
               <div class="m-doc-template">
-                template&lt;typename DiGraph&gt;
+                template&lt;typename Container&gt;
               </div>
-              <span class="m-doc-wrap-bumper"> NegCycleFinder&lt;DiGraph&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ac4e5f0d346217c9d33da3a30452b30e2" class="m-doc-self">NegCycleFinder</a>(</span><span class="m-doc-wrap">const DiGraph&amp; gra) <span class="m-label m-info">explicit</span> </span></span>
+              <span class="m-doc-wrap-bumper"> MapAdapter&lt;Container&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a6bec6c85b83b484cba6bbe5642f9caed" class="m-doc-self">MapAdapter</a>(</span><span class="m-doc-wrap">Container&amp; lst) <span class="m-label m-info">explicit</span> </span></span>
             </h3>
             <table class="m-table m-fullwidth m-flat">
               <thead>
@@ -113,51 +140,46 @@
               </thead>
               <tbody>
                 <tr>
-                  <td style="width: 1%">gra&nbsp;<span class="m-label m-flat m-info">in</span></td>
-                  <td>The <code>gra</code> parameter is of type <code>DiGraph</code> and represents a directed graph. It is used to initialize the <code>_digraph</code> member variable of the <code><a href="class_neg_cycle_finder.html" class="m-doc">NegCycleFinder</a></code> class.</td>
+                  <td style="width: 1%">lst&nbsp;<span class="m-label m-flat m-info">in</span></td>
+                  <td>The <code>lst</code> parameter is a reference to a container object.</td>
                 </tr>
               </tbody>
             </table>
-<p>The constructor initializes a <code><a href="class_neg_cycle_finder.html" class="m-doc">NegCycleFinder</a></code> object with a given <code>DiGraph</code> object.</p>
+<p>The function constructs a new <a href="classMapAdapter.html" class="m-doc">MapAdapter</a> object with a given container and creates a mapview using py::enumerate.</p>
           </div></section>
-          <section class="m-doc-details" id="a3abf186701d345e4bda235acc33f514b"><div>
+          <section class="m-doc-details" id="a5da9c98d5695e059cbc1396848df79c7"><div>
             <h3>
               <div class="m-doc-template">
-                template&lt;typename DiGraph&gt;
-                template&lt;typename Mapping, typename Callable&gt;
+                template&lt;typename Container&gt;
               </div>
-              <span class="m-doc-wrap-bumper">auto NegCycleFinder&lt;DiGraph&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a3abf186701d345e4bda235acc33f514b" class="m-doc-self">howard</a>(</span><span class="m-doc-wrap">Mapping&amp; dist,
-              Callable get_weight) -&gt; cppcoro::generator&lt; Cycle &gt;</span></span>
+              <span class="m-doc-wrap-bumper">auto MapAdapter&lt;Container&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a5da9c98d5695e059cbc1396848df79c7" class="m-doc-self">begin</a>(</span><span class="m-doc-wrap">) const</span></span>
             </h3>
             <table class="m-table m-fullwidth m-flat">
-              <thead>
-                <tr><th colspan="2">Template parameters</th></tr>
-              </thead>
-              <tbody>
+              <tfoot>
                 <tr>
-                  <td style="width: 1%">Mapping</td>
-                  <td></td>
+                  <th style="width: 1%">Returns</th>
+                  <td>The <code><a href="classMapAdapter.html#a5da9c98d5695e059cbc1396848df79c7" class="m-doc">begin()</a></code> function is returning an iterator pointing to the beginning of the <code>mapview</code> container.</td>
                 </tr>
-                <tr>
-                  <td>Callable</td>
-                  <td></td>
-                </tr>
-              </tbody>
-              <thead>
-                <tr><th colspan="2">Parameters</th></tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>dist&nbsp;<span class="m-label m-flat m-danger">in/out</span></td>
-                  <td>A mapping object that stores the distances between vertices in the graph.</td>
-                </tr>
-                <tr>
-                  <td>get_weight&nbsp;<span class="m-label m-flat m-info">in</span></td>
-                  <td>The <code>get_weight</code> parameter is a callable object that is used to retrieve the weight of an edge in the graph. It takes in two arguments: the source vertex and the destination vertex of the edge, and returns the weight of the edge.</td>
-                </tr>
-              </tbody>
+              </tfoot>
             </table>
-<p>The function &quot;howard&quot; finds a negative cycle in a graph using the Howard&#x27;s algorithm.</p>
+<p>The function returns an iterator pointing to the beginning of the mapview.</p>
+          </div></section>
+          <section class="m-doc-details" id="a43823445943724c0db7852ef94528bba"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;typename Container&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto MapAdapter&lt;Container&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a43823445943724c0db7852ef94528bba" class="m-doc-self">end</a>(</span><span class="m-doc-wrap">) const</span></span>
+            </h3>
+            <table class="m-table m-fullwidth m-flat">
+              <tfoot>
+                <tr>
+                  <th style="width: 1%">Returns</th>
+                  <td>The end iterator of the mapview.</td>
+                </tr>
+              </tfoot>
+            </table>
+<p>The function returns an iterator pointing to the end of the mapview.</p>
           </div></section>
         </section>
       </div>
@@ -204,7 +226,7 @@
   <div class="m-container">
     <div class="m-row">
       <div class="m-col-l-10 m-push-l-1">
-        <p>DiGraphX. Created with <a href="https://doxygen.org/">Doxygen</a> 1.10.0 and <a href="https://mcss.mosra.cz/">m.css</a>.</p>
+        <p>DiGraphX. Created with <a href="https://doxygen.org/">Doxygen</a> 1.9.8 and <a href="https://mcss.mosra.cz/">m.css</a>.</p>
       </div>
     </div>
   </div>
