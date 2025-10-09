@@ -32,6 +32,7 @@ target("test_digraphx")
     add_includedirs("../py2cpp/include", {public = true})
     add_files("test/source/*.cpp")
     add_packages("doctest", "fmt")
+    add_tests("default")
 
 -- target("test_ell")
 --     set_kind("binary")
