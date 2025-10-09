@@ -177,12 +177,12 @@ class NegCycleFinder {
      * retrieve the weight of an edge in the graph. It takes in two arguments: the source vertex and
      * the destination vertex of the edge, and returns the weight of the edge.
      */
-    template <typename Mapping, typename Callable> auto howard(Mapping &dist, Callable get_weight)
+    template <typename Mapping, typename Callable> auto howard(Mapping &dist, const Callable &get_weight)
         -> cppcoro::generator<Cycle> {
         this->_pred.clear();
         auto found = false;
         while (!found && this->_relax(dist, get_weight)) {
-            for (auto vtx : this->_find_cycle()) {
+            for (const auto vtx : this->_find_cycle()) {
                 assert(this->_is_negative(vtx, dist, get_weight));
                 co_yield this->_cycle_list(vtx);
                 found = true;

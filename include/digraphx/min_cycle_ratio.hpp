@@ -176,14 +176,14 @@ auto min_cycle_ratio(const DiGraph &gra, Ratio &r0, Fn1 &&get_cost, Fn2 &&get_ti
     auto calc_ratio = [&get_cost, &get_time](const Cycle &cycle) -> Ratio {
         auto total_cost = cost_T(0);
         auto total_time = time_T(0);
-        for (auto &&edge : cycle) {
+        for (const auto &edge : cycle) {
             total_cost += get_cost(edge);
             total_time += get_time(edge);
         }
         return Ratio(std::move(total_cost)) / std::move(total_time);
     };
 
-    auto calc_weight = [&get_cost, &get_time](Ratio &ratio, const Edge &edge) -> Ratio {
+    auto calc_weight = [&get_cost, &get_time](const Ratio &ratio, const Edge &edge) -> Ratio {
         return get_cost(edge) - ratio * get_time(edge);
     };
 
