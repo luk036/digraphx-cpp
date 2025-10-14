@@ -11,14 +11,14 @@
  *
  *  max  r
  *  s.t. dist[v] - dist[u] <= distrance(e, r)
- *       \forall e(u, v) \in gra(V, E)
+ *       for all edges e(u, v) in gra(V, E)
  *
  * A parametric network problem refers to a type of optimization problem that
  * involves finding the optimal solution to a network flow problem as a function
  * of one single parameter.
  *
- * @tparam DiGraph
- * @tparam ParametricAPI
+ * @tparam DiGraph The type of the directed graph.
+ * @tparam ParametricAPI The type of the parametric API.
  */
 template <typename DiGraph, typename ParametricAPI> class MaxParametricSolver {
   public:
@@ -47,15 +47,13 @@ template <typename DiGraph, typename ParametricAPI> class MaxParametricSolver {
      * The function "run" iteratively finds the minimum weight cycle in a graph until the weight of
      * the current minimum cycle is greater than or equal to a given ratio.
      *
-     * @tparam Ratio
-     * @tparam Mapping
-     * @tparam Domain
-     * @param[in] r_opt r_opt is a reference to a variable of type Ratio.
-     * @param[in] dist The `dist` parameter is a mapping that represents the distance between two
-     * elements in a domain. It is used in the `get_weight` lambda function to calculate the weight
-     * of an edge.
-     * @param[in]  - `Ratio`: A type representing a ratio or a fraction.
-     *
+      * @tparam Ratio The type representing a ratio or a fraction.
+      * @tparam Mapping The type of the mapping from vertices to their distances.
+      * @tparam Domain The type of the domain for distances.
+      * @param[in] r_opt r_opt is a reference to a variable of type Ratio.
+      * @param[in] dist The `dist` parameter is a mapping that represents the distance between two
+      * elements in a domain. It is used in the `get_weight` lambda function to calculate the weight
+      * of an edge.     *
      * @return The function `run` returns an object of type `Cycle`.
      */
     template <typename Ratio, typename Mapping, typename Domain>
@@ -95,25 +93,14 @@ template <typename DiGraph, typename ParametricAPI> class MaxParametricSolver {
  *
  *  max  r
  *  s.t. dist[v] - dist[u] <= distrance(e, r)
- *       \forall e(u, v) \in gra(V, E)
+ *       for all edges e(u, v) in gra(V, E)
  *
- * @tparam Graph
- * @tparam T
- * @tparam Fn1
- * @tparam Fn2
- * @tparam Mapping
- * @param[in] gra The parameter "gra" is a directed graph.
- * @param[in,out] r_opt The parameter `r_opt` is the parameter to be maximized in the network
- * parametric problem. It is initially set to a large number and will be updated during the
- * optimization process.
- * @param[in] distance A monotone decreasing function that calculates the distance between two
- * vertices in the graph given a parameter r. It takes in two arguments: the parameter r and an edge
- * of the graph.
- * @param[in] zero_cancel The `zero_cancel` parameter is a function that takes a critical cycle `ci`
- * and returns a modified version of it. This function is used to cancel out any zero-weight edges
- * in the critical cycle.
- * @param[in] dist A mapping from vertices to their distances from a source vertex in the graph.
- * @param[in]  - `Graph`: The type of the directed graph.
+ * @tparam DiGraph The type of the directed graph.
+ * @tparam Ratio The type representing a ratio or a fraction.
+ * @tparam Fn1 The type of the function to calculate the distance.
+ * @tparam Fn2 The type of the function to perform zero cancellation.
+ * @tparam Mapping The type of the mapping from vertices to their distances.
+ * @tparam Domain The type of the domain for distances.
  *
  * @return the optimal value of parameter r and the critical cycle.
  */

@@ -150,15 +150,18 @@ template <typename DiGraph, typename Ratio> class MinCycleRatioSolver {
  *        s.t. dist[vtx] - dist[utx] \ge cost(utx, vtx) - r * time(utx, vtx)
  *             \forall edge(utx, vtx) \in gra(V, E)
  *
- * @tparam Graph
- * @tparam Fn1
- * @tparam Fn2
- * @tparam Mapping
+ * @tparam DiGraph The type of the directed graph.
+ * @tparam Ratio The type representing a ratio or a fraction.
+ * @tparam Fn1 The type of the function to get the cost of an edge.
+ * @tparam Fn2 The type of the function to get the time of an edge.
+ * @tparam Mapping The type of the mapping from vertices to their distances.
+ * @tparam Domain The type of the domain for distances.
  * @param[in] gra
  * @param[in,out] r0
  * @param[in] get_cost
  * @param[in] get_time
  * @param[in,out] dist
+ * @param[in] dummy A placeholder parameter to deduce the `Domain` type.
  * @return auto
  */
 template <typename DiGraph, typename Ratio, typename Fn1, typename Fn2, typename Mapping,

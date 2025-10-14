@@ -1,12 +1,4 @@
-[![Actions Status](https://github.com/luk036/digraphx-cpp/workflows/MacOS/badge.svg)](https://github.com/luk036/digraphx-cpp/actions)
-[![Actions Status](https://github.com/luk036/digraphx-cpp/workflows/Windows/badge.svg)](https://github.com/luk036/digraphx-cpp/actions)
-[![Actions Status](https://github.com/luk036/digraphx-cpp/workflows/Ubuntu/badge.svg)](https://github.com/luk036/digraphx-cpp/actions)
-[![Actions Status](https://github.com/luk036/digraphx-cpp/workflows/Install/badge.svg)](https://github.com/luk036/digraphx-cpp/actions)
-[![codecov](https://codecov.io/gh/luk036/digraphx-cpp/branch/main/graph/badge.svg)](https://codecov.io/gh/luk036/digraphx-cpp)
 
-<p align="center">
-  <img src="https://repository-images.githubusercontent.com/254842585/4dfa7580-7ffb-11ea-99d0-46b8fe2f4170" height="175" width="auto" />
-</p>
 
 # 🔀 digraphx-cpp
 
@@ -108,6 +100,8 @@ To build the documentation locally, you will need Doxygen, jinja2 and Pygments i
 
 ### Build everything at once
 
+\anchor build-everything-at-once
+
 The project also includes an `all` directory that allows building all targets at the same time.
 This is useful during development, as it exposes all subprojects to your IDE and avoids redundant builds of the library.
 
@@ -126,6 +120,8 @@ cmake --build build --target GenerateDocs
 ```
 
 ### Additional tools
+
+\anchor additional-tools
 
 The test and standalone subprojects include the [tools.cmake](cmake/tools.cmake) file which is used to import additional tools on-demand through CMake configuration arguments.
 The following are currently supported.
@@ -201,6 +197,3 @@ Perhaps the [MiniCppStarter](https://github.com/TheLartians/MiniCppStarter) is s
 - [**filipdutescu/modern-cpp-template**](https://github.com/filipdutescu/modern-cpp-template): A recent starter using a more traditional approach for CMake structure and dependency management.
 - [**vector-of-bool/pitchfork**](https://github.com/vector-of-bool/pitchfork/): Pitchfork is a Set of C++ Project Conventions.
 
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=luk036/digraphx-cpp,cpp-best-practices/gui_starter_template,filipdutescu/modern-cpp-template&type=Date)](https://star-history.com/#luk036/digraphx-cpp&cpp-best-practices/gui_starter_template&filipdutescu/modern-cpp-template&Date)

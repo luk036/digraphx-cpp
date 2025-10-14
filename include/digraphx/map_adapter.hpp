@@ -8,10 +8,9 @@
 /**
  * @brief Dict-like data structure by std::vector and Range
  *
- * @tparam T
+ * @tparam Container The type of the container (e.g., std::vector)
  */
 template <typename Container> class MapAdapterBase {
-  public:
     using key_type = size_t;
     using mapped_type = typename Container::value_type;
     using value_type = std::pair<key_type, mapped_type>;
@@ -44,8 +43,7 @@ template <typename Container> class MapAdapterBase {
      * The function returns a constant reference to the value associated with the given key in a
      * map-like container.
      *
-     * @param[in] key The parameter "key" is of type "key_type", which is a data type that
-     * represents the key used to search for an element in the container.
+     * @param[in] key The key to access.
      *
      * @return a constant reference to the value associated with the given key in the `_lst`
      * container.
@@ -63,8 +61,7 @@ template <typename Container> class MapAdapterBase {
     /**
      * The function checks if a given key is present in a data structure.
      *
-     * @param[in] key The parameter "key" is of type "key_type", which is a data type that
-     * represents the key used to search for an element in the container.
+     * @param[in] key The key to check for existence.
      *
      * @return a boolean value. It will return true if the key is contained in the data structure,
      * and false otherwise.
@@ -82,7 +79,7 @@ template <typename Container> class MapAdapterBase {
 /**
  * @brief Dict-like data structure by std::vector and Range
  *
- * @tparam T
+ * @tparam Container The type of the container (e.g., std::vector)
  */
 template <typename Container> class MapAdapter : public MapAdapterBase<Container> {
   public:
@@ -123,7 +120,7 @@ template <typename Container> class MapAdapter : public MapAdapterBase<Container
 /**
  * @brief Dict-like data structure by std::vector and Range
  *
- * @tparam T
+ * @tparam Container The type of the container (e.g., std::vector)
  */
 template <typename Container> class MapConstAdapter {
   public:
@@ -150,8 +147,7 @@ template <typename Container> class MapConstAdapter {
      * The function overloads the subscript operator to access and modify the value associated with
      * a given key in a map-like container.
      *
-     * @param[in] key The parameter "key" is of type "key_type", which is a data type that
-     * represents the key used to search for an element in the container.
+     * @param[in] key The key to access.
      *
      * @return The operator[] is returning a reference to the mapped_type value associated with the
      * given key.
@@ -162,8 +158,7 @@ template <typename Container> class MapConstAdapter {
      * The function returns a constant reference to the value associated with the given key in a
      * map-like container.
      *
-     * @param[in] key The parameter "key" is of type "key_type", which is a data type that
-     * represents the key used to search for an element in the container.
+     * @param[in] key The key to access.
      *
      * @return a constant reference to the value associated with the given key in the `_lst`
      * container.
@@ -181,8 +176,7 @@ template <typename Container> class MapConstAdapter {
     /**
      * The function checks if a given key is present in a data structure.
      *
-     * @param[in] key The parameter "key" is of type "key_type", which is a data type that
-     * represents the key used to search for an element in the container.
+     * @param[in] key The key to check for existence.
      *
      * @return a boolean value. It will return true if the key is contained in the data structure,
      * and false otherwise.
