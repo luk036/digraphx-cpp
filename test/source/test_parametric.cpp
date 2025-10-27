@@ -1,3 +1,4 @@
+#include <cstdint> // for uint32_t
 #include <doctest/doctest.h>
 #include <digraphx/parametric.hpp>
 #include <list>
