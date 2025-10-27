@@ -1,12 +1,12 @@
 #include <doctest/doctest.h>
 
-#include <cstdint>
+// #include <cstdint> // for uint32_t
 #include <digraphx/min_parametric_q.hpp>  // Assuming this is the header for MinParametricSolver
 #include <unordered_map>
 #include <vector>
 #include <string>
 #include <limits>
-#include "digraphx/map_adapter.hpp"
+#include <digraphx/map_adapter.hpp>
 
 using std::string;
 using std::unordered_map;
