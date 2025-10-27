@@ -196,7 +196,7 @@ class NegCycleFinderQ {
         this->_pred.clear();
         auto found = false;
         while (!found && this->_relax_pred(dist, get_weight, update_ok)) {
-            for (const auto vtx : this->_find_cycle(this->_pred)) {
+            for (auto vtx : this->_find_cycle(this->_pred)) {
                 assert(this->_is_negative(vtx, dist, get_weight));
                 co_yield this->_cycle_list(vtx, this->_pred);
                 found = true;
