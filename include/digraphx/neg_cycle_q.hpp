@@ -222,7 +222,7 @@ class NegCycleFinderQ {
         this->_succ.clear();
         auto found = false;
         while (!found && this->_relax_succ(dist, get_weight, update_ok)) {
-            for (const auto vtx : this->_find_cycle(this->_succ)) {
+            for (auto vtx : this->_find_cycle(this->_succ)) {
                 // Note: Negative verification currently disabled as in Python version
                 // assert(this->_is_negative(vtx, dist, get_weight));
                 co_yield this->_cycle_list(vtx, this->_succ);
