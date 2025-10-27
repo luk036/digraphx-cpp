@@ -11,7 +11,7 @@
  * @tparam Container The type of the container (e.g., std::vector)
  */
 template <typename Container> class MapAdapterBase {
-  protected:
+  public:
     using key_type = size_t;
     using mapped_type = typename Container::value_type;
     using value_type = std::pair<key_type, mapped_type>;
