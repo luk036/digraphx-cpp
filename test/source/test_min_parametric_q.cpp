@@ -1,6 +1,5 @@
 #include <doctest/doctest.h>
 
-#include <cstdint> // for uint32_t
 #include <digraphx/min_parametric_q.hpp>  // Assuming this is the header for MinParametricSolver
 #include <unordered_map>
 #include <vector>
