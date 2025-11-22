@@ -3,6 +3,21 @@
 
 /*!
 Negative cycle detection for weighed graphs with constraints.
+
+```svgbob
+    // Example of constraint-based negative cycle detection
+    +-----> a ------+
+    |      |       |
+    |      | -1    | 2
+    |      |       | (with constraint: dist[a] - dist[b] <= 1)
+    |      v       |
+    |     b -------> c
+    |     |  -2     |
+    |     |         | (with constraint: dist[c] - dist[b] <= 2)
+    |     +-----><--+
+    |          1
+    +---- -3 (weight)
+```
 **/
 #include <cassert>
 #include <cppcoro/generator.hpp>
@@ -16,6 +31,19 @@ Negative cycle detection for weighed graphs with constraints.
  *
  * This class implements both predecessor and successor versions of Howard's
  * algorithm for negative cycle detection in directed graphs with constraints.
+ * 
+ * ```svgbob
+ *     Predecessor version (pred):
+ *         a <----- b
+ *         |       |
+ *         +--> c <-+
+ *         
+ *     Successor version (succ):
+ *         a -----> b
+ *         |       |
+ *         v       v
+ *         d <----- e
+ * ```
  */
 template <typename DiGraph, typename Domain>  //
 class NegCycleFinderQ {

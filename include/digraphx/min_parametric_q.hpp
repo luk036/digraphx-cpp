@@ -12,6 +12,19 @@
  *
  * This abstract class defines the interface for minimum parametric problems.
  * Concrete implementations must provide distance and zero_cancel methods.
+ *
+ * ```svgbob
+ *    Example of parametric problem with constraints:
+ *    a ----d(5,r)----> b
+ *    |                |
+ *    |d(2,r)    d(3,r)|
+ *    |                |
+ *    v      c(1)      v
+ *    d ----d(4,r)----> e
+ *
+ *    Where d(i,r) represents distance depending on parameter r
+ *    and c(1) represents a constraint
+ * ```
  */
 template <typename Node, typename Edge, typename Ratio>
 class MinParametricAPI {

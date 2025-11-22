@@ -1,9 +1,3 @@
-// -*- coding: utf-8 -*-
-/* The line `// -*- coding: utf-8 -*-` is a special comment that specifies the
-encoding of the source code file. In this case, it indicates that the file is
-encoded using UTF-8. This is useful for ensuring that the file is interpreted
-correctly by the compiler or interpreter. */
-
 #pragma once
 
 #include <algorithm>
@@ -18,6 +12,21 @@ correctly by the compiler or interpreter. */
  * directed graph. It takes two template parameters: `DiGraph`, which represents
  * the directed graph type, and `Ratio`, which represents the ratio type used
  * for calculations.
+ *
+ * Example of cycle ratio calculation:
+ *
+ * ```svgbob
+ *    a ----2----> b
+ *    |           |
+ *    |           |
+ *   1|           |3
+ *    |           |
+ *    v     4     v
+ *    c ---------> d
+ *
+ *    For a cycle a->b->d->c->a with costs [2, 3, 4, 1] and times [1, 1, 1, 1]:
+ *    ratio = (2 + 3 + 4 + 1) / (1 + 1 + 1 + 1) = 10 / 4 = 2.5
+ * ```
  *
  * @tparam DiGraph
  * @tparam Ratio

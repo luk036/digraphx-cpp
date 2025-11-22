@@ -3,6 +3,21 @@
 
 /*!
 Negative cycle detection for weighed graphs.
+
+```svgbob
+    // Example of a negative cycle
+    +-----> a ------+
+    |      |       |
+    |      | -1    | 2
+    |      |       |
+    |      v       |
+    |     b -------> c
+    |     |  -2     |
+    |     |         |
+    |     +-----><--+
+    |          1
+    +---- -3 (weight)
+```
 **/
 #include <cassert>
 #include <cppcoro/generator.hpp>

@@ -17,6 +17,18 @@
  * involves finding the optimal solution to a network flow problem as a function
  * of one single parameter.
  *
+ * ```svgbob
+ *    Example parametric network:
+ *    a ----c(5,r)----> b
+ *    |                |
+ *    |c(2,r)    c(3,r)|
+ *    |                |
+ *    v                v
+ *    d ----c(4,r)----> e
+ *
+ *    Where c(i,r) represents cost depending on parameter r
+ * ```
+ *
  * @tparam DiGraph The type of the directed graph.
  * @tparam ParametricAPI The type of the parametric API.
  */
