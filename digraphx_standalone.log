@@ -1,0 +1,6 @@
+[2025-11-26 14:16:17.536] [digraphx_logger] [info] Application started.
+[2025-11-26 14:16:17.537] [digraphx_logger] [info] Log message: Hello, spdlog!
+[2025-11-26 14:16:17.538] [digraphx_logger] [warning] This is a warning message.
+[2025-11-26 14:16:17.538] [digraphx_logger] [error] This is an error message.
+[2025-11-26 14:16:17.538] [digraphx_logger] [debug] Sum of numbers: 15
+[2025-11-26 14:16:17.538] [digraphx_logger] [info] Application finished.
