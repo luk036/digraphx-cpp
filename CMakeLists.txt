@@ -83,4 +83,3 @@ packageProject(
   DEPENDENCIES "fmt 11.0.2"
 )
 
-add_subdirectory(standalone)
