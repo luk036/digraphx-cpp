@@ -2,7 +2,7 @@
 #include <doctest/doctest.h>  // for ResultBuilder, TestCase
 
 #include <cstdint>  // for uint32_t
-#include <digraphx/map_adapter.hpp>
+#include <mywheel/map_adapter.hpp>
 #include <digraphx/neg_cycle.hpp>  // for NegCycleFinder
 #include <list>
 #include <unordered_map>

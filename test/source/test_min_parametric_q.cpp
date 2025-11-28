@@ -5,7 +5,7 @@
 #include <vector>
 #include <string>
 #include <limits>
-#include <digraphx/map_adapter.hpp>
+#include <mywheel/map_adapter.hpp>
 
 using std::string;
 using std::unordered_map;

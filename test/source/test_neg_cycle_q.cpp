@@ -1,7 +1,7 @@
 #include <doctest/doctest.h>  // for TestCase, TEST_CASE
 
 #include <cstdint>  // for uint32_t
-#include <digraphx/map_adapter.hpp>
+#include <mywheel/map_adapter.hpp>
 #include <digraphx/neg_cycle_q.hpp>  // for NegCycleFinderQ
 #include <list>
 #include <unordered_map>

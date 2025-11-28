@@ -10,14 +10,14 @@ CPMAddPackage(
 
 CPMAddPackage(
   NAME Py2Cpp
-  GIT_TAG 1.5
+  GIT_TAG 1.5.1
   GITHUB_REPOSITORY luk036/py2cpp
   OPTIONS "INSTALL_ONLY YES" # create an installable target
 )
 
 CPMAddPackage(
   NAME MyWheel
-  GIT_TAG 1.1
+  GIT_TAG 1.1.2
   GITHUB_REPOSITORY luk036/mywheel-cpp
   OPTIONS "INSTALL_ONLY YES" # create an installable target
 )

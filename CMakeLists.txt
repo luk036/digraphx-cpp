@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.14...3.22)
 # Note: update this to your new project's name and version
 project(
   DiGraphX
-  VERSION 1.1
+  VERSION 1.1.1
   LANGUAGES CXX
 )
 
