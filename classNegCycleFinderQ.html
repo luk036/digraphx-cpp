@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>CycleRatioAPI class | DiGraphX</title>
+  <title>NegCycleFinderQ class | DiGraphX</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
   <link rel="stylesheet" href="m-dark+documentation.compiled.css" />
   <link rel="icon" href="favicon-dark.png" type="image/png" />
@@ -49,25 +49,10 @@
     <div class="m-row">
       <div class="m-col-l-10 m-push-l-1">
         <h1>
-          <div class="m-doc-template">template&lt;typename DiGraph, typename Ratio&gt;</div>
-          CycleRatioAPI <span class="m-thin">class</span>
+          <div class="m-doc-template">template&lt;typename DiGraph, typename Domain&gt;</div>
+          NegCycleFinderQ <span class="m-thin">class</span>
         </h1>
-        <p><a href="classCycleRatioAPI.html" class="m-doc">CycleRatioAPI</a>.</p>
-        <table class="m-table m-fullwidth m-flat">
-          <thead>
-            <tr><th colspan="2">Template parameters</th></tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td style="width: 1%">DiGraph</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>Ratio</td>
-              <td></td>
-            </tr>
-          </tbody>
-        </table>
+        <p>Negative Cycle Finder with constraints by Howard&#x27;s method.</p>
         <nav class="m-block m-default">
           <h3>Contents</h3>
           <ul>
@@ -80,119 +65,184 @@
             </li>
           </ul>
         </nav>
-<p>The <code><a href="classCycleRatioAPI.html" class="m-doc">CycleRatioAPI</a></code> class is a template class that provides an interface for calculating distances and performing zero cancellation on cycles in a directed graph. It takes two template parameters: <code>DiGraph</code>, which represents the directed graph type, and <code>Ratio</code>, which represents the ratio type used for calculations.</p><p>Example of cycle ratio calculation:</p><pre class="m-code"> a ----2----&gt; b
- |           |
- |           |
-1|           |3
- |           |
- v     4     v
- c ---------&gt; d
-
- For a cycle a-&gt;b-&gt;d-&gt;c-&gt;a with costs [2, 3, 4, 1] and times [1, 1, 1, 1]:
- ratio = (2 + 3 + 4 + 1) / (1 + 1 + 1 + 1) = 10 / 4 = 2.5</pre>
+<p>Negative cycle detection for weighed graphs with constraints.</p><pre class="m-code">// Example of constraint-based negative cycle detection
++-----&gt; a ------+
+|      |       |
+|      | -1    | 2
+|      |       | (with constraint: dist[a] - dist[b] &lt;= 1)
+|      v       |
+|     b -------&gt; c
+|     |  -2     |
+|     |         | (with constraint: dist[c] - dist[b] &lt;= 2)
+|     +-----&gt;&lt;--+
+|          1
++---- -3 (weight)</pre><p>This class implements both predecessor and successor versions of Howard&#x27;s algorithm for negative cycle detection in directed graphs with constraints.</p><pre class="m-code">Predecessor version (pred):
+    a &lt;----- b
+    |       |
+    +--&gt; c &lt;-+
+    
+Successor version (succ):
+    a -----&gt; b
+    |       |
+    v       v
+    d &lt;----- e</pre>
         <section id="typeless-methods">
           <h2><a href="#typeless-methods">Constructors, destructors, conversion operators</a></h2>
           <dl class="m-doc">
             <dt>
-              <span class="m-doc-wrap-bumper"><a href="#ac46c196467bbb2866c2756144c3cbd91" class="m-doc">CycleRatioAPI</a>(</span><span class="m-doc-wrap">const DiGraph&amp; gra) <span class="m-label m-flat m-info">explicit</span> </span>
+              <span class="m-doc-wrap-bumper"><a href="#abf33796c13326bd7fb967c767b6b8e41" class="m-doc">NegCycleFinderQ</a>(</span><span class="m-doc-wrap">const DiGraph&amp; digraph) <span class="m-label m-flat m-info">explicit</span> </span>
             </dt>
-            <dd>Construct a new Cycle Ratio API object.</dd>
+            <dd>Initialize the negative cycle finder with a directed graph.</dd>
           </dl>
         </section>
         <section id="pub-methods">
           <h2><a href="#pub-methods">Public functions</a></h2>
           <dl class="m-doc">
             <dt>
-              <span class="m-doc-wrap-bumper">auto <a href="#a39a77b164052d2bddca8bd68da2e1428" class="m-doc">distance</a>(</span><span class="m-doc-wrap">Ratio&amp; ratio,
-              const Edge&amp; edge) const -&gt; Ratio -&gt; auto</span>
+              <div class="m-doc-template">template&lt;typename Mapping, typename GetWeight, typename UpdateOk&gt;</div>
+              <span class="m-doc-wrap-bumper">auto <a href="#ac1ea78a986dd21127a5a70bac67e2171" class="m-doc">howard_pred</a>(</span><span class="m-doc-wrap">Mapping&amp; dist,
+              GetWeight&amp;&amp; get_weight,
+              UpdateOk&amp;&amp; update_ok) -&gt; cppcoro::generator&lt; Cycle &gt; -&gt; auto</span>
             </dt>
-            <dd>distance between two end points of an edge</dd>
+            <dd>Find negative cycles using predecessor-based Howard&#x27;s algorithm.</dd>
             <dt>
-              <span class="m-doc-wrap-bumper">auto <a href="#af01c63396ca32bc7b3b4c4d96c7532de" class="m-doc">zero_cancel</a>(</span><span class="m-doc-wrap">const Cycle&amp; cycle) const -&gt; Ratio -&gt; auto</span>
+              <div class="m-doc-template">template&lt;typename Mapping, typename GetWeight, typename UpdateOk&gt;</div>
+              <span class="m-doc-wrap-bumper">auto <a href="#aeec1de092ec66473b8b82457d000aeaa" class="m-doc">howard_succ</a>(</span><span class="m-doc-wrap">Mapping&amp; dist,
+              GetWeight&amp;&amp; get_weight,
+              UpdateOk&amp;&amp; update_ok) -&gt; cppcoro::generator&lt; Cycle &gt; -&gt; auto</span>
             </dt>
-            <dd></dd>
+            <dd>Find negative cycles using successor-based Howard&#x27;s algorithm.</dd>
           </dl>
         </section>
         <section>
           <h2>Function documentation</h2>
-          <section class="m-doc-details" id="ac46c196467bbb2866c2756144c3cbd91"><div>
+          <section class="m-doc-details" id="abf33796c13326bd7fb967c767b6b8e41"><div>
             <h3>
               <div class="m-doc-template">
-                template&lt;typename DiGraph, typename Ratio&gt;
+                template&lt;typename DiGraph, typename Domain&gt;
               </div>
-              <span class="m-doc-wrap-bumper"> CycleRatioAPI&lt;DiGraph, Ratio&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ac46c196467bbb2866c2756144c3cbd91" class="m-doc-self">CycleRatioAPI</a>(</span><span class="m-doc-wrap">const DiGraph&amp; gra) <span class="m-label m-info">explicit</span> </span></span>
+              <span class="m-doc-wrap-bumper"> NegCycleFinderQ&lt;DiGraph, Domain&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#abf33796c13326bd7fb967c767b6b8e41" class="m-doc-self">NegCycleFinderQ</a>(</span><span class="m-doc-wrap">const DiGraph&amp; digraph) <span class="m-label m-info">explicit</span> </span></span>
             </h3>
-            <p>Construct a new Cycle Ratio API object.</p>
+            <p>Initialize the negative cycle finder with a directed graph.</p>
             <table class="m-table m-fullwidth m-flat">
               <thead>
                 <tr><th colspan="2">Parameters</th></tr>
               </thead>
               <tbody>
                 <tr>
-                  <td style="width: 1%">gra&nbsp;<span class="m-label m-flat m-info">in</span></td>
-                  <td>The <code>gra</code> parameter is a reference to a <code>DiGraph</code> object. It is used to initialize the <code>gra</code> member variable of the <code><a href="classCycleRatioAPI.html" class="m-doc">CycleRatioAPI</a></code> class. The <code>gra</code> member variable is a constant reference to a <code>DiGraph</code> object, which means it cannot be modified</td>
+                  <td style="width: 1%">digraph</td>
+                  <td>A directed graph represented as a nested mapping</td>
                 </tr>
               </tbody>
             </table>
-<p>The <code><a href="classCycleRatioAPI.html" class="m-doc">CycleRatioAPI</a></code> class constructor takes a reference to a <code>DiGraph</code> object and initializes its <code>gra</code> member variable.</p>
           </div></section>
-          <section class="m-doc-details" id="a39a77b164052d2bddca8bd68da2e1428"><div>
+          <section class="m-doc-details" id="ac1ea78a986dd21127a5a70bac67e2171"><div>
             <h3>
               <div class="m-doc-template">
-                template&lt;typename DiGraph, typename Ratio&gt;
+                template&lt;typename DiGraph, typename Domain&gt;
+                template&lt;typename Mapping, typename GetWeight, typename UpdateOk&gt;
               </div>
-              <span class="m-doc-wrap-bumper">auto CycleRatioAPI&lt;DiGraph, Ratio&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a39a77b164052d2bddca8bd68da2e1428" class="m-doc-self">distance</a>(</span><span class="m-doc-wrap">Ratio&amp; ratio,
-              const Edge&amp; edge) const -&gt; Ratio</span></span>
+              <span class="m-doc-wrap-bumper">auto NegCycleFinderQ&lt;DiGraph, Domain&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ac1ea78a986dd21127a5a70bac67e2171" class="m-doc-self">howard_pred</a>(</span><span class="m-doc-wrap">Mapping&amp; dist,
+              GetWeight&amp;&amp; get_weight,
+              UpdateOk&amp;&amp; update_ok) -&gt; cppcoro::generator&lt; Cycle &gt;</span></span>
             </h3>
-            <p>distance between two end points of an edge</p>
+            <p>Find negative cycles using predecessor-based Howard&#x27;s algorithm.</p>
             <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Template parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">Mapping</td>
+                  <td>Distance mapping type</td>
+                </tr>
+                <tr>
+                  <td>GetWeight</td>
+                  <td>Callable type for getting edge weights</td>
+                </tr>
+                <tr>
+                  <td>UpdateOk</td>
+                  <td>Callable type for update constraint</td>
+                </tr>
+              </tbody>
               <thead>
                 <tr><th colspan="2">Parameters</th></tr>
               </thead>
               <tbody>
                 <tr>
-                  <td style="width: 1%">ratio&nbsp;<span class="m-label m-flat m-info">in</span></td>
-                  <td>A reference to a <code>Ratio</code> object named <code>ratio</code>.</td>
+                  <td>dist</td>
+                  <td>Initial distance estimates (often zero-initialized)</td>
                 </tr>
                 <tr>
-                  <td>edge&nbsp;<span class="m-label m-flat m-info">in</span></td>
-                  <td>The <code>edge</code> parameter is a constant reference to an <code>Edge</code> object. It represents an edge in a graph connecting two vertices.</td>
+                  <td>get_weight</td>
+                  <td>Function to get weight of an edge</td>
+                </tr>
+                <tr>
+                  <td>update_ok</td>
+                  <td>Function to determine if distance updates are allowed</td>
                 </tr>
               </tbody>
               <tfoot>
                 <tr>
                   <th>Returns</th>
-                  <td>a <code>Ratio</code> object.</td>
+                  <td>cppcoro::generator&lt;Cycle&gt; Each negative cycle found as a list of edges</td>
                 </tr>
               </tfoot>
             </table>
-<p>The <code>distance</code> function calculates the distance between two vertices in a graph based on the cost and time values associated with the edge connecting them.</p>
           </div></section>
-          <section class="m-doc-details" id="af01c63396ca32bc7b3b4c4d96c7532de"><div>
+          <section class="m-doc-details" id="aeec1de092ec66473b8b82457d000aeaa"><div>
             <h3>
               <div class="m-doc-template">
-                template&lt;typename DiGraph, typename Ratio&gt;
+                template&lt;typename DiGraph, typename Domain&gt;
+                template&lt;typename Mapping, typename GetWeight, typename UpdateOk&gt;
               </div>
-              <span class="m-doc-wrap-bumper">auto CycleRatioAPI&lt;DiGraph, Ratio&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#af01c63396ca32bc7b3b4c4d96c7532de" class="m-doc-self">zero_cancel</a>(</span><span class="m-doc-wrap">const Cycle&amp; cycle) const -&gt; Ratio</span></span>
+              <span class="m-doc-wrap-bumper">auto NegCycleFinderQ&lt;DiGraph, Domain&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#aeec1de092ec66473b8b82457d000aeaa" class="m-doc-self">howard_succ</a>(</span><span class="m-doc-wrap">Mapping&amp; dist,
+              GetWeight&amp;&amp; get_weight,
+              UpdateOk&amp;&amp; update_ok) -&gt; cppcoro::generator&lt; Cycle &gt;</span></span>
             </h3>
+            <p>Find negative cycles using successor-based Howard&#x27;s algorithm.</p>
             <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Template parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">Mapping</td>
+                  <td>Distance mapping type</td>
+                </tr>
+                <tr>
+                  <td>GetWeight</td>
+                  <td>Callable type for getting edge weights</td>
+                </tr>
+                <tr>
+                  <td>UpdateOk</td>
+                  <td>Callable type for update constraint</td>
+                </tr>
+              </tbody>
               <thead>
                 <tr><th colspan="2">Parameters</th></tr>
               </thead>
               <tbody>
                 <tr>
-                  <td style="width: 1%">cycle&nbsp;<span class="m-label m-flat m-info">in</span></td>
-                  <td>The <code>cycle</code> parameter is of type <code>Cycle</code>, which is likely a container or data structure that represents a cycle in a graph. It is used to calculate the ratio of the total cost to the total time for the given cycle.</td>
+                  <td>dist</td>
+                  <td>Initial distance estimates (often zero-initialized)</td>
+                </tr>
+                <tr>
+                  <td>get_weight</td>
+                  <td>Function to get weight of an edge</td>
+                </tr>
+                <tr>
+                  <td>update_ok</td>
+                  <td>Function to determine if distance updates are allowed</td>
                 </tr>
               </tbody>
               <tfoot>
                 <tr>
                   <th>Returns</th>
-                  <td>The <code>zero_cancel</code> function returns the ratio of the total cost to the total time for a given cycle.</td>
+                  <td>cppcoro::generator&lt;Cycle&gt; Each negative cycle found as a list of edges</td>
                 </tr>
               </tfoot>
             </table>
-<p>The <code>zero_cancel</code> function calculates the ratio of the total cost to the total time for a given cycle.</p>
           </div></section>
         </section>
       </div>

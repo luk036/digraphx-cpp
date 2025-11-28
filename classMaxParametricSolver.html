@@ -49,7 +49,6 @@
     <div class="m-row">
       <div class="m-col-l-10 m-push-l-1">
         <h1>
-          <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="parametric_8hpp.html">&lt;digraphx/parametric.hpp&gt;</a></div>
           <div class="m-doc-template">template&lt;typename DiGraph, typename ParametricAPI&gt;</div>
           MaxParametricSolver <span class="m-thin">class</span>
         </h1>
@@ -61,11 +60,11 @@
           <tbody>
             <tr>
               <td style="width: 1%">DiGraph</td>
-              <td></td>
+              <td>The type of the directed graph.</td>
             </tr>
             <tr>
               <td>ParametricAPI</td>
-              <td></td>
+              <td>The type of the parametric API.</td>
             </tr>
           </tbody>
         </table>
@@ -75,39 +74,21 @@
             <li>
               Reference
               <ul>
-                <li><a href="#pub-types">Public types</a></li>
                 <li><a href="#typeless-methods">Constructors, destructors, conversion operators</a></li>
                 <li><a href="#pub-methods">Public functions</a></li>
               </ul>
             </li>
           </ul>
         </nav>
-<p>This class solves the following parametric network problem:</p><p>max r s.t. dist[v] - dist[u] &lt;= distrance(e, r) \forall e(u, v) \in gra(V, E)</p><p>A parametric network problem refers to a type of optimization problem that involves finding the optimal solution to a network flow problem as a function of one single parameter.</p>
-        <section id="pub-types">
-          <h2><a href="#pub-types">Public types</a></h2>
-          <dl class="m-doc">
-            <dt id="a8f4b3219d8e2de2ab1611cc417b45ba8">
-              using <a href="#a8f4b3219d8e2de2ab1611cc417b45ba8" class="m-doc-self">Nbrs1</a> = decltype((*std::declval&lt;DiGraph&gt;().begin()).second)
-            </dt>
-            <dd><span></span></dd>
-            <dt id="a79b04619e931d1016f2512ebfc5e4890">
-              using <a href="#a79b04619e931d1016f2512ebfc5e4890" class="m-doc-self">Nbrs</a> = std::remove_cv_t&lt;std::remove_reference_t&lt;<a href="classMaxParametricSolver.html#a8f4b3219d8e2de2ab1611cc417b45ba8" class="m-doc">Nbrs1</a>&gt;&gt;
-            </dt>
-            <dd><span></span></dd>
-            <dt id="af93a5c9df49e84afb24667a799e3f1f6">
-              using <a href="#af93a5c9df49e84afb24667a799e3f1f6" class="m-doc-self">Edge1</a> = decltype((*std::declval&lt;<a href="classMaxParametricSolver.html#a79b04619e931d1016f2512ebfc5e4890" class="m-doc">Nbrs</a>&gt;().begin()).second)
-            </dt>
-            <dd><span></span></dd>
-            <dt id="a451e95ce5dd35b4eac788694c7966c8d">
-              using <a href="#a451e95ce5dd35b4eac788694c7966c8d" class="m-doc-self">Edge</a> = std::remove_cv_t&lt;std::remove_reference_t&lt;<a href="classMaxParametricSolver.html#af93a5c9df49e84afb24667a799e3f1f6" class="m-doc">Edge1</a>&gt;&gt;
-            </dt>
-            <dd><span></span></dd>
-            <dt id="a8350155e915c19d1ce68eaefdc6756cf">
-              using <a href="#a8350155e915c19d1ce68eaefdc6756cf" class="m-doc-self">Cycle</a> = std::vector&lt;<a href="classMaxParametricSolver.html#a451e95ce5dd35b4eac788694c7966c8d" class="m-doc">Edge</a>&gt;
-            </dt>
-            <dd><span></span></dd>
-          </dl>
-        </section>
+<p>This class solves the following parametric network problem:</p><p>max r s.t. dist[v] - dist[u] &lt;= distrance(e, r) for all edges e(u, v) in gra(V, E)</p><p>A parametric network problem refers to a type of optimization problem that involves finding the optimal solution to a network flow problem as a function of one single parameter.</p><pre class="m-code">Example parametric network:
+a ----c(5,r)----&gt; b
+|                |
+|c(2,r)    c(3,r)|
+|                |
+v                v
+d ----c(4,r)----&gt; e
+
+Where c(i,r) represents cost depending on parameter r</pre>
         <section id="typeless-methods">
           <h2><a href="#typeless-methods">Constructors, destructors, conversion operators</a></h2>
           <dl class="m-doc">
@@ -174,15 +155,15 @@
               <tbody>
                 <tr>
                   <td style="width: 1%">Ratio</td>
-                  <td></td>
+                  <td>The type representing a ratio or a fraction.</td>
                 </tr>
                 <tr>
                   <td>Mapping</td>
-                  <td></td>
+                  <td>The type of the mapping from vertices to their distances.</td>
                 </tr>
                 <tr>
                   <td>Domain</td>
-                  <td></td>
+                  <td>The type of the domain for distances.</td>
                 </tr>
               </tbody>
               <thead>
@@ -195,7 +176,7 @@
                 </tr>
                 <tr>
                   <td>dist&nbsp;<span class="m-label m-flat m-info">in</span></td>
-                  <td>The <code>dist</code> parameter is a mapping that represents the distance between two elements in a domain. It is used in the <code>get_weight</code> lambda function to calculate the weight of an edge.</td>
+                  <td>The <code>dist</code> parameter is a mapping that represents the distance between two elements in a domain. It is used in the <code>get_weight</code> lambda function to calculate the weight of an edge. *</td>
                 </tr>
               </tbody>
               <tfoot>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>cppcoro::detail::generator_sentinel struct | DiGraphX</title>
+  <title>MinParametricAPI class | DiGraphX</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
   <link rel="stylesheet" href="m-dark+documentation.compiled.css" />
   <link rel="icon" href="favicon-dark.png" type="image/png" />
@@ -49,10 +49,105 @@
     <div class="m-row">
       <div class="m-col-l-10 m-push-l-1">
         <h1>
-          <span class="m-breadcrumb"><a href="namespacecppcoro.html">cppcoro</a>::<wbr/></span><span class="m-breadcrumb"><a href="namespacecppcoro_1_1detail.html">detail</a>::<wbr/></span>generator_sentinel <span class="m-thin">struct</span>
-          <div class="m-doc-include m-code m-inverted m-text-right"><span class="cp">#include</span> <a class="cpf" href="generator_8hpp.html">&lt;cppcoro/generator.hpp&gt;</a></div>
+          <div class="m-doc-template">template&lt;typename Node, typename Edge, typename Ratio&gt;</div>
+          MinParametricAPI <span class="m-thin">class</span>
         </h1>
-        <p><span></span></p>
+        <p>Minimum Parametric API Interface.</p>
+        <nav class="m-block m-default">
+          <h3>Contents</h3>
+          <ul>
+            <li>
+              Reference
+              <ul>
+                <li><a href="#pub-methods">Public functions</a></li>
+              </ul>
+            </li>
+          </ul>
+        </nav>
+<p>This abstract class defines the interface for minimum parametric problems. Concrete implementations must provide distance and zero_cancel methods.</p><pre class="m-code">Example of parametric problem with constraints:
+a ----d(5,r)----&gt; b
+|                |
+|d(2,r)    d(3,r)|
+|                |
+v      c(1)      v
+d ----d(4,r)----&gt; e
+
+Where d(i,r) represents distance depending on parameter r
+and c(1) represents a constraint</pre>
+        <section id="pub-methods">
+          <h2><a href="#pub-methods">Public functions</a></h2>
+          <dl class="m-doc">
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#ab77e988f0c6b96e8c105b29142118649" class="m-doc">distance</a>(</span><span class="m-doc-wrap">const Ratio&amp; ratio,
+              const Edge&amp; edge) -&gt; Ratio -&gt; auto <span class="m-label m-flat m-warning">pure virtual</span></span>
+            </dt>
+            <dd>Calculate the distance for a given ratio and edge.</dd>
+            <dt>
+              <span class="m-doc-wrap-bumper">auto <a href="#a150cb861b7e3cc3556a0a98b66e66126" class="m-doc">zero_cancel</a>(</span><span class="m-doc-wrap">const std::vector&lt;Edge&gt;&amp; cycle) -&gt; Ratio -&gt; auto <span class="m-label m-flat m-warning">pure virtual</span></span>
+            </dt>
+            <dd>Calculate the ratio that would make the cycle&#x27;s total distance zero.</dd>
+          </dl>
+        </section>
+        <section>
+          <h2>Function documentation</h2>
+          <section class="m-doc-details" id="ab77e988f0c6b96e8c105b29142118649"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;typename Node, typename Edge, typename Ratio&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto MinParametricAPI&lt;Node, Edge, Ratio&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ab77e988f0c6b96e8c105b29142118649" class="m-doc-self">distance</a>(</span><span class="m-doc-wrap">const Ratio&amp; ratio,
+              const Edge&amp; edge) -&gt; Ratio <span class="m-label m-warning">pure virtual</span></span></span>
+            </h3>
+            <p>Calculate the distance for a given ratio and edge.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">ratio</td>
+                  <td>The ratio parameter that affects the distance calculation</td>
+                </tr>
+                <tr>
+                  <td>edge</td>
+                  <td>The edge in the graph</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>Ratio The calculated distance based on the given ratio and edge</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a150cb861b7e3cc3556a0a98b66e66126"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;typename Node, typename Edge, typename Ratio&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto MinParametricAPI&lt;Node, Edge, Ratio&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a150cb861b7e3cc3556a0a98b66e66126" class="m-doc-self">zero_cancel</a>(</span><span class="m-doc-wrap">const std::vector&lt;Edge&gt;&amp; cycle) -&gt; Ratio <span class="m-label m-warning">pure virtual</span></span></span>
+            </h3>
+            <p>Calculate the ratio that would make the cycle&#x27;s total distance zero.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">cycle</td>
+                  <td>The cycle in the graph that needs to be evaluated</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>Ratio The ratio that would make the cycle&#x27;s total distance zero</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div></section>
+        </section>
       </div>
     </div>
   </div>

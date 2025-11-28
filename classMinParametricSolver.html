@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>digraphx/parametric.hpp file | DiGraphX</title>
+  <title>MinParametricSolver class | DiGraphX</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
   <link rel="stylesheet" href="m-dark+documentation.compiled.css" />
   <link rel="icon" href="favicon-dark.png" type="image/png" />
@@ -49,123 +49,114 @@
     <div class="m-row">
       <div class="m-col-l-10 m-push-l-1">
         <h1>
-          <span class="m-breadcrumb"><a href="dir_6fb5fa9d54de7aa30fd501f914de99ba.html">digraphx</a>/</span>parametric.hpp <span class="m-thin">file</span>
+          <div class="m-doc-template">template&lt;typename DiGraph, typename Ratio, typename Domain&gt;</div>
+          MinParametricSolver <span class="m-thin">class</span>
         </h1>
-        <p><span></span></p>
+        <p>Minimum Parametric Solver with constraints.</p>
         <nav class="m-block m-default">
           <h3>Contents</h3>
           <ul>
             <li>
               Reference
               <ul>
-                <li><a href="#nested-classes">Classes</a></li>
-                <li><a href="#func-members">Functions</a></li>
+                <li><a href="#typeless-methods">Constructors, destructors, conversion operators</a></li>
+                <li><a href="#pub-methods">Public functions</a></li>
               </ul>
             </li>
           </ul>
         </nav>
-        <section id="nested-classes">
-          <h2><a href="#nested-classes">Classes</a></h2>
+<p>This class solves the following parametric network problem:</p><p>min r s.t. dist[v] - dist[u] &lt;= distance(e, r) forall e(u, v) in G(V, E)</p><p>A parametric network problem refers to a type of optimization problem that involves finding the optimal solution to a network flow problem as a function of one single parameter.</p>
+        <section id="typeless-methods">
+          <h2><a href="#typeless-methods">Constructors, destructors, conversion operators</a></h2>
           <dl class="m-doc">
             <dt>
-              <div class="m-doc-template">template&lt;typename DiGraph, typename ParametricAPI&gt;</div>
-              class <a href="classMaxParametricSolver.html" class="m-doc">MaxParametricSolver</a>
+              <span class="m-doc-wrap-bumper"><a href="#adb15dd94802ef9b3b41dd734405ad0bd" class="m-doc">MinParametricSolver</a>(</span><span class="m-doc-wrap">const DiGraph&amp; digraph,
+              <a href="classMinParametricAPI.html" class="m-doc">MinParametricAPI</a>&lt;<a href="classMinParametricSolver.html#abe29f96564976089367b0899f8385989" class="m-doc">Node</a>, <a href="classMinParametricSolver.html#a21960858d510e137743629f9f799e97f" class="m-doc">Edge</a>, Ratio&gt;&amp; omega)</span>
             </dt>
-            <dd>Maximum Parametric Solver.</dd>
+            <dd>Initialize the solver with a graph and parametric API.</dd>
           </dl>
         </section>
-        <section id="func-members">
-          <h2><a href="#func-members">Functions</a></h2>
+        <section id="pub-methods">
+          <h2><a href="#pub-methods">Public functions</a></h2>
           <dl class="m-doc">
             <dt>
-              <div class="m-doc-template">template&lt;typename DiGraph, typename T, typename Fn1, typename Fn2, typename Mapping, typename D&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#a585513c55843ce6ba949a5866c531d0a" class="m-doc">max_parametric</a>(</span><span class="m-doc-wrap">const DiGraph&amp; gra,
-              T&amp; r_opt,
-              Fn1&amp;&amp; distance,
-              Fn2&amp;&amp; zero_cancel,
-              Mapping&amp; dist,
-              D) -&gt; auto</span>
+              <div class="m-doc-template">template&lt;typename Mapping&gt;</div>
+              <span class="m-doc-wrap-bumper">auto <a href="#a42fde848b8a00471685e4b275da7b613" class="m-doc">run</a>(</span><span class="m-doc-wrap">Mapping&amp; dist,
+              Ratio ratio,
+              const <a href="classMinParametricSolver.html#a25fcf08df9ad12496a61eceeca73b246" class="m-doc">UpdateOk</a>&amp; update_ok,
+              bool pick_one_only = false) -&gt; std::pair&lt; Ratio, Cycle &gt; -&gt; auto</span>
             </dt>
-            <dd></dd>
+            <dd>Execute the parametric solver algorithm to find the minimum ratio.</dd>
           </dl>
         </section>
         <section>
           <h2>Function documentation</h2>
-          <section class="m-doc-details" id="a585513c55843ce6ba949a5866c531d0a"><div>
+          <section class="m-doc-details" id="adb15dd94802ef9b3b41dd734405ad0bd"><div>
             <h3>
               <div class="m-doc-template">
-                template&lt;typename DiGraph, typename T, typename Fn1, typename Fn2, typename Mapping, typename D&gt;
+                template&lt;typename DiGraph, typename Ratio, typename Domain&gt;
               </div>
-              <span class="m-doc-wrap-bumper">auto </span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a585513c55843ce6ba949a5866c531d0a" class="m-doc-self">max_parametric</a>(</span><span class="m-doc-wrap">const DiGraph&amp; gra,
-              T&amp; r_opt,
-              Fn1&amp;&amp; distance,
-              Fn2&amp;&amp; zero_cancel,
-              Mapping&amp; dist,
-              D)</span></span>
+              <span class="m-doc-wrap-bumper"> MinParametricSolver&lt;DiGraph, Ratio, Domain&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#adb15dd94802ef9b3b41dd734405ad0bd" class="m-doc-self">MinParametricSolver</a>(</span><span class="m-doc-wrap">const DiGraph&amp; digraph,
+              <a href="classMinParametricAPI.html" class="m-doc">MinParametricAPI</a>&lt;<a href="classMinParametricSolver.html#abe29f96564976089367b0899f8385989" class="m-doc">Node</a>, <a href="classMinParametricSolver.html#a21960858d510e137743629f9f799e97f" class="m-doc">Edge</a>, Ratio&gt;&amp; omega)</span></span>
             </h3>
+            <p>Initialize the solver with a graph and parametric API.</p>
             <table class="m-table m-fullwidth m-flat">
-              <thead>
-                <tr><th colspan="2">Template parameters</th></tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td style="width: 1%">DiGraph</td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td>T</td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td>Fn1</td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td>Fn2</td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td>Mapping</td>
-                  <td></td>
-                </tr>
-                <tr>
-                  <td>D</td>
-                  <td></td>
-                </tr>
-              </tbody>
               <thead>
                 <tr><th colspan="2">Parameters</th></tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>gra&nbsp;<span class="m-label m-flat m-info">in</span></td>
-                  <td>The parameter &quot;gra&quot; is a directed graph.</td>
+                  <td style="width: 1%">digraph</td>
+                  <td>A directed graph where each node maps to its neighbors and the edges connecting them</td>
                 </tr>
                 <tr>
-                  <td>r_opt&nbsp;<span class="m-label m-flat m-danger">in/out</span></td>
-                  <td>The parameter <code>r_opt</code> is the parameter to be maximized in the network parametric problem. It is initially set to a large number and will be updated during the optimization process.</td>
+                  <td>omega</td>
+                  <td>An instance of <a href="classMinParametricAPI.html" class="m-doc">MinParametricAPI</a> that provides the necessary methods for distance calculation and cycle analysis</td>
+                </tr>
+              </tbody>
+            </table>
+          </div></section>
+          <section class="m-doc-details" id="a42fde848b8a00471685e4b275da7b613"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;typename DiGraph, typename Ratio, typename Domain&gt;
+                template&lt;typename Mapping&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto MinParametricSolver&lt;DiGraph, Ratio, Domain&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a42fde848b8a00471685e4b275da7b613" class="m-doc-self">run</a>(</span><span class="m-doc-wrap">Mapping&amp; dist,
+              Ratio ratio,
+              const <a href="classMinParametricSolver.html#a25fcf08df9ad12496a61eceeca73b246" class="m-doc">UpdateOk</a>&amp; update_ok,
+              bool pick_one_only = false) -&gt; std::pair&lt; Ratio, Cycle &gt;</span></span>
+            </h3>
+            <p>Execute the parametric solver algorithm to find the minimum ratio.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">dist</td>
+                  <td>A mutable mapping of node distances that will be updated during the algorithm</td>
                 </tr>
                 <tr>
-                  <td>distance&nbsp;<span class="m-label m-flat m-info">in</span></td>
-                  <td>A monotone decreasing function that calculates the distance between two vertices in the graph given a parameter r. It takes in two arguments: the parameter r and an edge of the graph.</td>
+                  <td>ratio</td>
+                  <td>The initial ratio value to start the optimization from</td>
                 </tr>
                 <tr>
-                  <td>zero_cancel&nbsp;<span class="m-label m-flat m-info">in</span></td>
-                  <td>The <code>zero_cancel</code> parameter is a function that takes a critical cycle <code>ci</code> and returns a modified version of it. This function is used to cancel out any zero-weight edges in the critical cycle.</td>
+                  <td>update_ok</td>
+                  <td>A callback function that determines whether a distance update is acceptable</td>
                 </tr>
                 <tr>
-                  <td>dist&nbsp;<span class="m-label m-flat m-info">in</span></td>
-                  <td>A mapping from vertices to their distances from a source vertex in the graph.</td>
+                  <td>pick_one_only</td>
+                  <td>If true, stops after finding the first improving cycle</td>
                 </tr>
               </tbody>
               <tfoot>
                 <tr>
                   <th>Returns</th>
-                  <td>the optimal value of parameter r and the critical cycle.</td>
+                  <td><p>std::pair&lt;Ratio, Cycle&gt; A pair containing:</p><ul><li>The minimum ratio found</li><li>The cycle that corresponds to this ratio</li></ul></td>
                 </tr>
               </tfoot>
             </table>
-<p>The function solves a network parametric problem by maximizing a parameter while satisfying a set of constraints:</p><p>max r s.t. dist[v] - dist[u] &lt;= distrance(e, r) \forall e(u, v) \in gra(V, E)</p>
           </div></section>
         </section>
       </div>
