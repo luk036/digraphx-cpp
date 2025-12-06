@@ -36,7 +36,7 @@ target("test_digraphx")
     add_files("test/source/*.cpp")
     add_packages("doctest", "fmt", "spdlog")
     add_tests("default")
-    
+
     on_load(function (target)
         -- Ensure packages are properly linked
         target:add("syslinks", "pthread")

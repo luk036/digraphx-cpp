@@ -63,7 +63,7 @@ TEST_CASE("Test Min Parametric Q") {
     // Create the API and solver
     auto api = MyAPI{};
     auto solver = MinParametricSolver<decltype(digraph), double, double>{digraph, api};
-    
+
     // Define update_ok function: allow update if current distance > new distance
     auto update_ok = [](const double& current, const double& new_val) -> bool {
         return current > new_val;
@@ -105,7 +105,7 @@ TEST_CASE("Test Min Parametric Q") {
 //     // Create the API and solver
 //     auto api = MyAPI{};
 //     auto solver = MinParametricSolver<decltype(ga), double, double>{ga, api};
-    
+
 //     auto update_ok = [](const double& current, const double& new_val) -> bool {
 //         return current > new_val;
 //     };
@@ -138,7 +138,7 @@ TEST_CASE("Test Min Parametric Q with Negative Cycle") {
 
     auto api = MyAPI{};
     auto solver = MinParametricSolver<decltype(digraph), double, double>{digraph, api};
-    
+
     auto update_ok = [](const double& , const double& ) -> bool {
         return true;  // Allow all updates for this test
     };
@@ -175,7 +175,7 @@ TEST_CASE("Test Min Parametric Q Pick One Only") {
 
     auto api = MyAPI{};
     auto solver = MinParametricSolver<decltype(digraph), double, double>{digraph, api};
-    
+
     auto update_ok = [](const double& current, const double& new_val) -> bool {
         return current > new_val;
     };
@@ -245,7 +245,7 @@ TEST_CASE("Test Min Parametric Q with List of Lists") {
     // Create the API and solver - FIXED: Use consistent types
     auto api = MyAPI2{};
     auto solver = MinParametricSolver<decltype(ga), double, double>{ga, api};
-    
+
     auto update_ok = [](const double& current, const double& new_val) -> bool {
         return current > new_val;
     };

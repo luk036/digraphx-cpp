@@ -7,29 +7,29 @@
 /*!
  * @file min_cycle_ratio.hpp
  * @brief Minimum cycle ratio algorithms for directed graphs
- * 
+ *
  * This module provides algorithms for finding the minimum cycle ratio in
  * directed graphs, which is a fundamental problem in graph theory with
  * applications in performance analysis, scheduling, and discrete event systems.
- * 
+ *
  * The cycle ratio of a cycle is defined as:
  * ```
  * ratio(cycle) = sum(costs) / sum(times)
  * ```
- * 
+ *
  * Problem formulation:
  * ```
  *  min  ratio(cycle)
  *  s.t. cycle is a directed cycle in G(V, E)
  * ```
- * 
+ *
  * Key applications:
  * - Performance analysis of digital circuits
  * - Scheduling and resource allocation
  * - Network flow optimization
  * - Timing analysis in real-time systems
  * - Economic equilibrium problems
- * 
+ *
  * Example cycle ratio calculation:
  * ```
  *    a ----2----> b
@@ -38,21 +38,21 @@
  *    |           |
  *    v     4     v
  *    c ---------> d
- * 
+ *
  *    For cycle a->b->d->c->a with costs [2, 3, 4, 1] and times [1, 1, 1, 1]:
  *    ratio = (2 + 3 + 4 + 1) / (1 + 1 + 1 + 1) = 10 / 4 = 2.5
  * ```
- * 
+ *
  * Algorithm approach:
  * - Transforms to parametric problem: max r s.t. cost(e) - r * time(e) >= 0
  * - Uses Howard's method for negative cycle detection
  * - Iteratively adjusts parameter r until convergence
- * 
+ *
  * Performance characteristics:
  * - Time complexity: O(V * E * log(C)) where C is the ratio range
  * - Space complexity: O(V + E)
  * - Efficient for sparse graphs with tight cycles
- * 
+ *
  * @tparam DiGraph Type of the directed graph representation
  * @tparam Ratio Type representing the ratio/cost values
  */
@@ -123,18 +123,18 @@ template <typename DiGraph, typename Ratio> class CycleRatioAPI {
 
 /*!
  * @brief Minimum Cycle Ratio Solver
- * 
+ *
  * This class provides algorithms for solving the minimum cycle ratio (MCR) problem
  * in directed graphs. The MCR problem seeks to find the cycle with the minimum
  * ratio of total cost to total time, which is crucial for analyzing performance
  * characteristics of discrete event systems.
- * 
+ *
  * Problem definition:
  * ```
  *  min  (sum(costs) / sum(times))
  *  s.t. cycle is a directed cycle in G(V, E)
  * ```
- * 
+ *
  * Algorithm approach:
  * The solver transforms the MCR problem into a parametric problem:
  * ```
@@ -142,20 +142,20 @@ template <typename DiGraph, typename Ratio> class CycleRatioAPI {
  *  s.t. dist[v] - dist[u] >= cost(u,v) - r * time(u,v)
  *       for all edges (u,v) in G
  * ```
- * 
+ *
  * Key insights:
  * - A cycle has ratio ≤ r iff cost - r*time has negative cycle
  * - Binary search on r with negative cycle detection
  * - Uses Howard's method for efficient cycle detection
  * - Converges to optimal minimum cycle ratio
- * 
+ *
  * Applications:
  * - Digital circuit performance analysis
  * - Real-time system scheduling
  * - Communication network optimization
  * - Manufacturing system analysis
  * - Economic equilibrium computation
- * 
+ *
  * @tparam DiGraph Type of the directed graph representation
  * @tparam Ratio Type representing ratio values (typically double)
  */
@@ -196,17 +196,17 @@ template <typename DiGraph, typename Ratio> class MinCycleRatioSolver {
 
 /*!
  * @brief Free function for minimum cost-to-time cycle ratio problem
- * 
+ *
  * This function provides a functional interface for solving the minimum cycle
  * ratio problem without requiring explicit class instantiation. It solves the
  * parametric network problem:
- * 
+ *
  * ```
  *     max  r
  *     s.t. dist[vtx] - dist[utx] ≥ cost(utx, vtx) - r * time(utx, vtx)
  *          ∀ edge(utx, vtx) ∈ G(V, E)
  * ```
- * 
+ *
  * The function uses the same algorithmic approach as MinCycleRatioSolver but
  * with a more flexible callback-based interface. This is particularly useful
  * when:
@@ -214,28 +214,28 @@ template <typename DiGraph, typename Ratio> class MinCycleRatioSolver {
  * - Cost and time extraction requires complex logic
  * - You prefer functional programming style
  * - Integration with existing callback-based code
- * 
+ *
  * Algorithm details:
  * 1. Transforms MCR to parametric problem
  * 2. Uses binary search on parameter r
  * 3. Employs Howard's method for negative cycle detection
  * 4. Iteratively refines the minimum ratio estimate
- * 
+ *
  * Usage example:
  * ```cpp
  * // Define cost and time extraction functions
  * auto get_cost = [](const Edge& e) { return e["cost"]; };
  * auto get_time = [](const Edge& e) { return e["time"]; };
- * 
+ *
  * // Initialize distances
  * std::unordered_map<Node, double> dist;
  * for (const auto& [node, _] : graph) dist[node] = 0.0;
- * 
+ *
  * // Find minimum cycle ratio
  * double ratio = 0.0;  // initial estimate
  * auto cycle = min_cycle_ratio(graph, ratio, get_cost, get_time, dist, 0.0);
  * ```
- * 
+ *
  * @tparam DiGraph Type of the directed graph representation
  * @tparam Ratio Type representing ratio values
  * @tparam Fn1 Type of cost extraction function

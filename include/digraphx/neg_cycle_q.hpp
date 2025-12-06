@@ -4,23 +4,23 @@
 /*!
  * @file neg_cycle_q.hpp
  * @brief Negative cycle detection with constraints using Howard's method
- * 
+ *
  * This module extends the basic negative cycle detection to support constrained
  * optimization problems. It implements both predecessor and successor versions
  * of Howard's algorithm, allowing for more flexible cycle detection strategies.
- * 
+ *
  * Key features:
  * - Support for distance update constraints via callback functions
  * - Both predecessor-based and successor-based algorithms
  * - Flexible constraint handling for complex optimization problems
  * - Generator-based cycle enumeration for memory efficiency
- * 
+ *
  * Constraint types supported:
  * - Upper bounds on distance updates
- * - Lower bounds on distance updates  
+ * - Lower bounds on distance updates
  * - Custom constraint functions
  * - Domain-specific validation rules
- * 
+ *
  * Example usage with constraints:
  * ```cpp
  * // Define a graph
@@ -29,30 +29,30 @@
  *     {1, {{2, -5.0}}},
  *     {2, {{0, 1.0}}}
  * };
- * 
+ *
  * // Create constrained cycle finder
  * NegCycleFinderQ finder(graph);
- * 
+ *
  * // Define constraint: only allow updates that improve by at least 0.1
  * auto update_ok = [](double old_val, double new_val) {
  *     return new_val < old_val - 0.1;
  * };
- * 
+ *
  * // Initialize distances
  * std::unordered_map<int, double> dist = {{0, 0.0}, {1, 0.0}, {2, 0.0}};
- * 
+ *
  * // Find cycles with predecessor-based algorithm
- * for (const auto& cycle : finder.howard_pred(dist, 
+ * for (const auto& cycle : finder.howard_pred(dist,
  *         [](const auto& edge) { return edge; }, update_ok)) {
  *     std::cout << "Found constrained negative cycle\n";
  * }
  * ```
- * 
+ *
  * Performance characteristics:
  * - Time complexity: O(V * E * C) where C is constrained by update_ok
  * - Space complexity: O(V + E) for predecessor/successor mappings
  * - Constraints can significantly reduce search space
- * 
+ *
  * @see neg_cycle.hpp for unconstrained version
  */
 #include <cassert>
@@ -64,43 +64,43 @@
 
 /*!
  * @brief Negative Cycle Finder with constraints using Howard's method
- * 
+ *
  * This class extends the basic negative cycle detection to support constrained
  * optimization problems. It implements both predecessor and successor versions
  * of Howard's algorithm, providing flexibility in how cycles are detected and
  * how distance updates are constrained.
- * 
+ *
  * Algorithm variants:
- * 
+ *
  * 1. Predecessor-based (howard_pred):
  *    - Follows traditional Bellman-Ford relaxation
  *    - Updates dist[v] based on dist[u] + weight(u,v)
  *    - Useful when constraints apply to forward updates
- *    
+ *
  *    ```
  *    Predecessor relaxation: dist[v] > dist[u] + w(u,v)
  *    a -----> b becomes: pred[b] = a
  *    ```
- * 
+ *
  * 2. Successor-based (howard_succ):
  *    - Uses reverse relaxation logic
- *    - Updates dist[u] based on dist[v] - weight(u,v)  
+ *    - Updates dist[u] based on dist[v] - weight(u,v)
  *    - Useful when constraints apply to backward updates
- *    
+ *
  *    ```
  *    Successor relaxation: dist[u] < dist[v] - w(u,v)
  *    a -----> b becomes: succ[a] = b
  *    ```
- * 
+ *
  * Constraint handling:
  * - The UpdateOk callback controls when distance updates are allowed
  * - This enables domain-specific constraints and optimization strategies
  * - Can implement bounds, step size limits, or custom validation
- * 
+ *
  * Template requirements:
  * - DiGraph: Same as basic NegCycleFinder
  * - Domain: Numeric type for distance calculations
- * 
+ *
  * @tparam DiGraph Type of the directed graph representation
  * @tparam Domain Numeric type for distance calculations
  */
@@ -127,22 +127,22 @@ class NegCycleFinderQ {
 
     /**
      * @brief Detect cycles in the current predecessor/successor graph
-     * 
+     *
      * @param point_to Either _pred or _succ dictionary defining the graph edges
      * @return cppcoro::generator<Node> Each node that starts a cycle in the graph
      */
-    auto _find_cycle(const std::unordered_map<Node, std::pair<Node, Edge>> &point_to) 
+    auto _find_cycle(const std::unordered_map<Node, std::pair<Node, Edge>> &point_to)
         -> cppcoro::generator<Node> {
         auto visited = std::unordered_map<Node, Node>{};
-        
+
         for (const auto &[vtx, _] : this->_digraph) {
             if (visited.find(vtx) != visited.end()) {
                 continue;
             }
-            
+
             auto utx = vtx;
             visited[utx] = vtx;
-            
+
             while (point_to.find(utx) != point_to.end()) {
                 utx = point_to.at(utx).first;
                 if (visited.find(utx) != visited.end()) {
@@ -159,7 +159,7 @@ class NegCycleFinderQ {
 
     /**
      * @brief Perform predecessor relaxation step (Bellman-Ford style)
-     * 
+     *
      * @tparam Mapping Distance mapping type
      * @tparam GetWeight Callable type for getting edge weights
      * @tparam UpdateOk Callable type for update constraint
@@ -168,7 +168,7 @@ class NegCycleFinderQ {
      * @param update_ok Function to determine if distance update should be applied
      * @return bool True if any distances were updated, False otherwise
      */
-    template <typename Mapping, typename GetWeight, typename UpdateOk> 
+    template <typename Mapping, typename GetWeight, typename UpdateOk>
     auto _relax_pred(Mapping &dist, GetWeight &&get_weight, UpdateOk &&update_ok) -> bool {
         auto changed = false;
         for (const auto &[utx, neighbors] : this->_digraph) {
@@ -186,7 +186,7 @@ class NegCycleFinderQ {
 
     /**
      * @brief Perform successor relaxation step (reverse Bellman-Ford style)
-     * 
+     *
      * @tparam Mapping Distance mapping type
      * @tparam GetWeight Callable type for getting edge weights
      * @tparam UpdateOk Callable type for update constraint
@@ -195,7 +195,7 @@ class NegCycleFinderQ {
      * @param update_ok Function to determine if distance update should be applied
      * @return bool True if any distances were updated, False otherwise
      */
-    template <typename Mapping, typename GetWeight, typename UpdateOk> 
+    template <typename Mapping, typename GetWeight, typename UpdateOk>
     auto _relax_succ(Mapping &dist, GetWeight &&get_weight, UpdateOk &&update_ok) -> bool {
         auto changed = false;
         for (const auto &[utx, neighbors] : this->_digraph) {
@@ -213,7 +213,7 @@ class NegCycleFinderQ {
 
     /**
      * @brief Reconstruct the cycle starting from the given node
-     * 
+     *
      * @param handle Starting node of the cycle
      * @param point_to Either _pred or _succ dictionary defining the edges
      * @return Cycle List of edges forming the cycle in order
@@ -234,7 +234,7 @@ class NegCycleFinderQ {
 
     /**
      * @brief Verify if the cycle starting at handle is negative
-     * 
+     *
      * @tparam Mapping Distance mapping type
      * @tparam GetWeight Callable type for getting edge weights
      * @param handle Starting node of the cycle
@@ -261,14 +261,14 @@ class NegCycleFinderQ {
   public:
     /**
      * @brief Initialize the negative cycle finder with a directed graph
-     * 
+     *
      * @param digraph A directed graph represented as a nested mapping
      */
     explicit NegCycleFinderQ(const DiGraph &digraph) : _digraph{digraph} {}
 
     /**
      * @brief Find negative cycles using predecessor-based Howard's algorithm
-     * 
+     *
      * @tparam Mapping Distance mapping type
      * @tparam GetWeight Callable type for getting edge weights
      * @tparam UpdateOk Callable type for update constraint
@@ -278,7 +278,7 @@ class NegCycleFinderQ {
      * @return cppcoro::generator<Cycle> Each negative cycle found as a list of edges
      */
     template <typename Mapping, typename GetWeight, typename UpdateOk>
-    auto howard_pred(Mapping &dist, GetWeight &&get_weight, UpdateOk &&update_ok) 
+    auto howard_pred(Mapping &dist, GetWeight &&get_weight, UpdateOk &&update_ok)
         -> cppcoro::generator<Cycle> {
         this->_pred.clear();
         auto found = false;
@@ -294,7 +294,7 @@ class NegCycleFinderQ {
 
     /**
      * @brief Find negative cycles using successor-based Howard's algorithm
-     * 
+     *
      * @tparam Mapping Distance mapping type
      * @tparam GetWeight Callable type for getting edge weights
      * @tparam UpdateOk Callable type for update constraint
@@ -304,7 +304,7 @@ class NegCycleFinderQ {
      * @return cppcoro::generator<Cycle> Each negative cycle found as a list of edges
      */
     template <typename Mapping, typename GetWeight, typename UpdateOk>
-    auto howard_succ(Mapping &dist, GetWeight &&get_weight, UpdateOk &&update_ok) 
+    auto howard_succ(Mapping &dist, GetWeight &&get_weight, UpdateOk &&update_ok)
         -> cppcoro::generator<Cycle> {
         this->_succ.clear();
         auto found = false;

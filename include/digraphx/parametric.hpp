@@ -7,25 +7,25 @@
 /*!
  * @file parametric.hpp
  * @brief Maximum parametric network problem solver
- * 
+ *
  * This module provides algorithms for solving parametric network optimization
  * problems where edge costs depend on a single parameter. The goal is to find
  * the maximum parameter value such that the system of distance constraints
  * remains feasible.
- * 
+ *
  * Problem formulation:
  * ```
  *  max  r
  *  s.t. dist[v] - dist[u] <= distance(e, r)
  *       for all edges e(u, v) in G(V, E)
  * ```
- * 
+ *
  * Key applications:
  * - Maximum cycle ratio problems
  * - Performance analysis of discrete event systems
  * - Scheduling and timing analysis
  * - Network flow optimization with parameter-dependent costs
- * 
+ *
  * Example parametric network:
  * ```
  *    a --c(5,r)--> b
@@ -34,21 +34,21 @@
  *    |             |
  *    v             v
  *    d --c(4,r)--> e
- * 
+ *
  * Where c(i,r) represents cost depending on parameter r
  * ```
- * 
+ *
  * Algorithm approach:
  * 1. Start with initial parameter value r₀
  * 2. Use negative cycle detection to find infeasibility
  * 3. Reduce parameter based on violating cycles
  * 4. Iterate until no more violations found
- * 
+ *
  * Performance characteristics:
  * - Time complexity depends on negative cycle detection
  * - Space complexity: O(V + E) for distance storage
  * - Convergence typically in few iterations
- * 
+ *
  * @tparam DiGraph Type of the directed graph representation
  * @tparam ParametricAPI Interface for distance calculations
  */
@@ -67,12 +67,12 @@ template <typename DiGraph, typename ParametricAPI> class MaxParametricSolver {
   public:
     /**
      * @brief Construct a Maximum Parametric Solver
-     * 
+     *
      * Creates a new solver instance that will find the maximum parameter value
      * for which the distance constraints are satisfiable. The solver uses the
      * provided ParametricAPI to calculate edge distances as functions of the
      * parameter.
-     * 
+     *
      * @param[in] gra The directed graph on which to solve the parametric problem
      * @param[in] omega API object providing distance calculation methods
      */
@@ -80,22 +80,22 @@ template <typename DiGraph, typename ParametricAPI> class MaxParametricSolver {
 
     /**
      * @brief Execute the maximum parametric algorithm
-     * 
+     *
      * This method implements the core algorithm for finding the maximum parameter
      * value r such that the distance constraints remain feasible. It uses an
      * iterative approach that repeatedly finds negative cycles and adjusts the
      * parameter based on the most violating cycles.
-     * 
+     *
      * Algorithm steps:
      * 1. Initialize with current parameter value r_opt
      * 2. Find negative cycles using Howard's method with current r
      * 3. For each violating cycle, calculate the parameter that would eliminate it
      * 4. Update r_opt to the minimum of these values
      * 5. Repeat until no more violations found
-     * 
+     *
      * The method returns the cycle that determines the final optimal parameter
      * value, which is useful for sensitivity analysis and debugging.
-     * 
+     *
      * @tparam Ratio Type representing the parameter value
      * @tparam Mapping Type of the distance mapping (node -> distance)
      * @tparam Domain Type of the domain for distance calculations
@@ -137,28 +137,28 @@ template <typename DiGraph, typename ParametricAPI> class MaxParametricSolver {
 
 /*!
  * @brief Free function for solving maximum parametric network problems
- * 
+ *
  * This function provides a functional interface for solving parametric network
  * problems without requiring explicit class instantiation. It solves the same
  * problem as MaxParametricSolver but with a more flexible callback-based
  * approach.
- * 
+ *
  * Problem formulation:
  * ```
  *  max  r
  *  s.t. dist[v] - dist[u] <= distance(e, r)
  *       for all edges e(u, v) in G(V, E)
  * ```
- * 
+ *
  * This approach is useful when:
  * - You prefer functional programming style
  * - You need custom distance calculation logic
  * - You want to avoid class instantiation overhead
  * - You're working with existing callback-based code
- * 
+ *
  * The function internally creates a NegCycleFinder and applies the same
  * iterative algorithm as the class-based version.
- * 
+ *
  * @tparam DiGraph Type of the directed graph representation
  * @tparam Ratio Type representing the parameter value
  * @tparam Fn1 Type of the distance calculation function
