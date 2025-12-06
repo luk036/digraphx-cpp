@@ -2,23 +2,59 @@
 #pragma once
 
 /*!
-Negative cycle detection for weighed graphs with constraints.
-
-```svgbob
-    // Example of constraint-based negative cycle detection
-    +-----> a ------+
-    |      |       |
-    |      | -1    | 2
-    |      |       | (with constraint: dist[a] - dist[b] <= 1)
-    |      v       |
-    |     b -------> c
-    |     |  -2     |
-    |     |         | (with constraint: dist[c] - dist[b] <= 2)
-    |     +-----><--+
-    |          1
-    +---- -3 (weight)
-```
-**/
+ * @file neg_cycle_q.hpp
+ * @brief Negative cycle detection with constraints using Howard's method
+ * 
+ * This module extends the basic negative cycle detection to support constrained
+ * optimization problems. It implements both predecessor and successor versions
+ * of Howard's algorithm, allowing for more flexible cycle detection strategies.
+ * 
+ * Key features:
+ * - Support for distance update constraints via callback functions
+ * - Both predecessor-based and successor-based algorithms
+ * - Flexible constraint handling for complex optimization problems
+ * - Generator-based cycle enumeration for memory efficiency
+ * 
+ * Constraint types supported:
+ * - Upper bounds on distance updates
+ * - Lower bounds on distance updates  
+ * - Custom constraint functions
+ * - Domain-specific validation rules
+ * 
+ * Example usage with constraints:
+ * ```cpp
+ * // Define a graph
+ * std::unordered_map<int, std::unordered_map<int, double>> graph = {
+ *     {0, {{1, 2.0}, {2, 3.0}}},
+ *     {1, {{2, -5.0}}},
+ *     {2, {{0, 1.0}}}
+ * };
+ * 
+ * // Create constrained cycle finder
+ * NegCycleFinderQ finder(graph);
+ * 
+ * // Define constraint: only allow updates that improve by at least 0.1
+ * auto update_ok = [](double old_val, double new_val) {
+ *     return new_val < old_val - 0.1;
+ * };
+ * 
+ * // Initialize distances
+ * std::unordered_map<int, double> dist = {{0, 0.0}, {1, 0.0}, {2, 0.0}};
+ * 
+ * // Find cycles with predecessor-based algorithm
+ * for (const auto& cycle : finder.howard_pred(dist, 
+ *         [](const auto& edge) { return edge; }, update_ok)) {
+ *     std::cout << "Found constrained negative cycle\n";
+ * }
+ * ```
+ * 
+ * Performance characteristics:
+ * - Time complexity: O(V * E * C) where C is constrained by update_ok
+ * - Space complexity: O(V + E) for predecessor/successor mappings
+ * - Constraints can significantly reduce search space
+ * 
+ * @see neg_cycle.hpp for unconstrained version
+ */
 #include <cassert>
 #include <cppcoro/generator.hpp>
 #include <type_traits>  // for is_same_v
@@ -27,23 +63,46 @@ Negative cycle detection for weighed graphs with constraints.
 #include <vector>
 
 /*!
- * @brief Negative Cycle Finder with constraints by Howard's method
- *
- * This class implements both predecessor and successor versions of Howard's
- * algorithm for negative cycle detection in directed graphs with constraints.
+ * @brief Negative Cycle Finder with constraints using Howard's method
  * 
- * ```svgbob
- *     Predecessor version (pred):
- *         a <----- b
- *         |       |
- *         +--> c <-+
- *         
- *     Successor version (succ):
- *         a -----> b
- *         |       |
- *         v       v
- *         d <----- e
- * ```
+ * This class extends the basic negative cycle detection to support constrained
+ * optimization problems. It implements both predecessor and successor versions
+ * of Howard's algorithm, providing flexibility in how cycles are detected and
+ * how distance updates are constrained.
+ * 
+ * Algorithm variants:
+ * 
+ * 1. Predecessor-based (howard_pred):
+ *    - Follows traditional Bellman-Ford relaxation
+ *    - Updates dist[v] based on dist[u] + weight(u,v)
+ *    - Useful when constraints apply to forward updates
+ *    
+ *    ```
+ *    Predecessor relaxation: dist[v] > dist[u] + w(u,v)
+ *    a -----> b becomes: pred[b] = a
+ *    ```
+ * 
+ * 2. Successor-based (howard_succ):
+ *    - Uses reverse relaxation logic
+ *    - Updates dist[u] based on dist[v] - weight(u,v)  
+ *    - Useful when constraints apply to backward updates
+ *    
+ *    ```
+ *    Successor relaxation: dist[u] < dist[v] - w(u,v)
+ *    a -----> b becomes: succ[a] = b
+ *    ```
+ * 
+ * Constraint handling:
+ * - The UpdateOk callback controls when distance updates are allowed
+ * - This enables domain-specific constraints and optimization strategies
+ * - Can implement bounds, step size limits, or custom validation
+ * 
+ * Template requirements:
+ * - DiGraph: Same as basic NegCycleFinder
+ * - Domain: Numeric type for distance calculations
+ * 
+ * @tparam DiGraph Type of the directed graph representation
+ * @tparam Domain Numeric type for distance calculations
  */
 template <typename DiGraph, typename Domain>  //
 class NegCycleFinderQ {

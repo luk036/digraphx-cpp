@@ -25,7 +25,11 @@ GENERATE_HTML = NO
 GENERATE_LATEX = NO
 XML_PROGRAMLISTING = NO
 CREATE_SUBDIRS = NO
-MARKDOWN_IMAGES = NO
 
-# Include all directories, files and namespaces in the documentation
-# Disable to include only explicitly documented objects
+# Support for additional languages
+OPTIMIZE_FOR_FORTRAN = NO
+OPTIMIZE_OUTPUT_FOR_C = NO
+OPTIMIZE_OUTPUT_JAVA = NO
+OPTIMIZE_OUTPUT_SLICE = NO
+
+

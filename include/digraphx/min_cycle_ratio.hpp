@@ -4,32 +4,57 @@
 
 #include "parametric.hpp"  // import max_parametric
 
-/**
- * @brief CycleRatioAPI
- *
- * The `CycleRatioAPI` class is a template class that provides an interface for
- * calculating distances and performing zero cancellation on cycles in a
- * directed graph. It takes two template parameters: `DiGraph`, which represents
- * the directed graph type, and `Ratio`, which represents the ratio type used
- * for calculations.
- *
- * Example of cycle ratio calculation:
- *
- * ```svgbob
+/*!
+ * @file min_cycle_ratio.hpp
+ * @brief Minimum cycle ratio algorithms for directed graphs
+ * 
+ * This module provides algorithms for finding the minimum cycle ratio in
+ * directed graphs, which is a fundamental problem in graph theory with
+ * applications in performance analysis, scheduling, and discrete event systems.
+ * 
+ * The cycle ratio of a cycle is defined as:
+ * ```
+ * ratio(cycle) = sum(costs) / sum(times)
+ * ```
+ * 
+ * Problem formulation:
+ * ```
+ *  min  ratio(cycle)
+ *  s.t. cycle is a directed cycle in G(V, E)
+ * ```
+ * 
+ * Key applications:
+ * - Performance analysis of digital circuits
+ * - Scheduling and resource allocation
+ * - Network flow optimization
+ * - Timing analysis in real-time systems
+ * - Economic equilibrium problems
+ * 
+ * Example cycle ratio calculation:
+ * ```
  *    a ----2----> b
- *    |           |
  *    |           |
  *   1|           |3
  *    |           |
  *    v     4     v
  *    c ---------> d
- *
- *    For a cycle a->b->d->c->a with costs [2, 3, 4, 1] and times [1, 1, 1, 1]:
+ * 
+ *    For cycle a->b->d->c->a with costs [2, 3, 4, 1] and times [1, 1, 1, 1]:
  *    ratio = (2 + 3 + 4 + 1) / (1 + 1 + 1 + 1) = 10 / 4 = 2.5
  * ```
- *
- * @tparam DiGraph
- * @tparam Ratio
+ * 
+ * Algorithm approach:
+ * - Transforms to parametric problem: max r s.t. cost(e) - r * time(e) >= 0
+ * - Uses Howard's method for negative cycle detection
+ * - Iteratively adjusts parameter r until convergence
+ * 
+ * Performance characteristics:
+ * - Time complexity: O(V * E * log(C)) where C is the ratio range
+ * - Space complexity: O(V + E)
+ * - Efficient for sparse graphs with tight cycles
+ * 
+ * @tparam DiGraph Type of the directed graph representation
+ * @tparam Ratio Type representing the ratio/cost values
  */
 template <typename DiGraph, typename Ratio> class CycleRatioAPI {
     using Nbrs1 = decltype((*std::declval<DiGraph>().begin()).second);
@@ -96,24 +121,43 @@ template <typename DiGraph, typename Ratio> class CycleRatioAPI {
     }
 };
 
-/**
+/*!
  * @brief Minimum Cycle Ratio Solver
- *
- * The minimum cycle ratio (MCR) problem is a fundamental problem in the
- * analysis of directed graphs. Given a directed graph, the MCR problem seeks to
- * find the cycle with the minimum ratio of the sum of edge weights to the
- * number of edges in the cycle. In other words, the MCR problem seeks to find
- * the "tightest" cycle in the graph, where the tightness of a cycle is measured
- * by the ratio of the total weight of the cycle to its length.
- *
- * The MCR problem has many applications in the analysis of discrete event
- * systems, such as digital circuits and communication networks. It is closely
- * related to other problems in graph theory, such as the shortest path problem
- * and the maximum flow problem. Efficient algorithms for solving the MCR
- * problem are therefore of great practical importance.
- *
- * @tparam DiGraph
- * @tparam Ratio
+ * 
+ * This class provides algorithms for solving the minimum cycle ratio (MCR) problem
+ * in directed graphs. The MCR problem seeks to find the cycle with the minimum
+ * ratio of total cost to total time, which is crucial for analyzing performance
+ * characteristics of discrete event systems.
+ * 
+ * Problem definition:
+ * ```
+ *  min  (sum(costs) / sum(times))
+ *  s.t. cycle is a directed cycle in G(V, E)
+ * ```
+ * 
+ * Algorithm approach:
+ * The solver transforms the MCR problem into a parametric problem:
+ * ```
+ *  max  r
+ *  s.t. dist[v] - dist[u] >= cost(u,v) - r * time(u,v)
+ *       for all edges (u,v) in G
+ * ```
+ * 
+ * Key insights:
+ * - A cycle has ratio ≤ r iff cost - r*time has negative cycle
+ * - Binary search on r with negative cycle detection
+ * - Uses Howard's method for efficient cycle detection
+ * - Converges to optimal minimum cycle ratio
+ * 
+ * Applications:
+ * - Digital circuit performance analysis
+ * - Real-time system scheduling
+ * - Communication network optimization
+ * - Manufacturing system analysis
+ * - Economic equilibrium computation
+ * 
+ * @tparam DiGraph Type of the directed graph representation
+ * @tparam Ratio Type representing ratio values (typically double)
  */
 template <typename DiGraph, typename Ratio> class MinCycleRatioSolver {
     using Nbrs1 = decltype((*std::declval<DiGraph>().begin()).second);
@@ -151,27 +195,60 @@ template <typename DiGraph, typename Ratio> class MinCycleRatioSolver {
 };
 
 /*!
- * @brief minimum cost-to-time cycle ratio problem
- *
- *    This function solves the following network parametric problem:
- *
- *        max  r
- *        s.t. dist[vtx] - dist[utx] \ge cost(utx, vtx) - r * time(utx, vtx)
- *             \forall edge(utx, vtx) \in gra(V, E)
- *
- * @tparam DiGraph The type of the directed graph.
- * @tparam Ratio The type representing a ratio or a fraction.
- * @tparam Fn1 The type of the function to get the cost of an edge.
- * @tparam Fn2 The type of the function to get the time of an edge.
- * @tparam Mapping The type of the mapping from vertices to their distances.
- * @tparam Domain The type of the domain for distances.
- * @param[in] gra
- * @param[in,out] r0
- * @param[in] get_cost
- * @param[in] get_time
- * @param[in,out] dist
- * @param[in] dummy A placeholder parameter to deduce the `Domain` type.
- * @return auto
+ * @brief Free function for minimum cost-to-time cycle ratio problem
+ * 
+ * This function provides a functional interface for solving the minimum cycle
+ * ratio problem without requiring explicit class instantiation. It solves the
+ * parametric network problem:
+ * 
+ * ```
+ *     max  r
+ *     s.t. dist[vtx] - dist[utx] ≥ cost(utx, vtx) - r * time(utx, vtx)
+ *          ∀ edge(utx, vtx) ∈ G(V, E)
+ * ```
+ * 
+ * The function uses the same algorithmic approach as MinCycleRatioSolver but
+ * with a more flexible callback-based interface. This is particularly useful
+ * when:
+ * - Edge data is stored in custom formats
+ * - Cost and time extraction requires complex logic
+ * - You prefer functional programming style
+ * - Integration with existing callback-based code
+ * 
+ * Algorithm details:
+ * 1. Transforms MCR to parametric problem
+ * 2. Uses binary search on parameter r
+ * 3. Employs Howard's method for negative cycle detection
+ * 4. Iteratively refines the minimum ratio estimate
+ * 
+ * Usage example:
+ * ```cpp
+ * // Define cost and time extraction functions
+ * auto get_cost = [](const Edge& e) { return e["cost"]; };
+ * auto get_time = [](const Edge& e) { return e["time"]; };
+ * 
+ * // Initialize distances
+ * std::unordered_map<Node, double> dist;
+ * for (const auto& [node, _] : graph) dist[node] = 0.0;
+ * 
+ * // Find minimum cycle ratio
+ * double ratio = 0.0;  // initial estimate
+ * auto cycle = min_cycle_ratio(graph, ratio, get_cost, get_time, dist, 0.0);
+ * ```
+ * 
+ * @tparam DiGraph Type of the directed graph representation
+ * @tparam Ratio Type representing ratio values
+ * @tparam Fn1 Type of cost extraction function
+ * @tparam Fn2 Type of time extraction function
+ * @tparam Mapping Type of distance mapping (node -> distance)
+ * @tparam Domain Type of the domain for distance calculations
+ * @param[in] gra The directed graph to analyze
+ * @param[in,out] r0 Initial and final minimum ratio estimate
+ * @param[in] get_cost Function to extract cost from an edge
+ * @param[in] get_time Function to extract time from an edge
+ * @param[in,out] dist Distance mapping updated during execution
+ * @param[in] dummy Parameter for type deduction
+ * @return Cycle The cycle achieving the minimum ratio
  */
 template <typename DiGraph, typename Ratio, typename Fn1, typename Fn2, typename Mapping,
           typename Domain>

@@ -4,33 +4,53 @@
 
 #include "neg_cycle.hpp"  // import NegCycleFinder
 
-/**
- * @brief Maximum Parametric Solver
- *
- * This class solves the following parametric network problem:
- *
- *  max  r
- *  s.t. dist[v] - dist[u] <= distrance(e, r)
- *       for all edges e(u, v) in gra(V, E)
- *
- * A parametric network problem refers to a type of optimization problem that
- * involves finding the optimal solution to a network flow problem as a function
- * of one single parameter.
- *
- * ```svgbob
- *    Example parametric network:
- *    a ----c(5,r)----> b
- *    |                |
- *    |c(2,r)    c(3,r)|
- *    |                |
- *    v                v
- *    d ----c(4,r)----> e
- *
- *    Where c(i,r) represents cost depending on parameter r
+/*!
+ * @file parametric.hpp
+ * @brief Maximum parametric network problem solver
+ * 
+ * This module provides algorithms for solving parametric network optimization
+ * problems where edge costs depend on a single parameter. The goal is to find
+ * the maximum parameter value such that the system of distance constraints
+ * remains feasible.
+ * 
+ * Problem formulation:
  * ```
- *
- * @tparam DiGraph The type of the directed graph.
- * @tparam ParametricAPI The type of the parametric API.
+ *  max  r
+ *  s.t. dist[v] - dist[u] <= distance(e, r)
+ *       for all edges e(u, v) in G(V, E)
+ * ```
+ * 
+ * Key applications:
+ * - Maximum cycle ratio problems
+ * - Performance analysis of discrete event systems
+ * - Scheduling and timing analysis
+ * - Network flow optimization with parameter-dependent costs
+ * 
+ * Example parametric network:
+ * ```
+ *    a --c(5,r)--> b
+ *    |             |
+ * c(2,r)       c(3,r)
+ *    |             |
+ *    v             v
+ *    d --c(4,r)--> e
+ * 
+ * Where c(i,r) represents cost depending on parameter r
+ * ```
+ * 
+ * Algorithm approach:
+ * 1. Start with initial parameter value r₀
+ * 2. Use negative cycle detection to find infeasibility
+ * 3. Reduce parameter based on violating cycles
+ * 4. Iterate until no more violations found
+ * 
+ * Performance characteristics:
+ * - Time complexity depends on negative cycle detection
+ * - Space complexity: O(V + E) for distance storage
+ * - Convergence typically in few iterations
+ * 
+ * @tparam DiGraph Type of the directed graph representation
+ * @tparam ParametricAPI Interface for distance calculations
  */
 template <typename DiGraph, typename ParametricAPI> class MaxParametricSolver {
   public:
@@ -46,27 +66,43 @@ template <typename DiGraph, typename ParametricAPI> class MaxParametricSolver {
 
   public:
     /**
-     * The MaxParametricSolver constructor initializes the MaxParametricSolver object with a given
-     * DiGraph and ParametricAPI.
-     *
-     * @param[in] gra The parameter "gra" is of type DiGraph and it represents a directed graph. It
-     * is used as input for the constructor of the MaxParametricSolver class.
-     * @param[in] omega omega is an object of type ParametricAPI.
+     * @brief Construct a Maximum Parametric Solver
+     * 
+     * Creates a new solver instance that will find the maximum parameter value
+     * for which the distance constraints are satisfiable. The solver uses the
+     * provided ParametricAPI to calculate edge distances as functions of the
+     * parameter.
+     * 
+     * @param[in] gra The directed graph on which to solve the parametric problem
+     * @param[in] omega API object providing distance calculation methods
      */
     MaxParametricSolver(const DiGraph &gra, ParametricAPI &omega) : _ncf{gra}, _omega{omega} {}
 
     /**
-     * The function "run" iteratively finds the minimum weight cycle in a graph until the weight of
-     * the current minimum cycle is greater than or equal to a given ratio.
-     *
-      * @tparam Ratio The type representing a ratio or a fraction.
-      * @tparam Mapping The type of the mapping from vertices to their distances.
-      * @tparam Domain The type of the domain for distances.
-      * @param[in] r_opt r_opt is a reference to a variable of type Ratio.
-      * @param[in] dist The `dist` parameter is a mapping that represents the distance between two
-      * elements in a domain. It is used in the `get_weight` lambda function to calculate the weight
-      * of an edge.     *
-     * @return The function `run` returns an object of type `Cycle`.
+     * @brief Execute the maximum parametric algorithm
+     * 
+     * This method implements the core algorithm for finding the maximum parameter
+     * value r such that the distance constraints remain feasible. It uses an
+     * iterative approach that repeatedly finds negative cycles and adjusts the
+     * parameter based on the most violating cycles.
+     * 
+     * Algorithm steps:
+     * 1. Initialize with current parameter value r_opt
+     * 2. Find negative cycles using Howard's method with current r
+     * 3. For each violating cycle, calculate the parameter that would eliminate it
+     * 4. Update r_opt to the minimum of these values
+     * 5. Repeat until no more violations found
+     * 
+     * The method returns the cycle that determines the final optimal parameter
+     * value, which is useful for sensitivity analysis and debugging.
+     * 
+     * @tparam Ratio Type representing the parameter value
+     * @tparam Mapping Type of the distance mapping (node -> distance)
+     * @tparam Domain Type of the domain for distance calculations
+     * @param[in,out] r_opt Initial and final optimal parameter value
+     * @param[in,out] dist Distance mapping that gets updated during execution
+     * @param[in] dist_param Parameter for type deduction (typically default-constructed)
+     * @return Cycle The critical cycle that determines the optimal parameter
      */
     template <typename Ratio, typename Mapping, typename Domain>
     auto run(Ratio &r_opt, Mapping &dist, Domain /* dist type */) {
@@ -99,22 +135,43 @@ template <typename DiGraph, typename ParametricAPI> class MaxParametricSolver {
     }
 };
 
-/**
- * The function solves a network parametric problem by maximizing a parameter while satisfying a set
- * of constraints:
- *
+/*!
+ * @brief Free function for solving maximum parametric network problems
+ * 
+ * This function provides a functional interface for solving parametric network
+ * problems without requiring explicit class instantiation. It solves the same
+ * problem as MaxParametricSolver but with a more flexible callback-based
+ * approach.
+ * 
+ * Problem formulation:
+ * ```
  *  max  r
- *  s.t. dist[v] - dist[u] <= distrance(e, r)
- *       for all edges e(u, v) in gra(V, E)
- *
- * @tparam DiGraph The type of the directed graph.
- * @tparam Ratio The type representing a ratio or a fraction.
- * @tparam Fn1 The type of the function to calculate the distance.
- * @tparam Fn2 The type of the function to perform zero cancellation.
- * @tparam Mapping The type of the mapping from vertices to their distances.
- * @tparam Domain The type of the domain for distances.
- *
- * @return the optimal value of parameter r and the critical cycle.
+ *  s.t. dist[v] - dist[u] <= distance(e, r)
+ *       for all edges e(u, v) in G(V, E)
+ * ```
+ * 
+ * This approach is useful when:
+ * - You prefer functional programming style
+ * - You need custom distance calculation logic
+ * - You want to avoid class instantiation overhead
+ * - You're working with existing callback-based code
+ * 
+ * The function internally creates a NegCycleFinder and applies the same
+ * iterative algorithm as the class-based version.
+ * 
+ * @tparam DiGraph Type of the directed graph representation
+ * @tparam Ratio Type representing the parameter value
+ * @tparam Fn1 Type of the distance calculation function
+ * @tparam Fn2 Type of the zero cancellation function
+ * @tparam Mapping Type of the distance mapping (node -> distance)
+ * @tparam Domain Type of the domain for distance calculations
+ * @param[in] gra The directed graph to analyze
+ * @param[in,out] r_opt Initial and optimal parameter value
+ * @param[in] distance Function calculating edge distance as function of r
+ * @param[in] zero_cancel Function calculating parameter from a cycle
+ * @param[in,out] dist Distance mapping that gets updated
+ * @param[in] dist_param Parameter for type deduction
+ * @return Cycle The critical cycle that determines the optimal parameter
  */
 template <typename DiGraph, typename T, typename Fn1, typename Fn2, typename Mapping, typename D>
 auto max_parametric(const DiGraph &gra, T &r_opt, Fn1 &&distance, Fn2 &&zero_cancel, Mapping &dist,

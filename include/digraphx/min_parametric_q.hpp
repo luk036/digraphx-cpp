@@ -7,24 +7,61 @@
 
 #include "neg_cycle_q.hpp"  // import NegCycleFinderQ
 
-/**
- * @brief Minimum Parametric API Interface
- *
- * This abstract class defines the interface for minimum parametric problems.
- * Concrete implementations must provide distance and zero_cancel methods.
- *
- * ```svgbob
- *    Example of parametric problem with constraints:
+/*!
+ * @file min_parametric_q.hpp
+ * @brief Minimum parametric network problem solver with constraints
+ * 
+ * This module provides algorithms for solving constrained parametric network
+ * optimization problems. It extends the basic parametric solver to support
+ * constraint handling and both predecessor/successor-based algorithms.
+ * 
+ * Problem formulation:
+ * ```
+ *  min  r
+ *  s.t. dist[v] - dist[u] <= distance(e, r)
+ *       forall e(u, v) in G(V, E)
+ *       subject to update constraints
+ * ```
+ * 
+ * Key features:
+ * - Support for distance update constraints
+ * - Both predecessor and successor algorithm variants
+ * - Flexible callback-based constraint handling
+ * - Early termination options for optimization
+ * - Abstract API interface for extensibility
+ * 
+ * Constraint types:
+ * - Upper/lower bounds on distance updates
+ * - Step size limitations
+ * - Domain-specific validation rules
+ * - Custom feasibility conditions
+ * 
+ * Example constrained parametric problem:
+ * ```
  *    a ----d(5,r)----> b
  *    |                |
  *    |d(2,r)    d(3,r)|
  *    |                |
  *    v      c(1)      v
  *    d ----d(4,r)----> e
- *
- *    Where d(i,r) represents distance depending on parameter r
- *    and c(1) represents a constraint
+ * 
+ * Where d(i,r) represents distance depending on parameter r
+ * and c(1) represents a constraint on updates
  * ```
+ * 
+ * Algorithm variants:
+ * - Predecessor-based: Traditional forward relaxation
+ * - Successor-based: Reverse relaxation for different constraint types
+ * - Alternating: Switches between both for robustness
+ * 
+ * Performance characteristics:
+ * - Time complexity depends on constraint restrictiveness
+ * - Space complexity: O(V + E) for mappings
+ * - Constraints can significantly improve convergence
+ * 
+ * @tparam DiGraph Type of the directed graph representation
+ * @tparam Ratio Type representing the parameter value
+ * @tparam Domain Type of the domain for distance calculations
  */
 template <typename Node, typename Edge, typename Ratio>
 class MinParametricAPI {
@@ -49,18 +86,58 @@ class MinParametricAPI {
     virtual auto zero_cancel(const std::vector<Edge>& cycle) -> Ratio = 0;
 };
 
-/**
- * @brief Minimum Parametric Solver with constraints
- *
- * This class solves the following parametric network problem:
- *
+/*!
+ * @brief Minimum Parametric Solver with constraint support
+ * 
+ * This class implements algorithms for solving constrained parametric network
+ * optimization problems. It extends the basic parametric solver by incorporating
+ * constraint handling through callback functions and providing both predecessor
+ * and successor-based algorithm variants.
+ * 
+ * Problem formulation:
+ * ```
  *  min  r
  *  s.t. dist[v] - dist[u] <= distance(e, r)
  *       forall e(u, v) in G(V, E)
- *
- * A parametric network problem refers to a type of optimization problem that
- * involves finding the optimal solution to a network flow problem as a
- * function of one single parameter.
+ *       subject to: update_ok(old_dist, new_dist) == true
+ * ```
+ * 
+ * Algorithm approach:
+ * 1. Initialize with starting parameter value
+ * 2. Use constrained negative cycle detection
+ * 3. Apply update constraints during relaxation
+ * 4. Adjust parameter based on violating cycles
+ * 5. Alternate between predecessor/successor methods
+ * 
+ * Key innovations:
+ * - Constraint-aware relaxation: Updates validated by callback
+ * - Dual algorithm support: Both forward and reverse relaxation
+ * - Alternating strategy: Improves robustness and convergence
+ * - Early termination: Option to stop after first improvement
+ * 
+ * Constraint handling:
+ * The UpdateOk callback enables sophisticated constraint strategies:
+ * ```cpp
+ * // Example: Only allow significant improvements
+ * auto update_ok = [](double old_val, double new_val) {
+ *     return new_val < old_val - 0.01;  // Minimum improvement threshold
+ * };
+ * 
+ * // Example: Bounded updates
+ * auto update_ok = [](double old_val, double new_val) {
+ *     return std::abs(new_val - old_val) <= max_step_size;
+ * };
+ * ```
+ * 
+ * Use cases:
+ * - Resource allocation with capacity constraints
+ * - Economic equilibrium with market frictions
+ * - Network optimization with budget limitations
+ * - Scheduling with time window constraints
+ * 
+ * @tparam DiGraph Type of the directed graph representation
+ * @tparam Ratio Type representing the parameter value
+ * @tparam Domain Type of the domain for distance calculations
  */
 template <typename DiGraph, typename Ratio, typename Domain>
 class MinParametricSolver {
@@ -173,23 +250,71 @@ class MinParametricSolver {
     // }
 };
 
-/**
- * @brief Free function to solve minimum parametric problem
- *
- * This function solves the following parametric network problem:
- *
+/*!
+ * @brief Free function for constrained minimum parametric problems
+ * 
+ * This function provides a functional interface for solving constrained
+ * parametric network problems without requiring class instantiation. It combines
+ * the flexibility of callback-based programming with sophisticated constraint
+ * handling.
+ * 
+ * Problem formulation:
+ * ```
  *  min  r
  *  s.t. dist[v] - dist[u] <= distance(e, r)
  *       forall e(u, v) in G(V, E)
- *
- * @tparam DiGraph The type of the directed graph
- * @tparam Ratio The type representing a ratio
- * @tparam Fn1 The type of the function to calculate the distance
- * @tparam Fn2 The type of the function to perform zero cancellation
- * @tparam Mapping The type of the mapping from vertices to their distances
- * @tparam Domain The type of the domain for distances
- *
- * @return std::pair<Ratio, Cycle> The optimal ratio and critical cycle
+ *       subject to update_ok(old_dist, new_dist) == true
+ * ```
+ * 
+ * Algorithm features:
+ * - Alternating predecessor/successor search strategy
+ * - Constraint-aware relaxation through update_ok callback
+ * - Early termination option for faster convergence
+ * - Memory-efficient cycle enumeration
+ * 
+ * Usage patterns:
+ * 
+ * 1. Basic constrained optimization:
+ * 
+ * auto distance = [](double r, const Edge& e) { return e.cost - r * e.time; };
+ * auto zero_cancel = [](const Cycle& c) { return calculate_ratio(c); };
+ * auto update_ok = [](double old, double new) { return new < old; };
+ * 
+ * auto [ratio, cycle] = min_parametric(graph, r0, distance, zero_cancel, dist, 0.0);
+ * 
+ * 
+ * 2. Step-size limited optimization:
+ * 
+ * auto update_ok = [max_step](double old, double new) {
+ *     return std::abs(new - old) <= max_step;
+ * };
+ * ```
+ * 
+ * 3. Threshold-based improvements:
+ * ```cpp
+ * auto update_ok = [min_improvement](double old, double new) {
+ *     return old - new >= min_improvement;
+ * };
+ * ```
+ * 
+ * Return value:
+ * - First element: Optimal parameter value found
+ * - Second element: Critical cycle achieving this value (empty if none)
+ * 
+ * @tparam DiGraph Type of the directed graph representation
+ * @tparam Ratio Type representing the parameter value
+ * @tparam Fn1 Type of distance calculation function
+ * @tparam Fn2 Type of zero cancellation function
+ * @tparam Mapping Type of distance mapping (node -> distance)
+ * @tparam Domain Type of the domain for distance calculations
+ * @param[in] gra The directed graph to analyze
+ * @param[in] ratio Initial parameter value for optimization
+ * @param[in] distance Function calculating edge distance as function of r
+ * @param[in] zero_cancel Function calculating parameter from a cycle
+ * @param[in,out] dist Distance mapping updated during execution
+ * @param[in] dist_param Parameter for type deduction
+ * @param[in] pick_one_only If true, stop after first improving cycle
+ * @return std::pair<Ratio, Cycle> Optimal parameter and critical cycle
  */
 template <typename DiGraph, typename Ratio, typename Fn1, typename Fn2, typename Mapping, typename Domain>
 inline auto min_parametric(const DiGraph& gra, Ratio ratio, Fn1&& distance, Fn2&& zero_cancel,

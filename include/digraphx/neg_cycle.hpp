@@ -2,23 +2,50 @@
 #pragma once
 
 /*!
-Negative cycle detection for weighed graphs.
-
-```svgbob
-    // Example of a negative cycle
-    +-----> a ------+
-    |      |       |
-    |      | -1    | 2
-    |      |       |
-    |      v       |
-    |     b -------> c
-    |     |  -2     |
-    |     |         |
-    |     +-----><--+
-    |          1
-    +---- -3 (weight)
-```
-**/
+ * @file neg_cycle.hpp
+ * @brief Negative cycle detection for weighted directed graphs
+ * 
+ * This module implements Howard's method for efficient negative cycle detection
+ * in directed graphs. It provides a policy iteration algorithm that maintains
+ * candidate cycles and iteratively updates them until convergence.
+ * 
+ * Key features:
+ * - Efficient negative cycle detection without requiring a source node
+ * - Policy iteration approach for faster convergence
+ * - Generator-based cycle enumeration for memory efficiency
+ * - Template-based design for various graph representations
+ * 
+ * Example usage:
+ * ```cpp
+ * // Define a directed graph with weighted edges
+ * std::unordered_map<int, std::unordered_map<int, double>> graph = {
+ *     {0, {{1, 2.0}, {2, 3.0}}},
+ *     {1, {{2, -5.0}}},  // Creates negative cycle 0->1->2->0
+ *     {2, {{0, 1.0}}}
+ * };
+ * 
+ * // Create negative cycle finder
+ * NegCycleFinder finder(graph);
+ * 
+ * // Initialize distances (typically all zeros)
+ * std::unordered_map<int, double> dist;
+ * for (const auto& [node, _] : graph) {
+ *     dist[node] = 0.0;
+ * }
+ * 
+ * // Find negative cycles
+ * for (const auto& cycle : finder.howard(dist, [](const auto& edge) { return edge; })) {
+ *     std::cout << "Found negative cycle with " << cycle.size() << " edges\n";
+ * }
+ * ```
+ * 
+ * Performance characteristics:
+ * - Time complexity: O(V * E * C) where C is the number of policy iterations
+ * - Space complexity: O(V + E) for storing predecessor information
+ * - Typically faster than Bellman-Ford for dense graphs with many cycles
+ * 
+ * @see Howard, R. A. (1960). Dynamic programming and Markov processes.
+ */
 #include <cassert>
 #include <cppcoro/generator.hpp>
 #include <type_traits>  // for is_same_v
@@ -27,26 +54,33 @@ Negative cycle detection for weighed graphs.
 #include <vector>
 
 /*!
- * @brief Negative Cycle Finder by Howard's method
- *
- * Howard's method is a minimum cycle ratio (MCR) algorithm that uses a policy
- * iteration algorithm to find the minimum cycle ratio of a directed graph. The
- * algorithm maintains a set of candidate cycles and iteratively updates the
- * cycle with the minimum ratio until convergence. To detect negative cycles,
- * Howard's method uses a cycle detection algorithm that is based on the
- * Bellman-Ford relaxation algorithm. Specifically, the algorithm maintains a
- * predecessor graph of the original graph and performs cycle detection on this
- * graph using the Bellman-Ford relaxation algorithm. If a negative cycle is
- * detected, the algorithm terminates and returns the cycle.
- *
- * Note: Bellman-Ford's shortest-path algorithm (BF) is NOT the best way to
- * detect negative cycles, because
- *
- *  1. BF needs a source node.
- *  2. BF detect whether there is a negative cycle at the fianl stage.
- *  3. BF restarts the solution (dist[utx]) every time.
- *
- * @tparam DiGraph
+ * @brief Negative Cycle Finder using Howard's policy iteration method
+ * 
+ * This class implements Howard's algorithm for efficient negative cycle detection
+ * in directed graphs. Unlike traditional Bellman-Ford approaches, Howard's method
+ * uses policy iteration to maintain a set of candidate cycles and iteratively
+ * improves them until convergence.
+ * 
+ * Algorithm overview:
+ * 1. Initialize a policy (predecessor mapping)
+ * 2. Perform relaxation steps to improve the policy
+ * 3. Detect cycles in the current policy graph
+ * 4. Verify if detected cycles are negative
+ * 5. Yield negative cycles and continue until no improvements possible
+ * 
+ * Advantages over Bellman-Ford:
+ * - No source node required
+ * - Detects negative cycles during iteration, not just at the end
+ * - Reuses previous distance estimates instead of restarting
+ * - Often faster for graphs with many negative cycles
+ * 
+ * Template requirements for DiGraph:
+ * - Must be iterable with begin()/end()
+ * - Each element must be a pair: (node, neighbors_mapping)
+ * - neighbors_mapping must be iterable with begin()/end()
+ * - Each neighbor must be a pair: (target_node, edge_data)
+ * 
+ * @tparam DiGraph Type of the directed graph representation
  */
 template <typename DiGraph>  //
 class NegCycleFinder {
@@ -65,17 +99,21 @@ class NegCycleFinder {
     const DiGraph &_digraph;
 
     /**
-     * The function performs one relaxation step in a graph algorithm.
-     *
-     * @tparam Mapping
-     * @tparam Callable
-     * @param[in,out] dist A mapping object that stores the current distances from a source vertex
-     * to each vertex in the graph.
-     * @param[in] get_weight The `get_weight` parameter is a callable object that takes an edge as
-     * input and returns the weight of that edge. It is used to calculate the distance between two
-     * vertices during the relaxation process.
-     *
-     * @return a boolean value.
+     * @brief Perform one Bellman-Ford relaxation step on the graph
+     * 
+     * This method implements a single relaxation iteration that attempts to improve
+     * distance estimates by considering all edges in the graph. For each edge (u,v),
+     * it checks if dist[v] > dist[u] + weight(u,v) and updates if true.
+     * 
+     * The relaxation is the core operation that drives Howard's algorithm toward
+     * finding negative cycles. Each successful relaxation updates the predecessor
+     * mapping, which defines the current policy.
+     * 
+     * @tparam Mapping Type of the distance mapping (node -> distance)
+     * @tparam Callable Type of the weight extraction function
+     * @param[in,out] dist Current distance estimates for each node
+     * @param[in] get_weight Function that extracts weight from an edge
+     * @return true if any distances were updated, false if no changes occurred
      */
     template <typename Mapping, typename Callable> auto _relax(Mapping &dist, Callable &&get_weight)
         -> bool {
@@ -94,17 +132,26 @@ class NegCycleFinder {
     }
 
     /**
-     * The function checks if there is a negative cycle in a graph.
-     *
-     * @tparam Mapping
-     * @tparam Callable
-     * @param[in] handle The handle parameter is a reference to a Node object.
-     * @param[in] dist A mapping that stores the distances from a source node to each node in the
-     * graph.
-     * @param[in] get_weight The `get_weight` parameter is a callable object that takes an edge as
-     * input and returns the weight of that edge.
-     *
-     * @return a boolean value. It returns `true` if it is a negative cycle and `false` otherwise.
+     * @brief Verify if a cycle starting from handle is negative
+     * 
+     * This method traverses the cycle starting from the given node and checks
+     * if the total weight around the cycle is negative. It uses the predecessor
+     * mapping to follow the cycle and the current distance estimates to verify
+     * the negative cycle property.
+     * 
+     * A cycle is negative if for some edge (u,v) in the cycle:
+     * dist[v] > dist[u] + weight(u,v)
+     * 
+     * This verification is crucial because the policy iteration might find
+     * cycles that are not actually negative due to the nature of the relaxation
+     * process.
+     * 
+     * @tparam Mapping Type of the distance mapping
+     * @tparam Callable Type of the weight extraction function  
+     * @param[in] handle Starting node of the cycle to verify
+     * @param[in] dist Current distance estimates
+     * @param[in] get_weight Function that extracts weight from an edge
+     * @return true if the cycle is negative, false otherwise
      */
     template <typename Mapping, typename Callable>
     auto _is_negative(const Node &handle, const Mapping &dist, Callable &&get_weight) const
@@ -124,12 +171,17 @@ class NegCycleFinder {
     }
 
     /**
-     * The function `_cycle_list` generates a cycle list by traversing a graph starting from a given
-     * node.
-     *
-     * @param[in] handle The `handle` parameter is of type `Node` and represents a node in a graph.
-     *
-     * @return a `Cycle` object.
+     * @brief Extract the cycle edges starting from the given node
+     * 
+     * This method reconstructs a complete cycle by following the predecessor
+     * mapping starting from the handle node. It traverses the cycle until it
+     * returns to the starting node, collecting all edges along the way.
+     * 
+     * The resulting cycle is ordered as encountered during traversal, which
+     * provides a consistent representation of the cycle structure.
+     * 
+     * @param[in] handle Starting node of the cycle (must be part of a cycle)
+     * @return Cycle A vector of edges forming the complete cycle
      */
     auto _cycle_list(const Node &handle) const -> Cycle {
         auto vtx = handle;
@@ -146,9 +198,23 @@ class NegCycleFinder {
     }
 
     /**
-     * @brief Find a cycle on policy graph
-     *
-     * The function `_find_cycle` finds a cycle on a policy graph and returns it as a generator.
+     * @brief Find all cycles in the current predecessor policy graph
+     * 
+     * This method searches the predecessor graph (defined by the current policy)
+     * for cycles. It uses a visited tracking approach to efficiently detect cycles
+     * without redundant work.
+     * 
+     * The algorithm works by:
+     * 1. Visiting each unvisited node as a potential cycle start
+     * 2. Following predecessor links until either:
+     *    - A visited node is reached (cycle detected)
+     *    - A node with no predecessor is reached (path ends)
+     * 3. Yielding nodes that complete cycles back to their start
+     * 
+     * Using a generator allows memory-efficient cycle enumeration, as cycles
+     * are produced on-demand rather than stored all at once.
+     * 
+     * @return cppcoro::generator<Node> Generator yielding nodes that start cycles
      */
     auto _find_cycle() -> cppcoro::generator<Node> {
         auto visited = std::unordered_map<Node, Node>{};
@@ -175,22 +241,39 @@ class NegCycleFinder {
 
   public:
     /**
-     * The constructor initializes a `NegCycleFinder` object with a given `DiGraph` object.
-     *
-     * @param[in] gra The `gra` parameter is of type `DiGraph` and represents a directed graph. It
-     * is used to initialize the `_digraph` member variable of the `NegCycleFinder` class.
+     * @brief Construct a Negative Cycle Finder for the given graph
+     * 
+     * Creates a new NegCycleFinder instance that will operate on the provided
+     * directed graph. The graph is stored by reference, so it must remain valid
+     * for the lifetime of the NegCycleFinder object.
+     * 
+     * @param[in] gra The directed graph to search for negative cycles
      */
     explicit NegCycleFinder(const DiGraph &gra) : _digraph{gra} {}
 
     /**
-     * The function "howard" finds a negative cycle in a graph using the Howard's algorithm.
-     *
-     * @tparam Mapping
-     * @tparam Callable
-     * @param[in,out] dist A mapping object that stores the distances between vertices in the graph.
-     * @param[in] get_weight The `get_weight` parameter is a callable object that is used to
-     * retrieve the weight of an edge in the graph. It takes in two arguments: the source vertex and
-     * the destination vertex of the edge, and returns the weight of the edge.
+     * @brief Execute Howard's algorithm to find negative cycles
+     * 
+     * This is the main method that implements Howard's policy iteration algorithm
+     * for negative cycle detection. It repeatedly performs relaxation steps and
+     * cycle detection until no more negative cycles can be found.
+     * 
+     * Algorithm flow:
+     * 1. Clear predecessor mapping (start fresh)
+     * 2. While relaxation makes changes and no negative cycles found:
+     *    a. Perform relaxation step to improve policy
+     *    b. Search for cycles in current policy graph
+     *    c. For each cycle found, verify it's negative
+     *    d. Yield all negative cycles found
+     * 
+     * The method uses a generator to efficiently return cycles as they are found,
+     * avoiding the need to store all cycles simultaneously.
+     * 
+     * @tparam Mapping Type of the distance mapping (node -> distance)
+     * @tparam Callable Type of the weight extraction function
+     * @param[in,out] dist Initial and updated distance estimates
+     * @param[in] get_weight Function to extract weight from an edge
+     * @return cppcoro::generator<Cycle> Generator yielding negative cycles
      */
     template <typename Mapping, typename Callable> auto howard(Mapping &dist, const Callable &get_weight)
         -> cppcoro::generator<Cycle> {
