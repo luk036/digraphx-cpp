@@ -16,12 +16,12 @@
  * constraint handling and both predecessor/successor-based algorithms.
  *
  * Problem formulation:
- * ```
+ * \code
  *  min  r
  *  s.t. dist[v] - dist[u] <= distance(e, r)
  *       forall e(u, v) in G(V, E)
  *       subject to update constraints
- * ```
+ * \endcode
  *
  * Key features:
  * - Support for distance update constraints
@@ -37,7 +37,7 @@
  * - Custom feasibility conditions
  *
  * Example constrained parametric problem:
- * ```
+ * \code
  *    a ----d(5,r)----> b
  *    |                |
  *    |d(2,r)    d(3,r)|
@@ -47,7 +47,7 @@
  *
  * Where d(i,r) represents distance depending on parameter r
  * and c(1) represents a constraint on updates
- * ```
+ * \endcode
  *
  * Algorithm variants:
  * - Predecessor-based: Traditional forward relaxation
@@ -95,12 +95,12 @@ class MinParametricAPI {
  * and successor-based algorithm variants.
  *
  * Problem formulation:
- * ```
+ * \code
  *  min  r
  *  s.t. dist[v] - dist[u] <= distance(e, r)
  *       forall e(u, v) in G(V, E)
  *       subject to: update_ok(old_dist, new_dist) == true
- * ```
+ * \endcode
  *
  * Algorithm approach:
  * 1. Initialize with starting parameter value
@@ -117,7 +117,7 @@ class MinParametricAPI {
  *
  * Constraint handling:
  * The UpdateOk callback enables sophisticated constraint strategies:
- * ```cpp
+ * \code{.cpp}
  * // Example: Only allow significant improvements
  * auto update_ok = [](double old_val, double new_val) {
  *     return new_val < old_val - 0.01;  // Minimum improvement threshold
@@ -127,7 +127,7 @@ class MinParametricAPI {
  * auto update_ok = [](double old_val, double new_val) {
  *     return std::abs(new_val - old_val) <= max_step_size;
  * };
- * ```
+ * \endcode
  *
  * Use cases:
  * - Resource allocation with capacity constraints
@@ -259,12 +259,12 @@ class MinParametricSolver {
  * handling.
  *
  * Problem formulation:
- * ```
+ * \code
  *  min  r
  *  s.t. dist[v] - dist[u] <= distance(e, r)
  *       forall e(u, v) in G(V, E)
  *       subject to update_ok(old_dist, new_dist) == true
- * ```
+ * \endcode
  *
  * Algorithm features:
  * - Alternating predecessor/successor search strategy
@@ -275,27 +275,27 @@ class MinParametricSolver {
  * Usage patterns:
  *
  * 1. Basic constrained optimization:
- *
+ * \code
  * auto distance = [](double r, const Edge& e) { return e.cost - r * e.time; };
  * auto zero_cancel = [](const Cycle& c) { return calculate_ratio(c); };
  * auto update_ok = [](double old, double new) { return new < old; };
  *
  * auto [ratio, cycle] = min_parametric(graph, r0, distance, zero_cancel, dist, 0.0);
- *
+ * \endcode
  *
  * 2. Step-size limited optimization:
- *
+ * \code
  * auto update_ok = [max_step](double old, double new) {
  *     return std::abs(new - old) <= max_step;
  * };
- * ```
+ * \endcode
  *
  * 3. Threshold-based improvements:
- * ```cpp
+ * \code{.cpp}
  * auto update_ok = [min_improvement](double old, double new) {
  *     return old - new >= min_improvement;
  * };
- * ```
+ * \endcode
  *
  * Return value:
  * - First element: Optimal parameter value found
@@ -312,13 +312,13 @@ class MinParametricSolver {
  * @param[in] distance Function calculating edge distance as function of r
  * @param[in] zero_cancel Function calculating parameter from a cycle
  * @param[in,out] dist Distance mapping updated during execution
- * @param[in] dist_param Parameter for type deduction
+ * @param[in] domain Type deduction parameter for distance domain
  * @param[in] pick_one_only If true, stop after first improving cycle
- * @return std::pair<Ratio, Cycle> Optimal parameter and critical cycle
+ * @return std::pair<Ratio, std::vector<typename MinParametricSolver<DiGraph, Ratio, Domain>::Edge>> Optimal parameter and critical cycle
  */
 template <typename DiGraph, typename Ratio, typename Fn1, typename Fn2, typename Mapping, typename Domain>
 inline auto min_parametric(const DiGraph& gra, Ratio ratio, Fn1&& distance, Fn2&& zero_cancel,
-                    Mapping& dist, Domain /* dist type */, bool pick_one_only = false)
+                    Mapping& dist, Domain domain, bool pick_one_only = false)
     -> std::pair<Ratio, std::vector<typename MinParametricSolver<DiGraph, Ratio, Domain>::Edge>> {
 
     // using Node1 = decltype((*std::declval<DiGraph>().begin()).first);

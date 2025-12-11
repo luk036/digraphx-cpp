@@ -14,11 +14,11 @@
  * remains feasible.
  *
  * Problem formulation:
- * ```
+ * \code
  *  max  r
  *  s.t. dist[v] - dist[u] <= distance(e, r)
  *       for all edges e(u, v) in G(V, E)
- * ```
+ * \endcode
  *
  * Key applications:
  * - Maximum cycle ratio problems
@@ -27,7 +27,7 @@
  * - Network flow optimization with parameter-dependent costs
  *
  * Example parametric network:
- * ```
+ * \code
  *    a --c(5,r)--> b
  *    |             |
  * c(2,r)       c(3,r)
@@ -36,7 +36,7 @@
  *    d --c(4,r)--> e
  *
  * Where c(i,r) represents cost depending on parameter r
- * ```
+ * \endcode
  *
  * Algorithm approach:
  * 1. Start with initial parameter value r₀
@@ -101,11 +101,11 @@ template <typename DiGraph, typename ParametricAPI> class MaxParametricSolver {
      * @tparam Domain Type of the domain for distance calculations
      * @param[in,out] r_opt Initial and final optimal parameter value
      * @param[in,out] dist Distance mapping that gets updated during execution
-     * @param[in] dist_param Parameter for type deduction (typically default-constructed)
+     * @param[in] domain Type deduction parameter for distance domain (typically default-constructed)
      * @return Cycle The critical cycle that determines the optimal parameter
      */
     template <typename Ratio, typename Mapping, typename Domain>
-    auto run(Ratio &r_opt, Mapping &dist, Domain /* dist type */) {
+    auto run(Ratio &r_opt, Mapping &dist, Domain domain) {
         auto get_weight = [this,
                            &r_opt](const Edge &edge) -> Domain {  // note!!!
             return Domain(this->_omega.distance(r_opt, edge));
@@ -144,11 +144,11 @@ template <typename DiGraph, typename ParametricAPI> class MaxParametricSolver {
  * approach.
  *
  * Problem formulation:
- * ```
+ * \code
  *  max  r
  *  s.t. dist[v] - dist[u] <= distance(e, r)
  *       for all edges e(u, v) in G(V, E)
- * ```
+ * \endcode
  *
  * This approach is useful when:
  * - You prefer functional programming style
@@ -170,12 +170,12 @@ template <typename DiGraph, typename ParametricAPI> class MaxParametricSolver {
  * @param[in] distance Function calculating edge distance as function of r
  * @param[in] zero_cancel Function calculating parameter from a cycle
  * @param[in,out] dist Distance mapping that gets updated
- * @param[in] dist_param Parameter for type deduction
+ * @param[in] domain Type deduction parameter for distance domain
  * @return Cycle The critical cycle that determines the optimal parameter
  */
 template <typename DiGraph, typename T, typename Fn1, typename Fn2, typename Mapping, typename D>
 auto max_parametric(const DiGraph &gra, T &r_opt, Fn1 &&distance, Fn2 &&zero_cancel, Mapping &dist,
-                    D /* dist type*/) {
+                    D domain) {
     using Nbrs1 = decltype((*std::declval<DiGraph>().begin()).second);
     using Nbrs = std::remove_cv_t<std::remove_reference_t<Nbrs1>>;
     using Edge1 = decltype((*std::declval<Nbrs>().begin()).second);
