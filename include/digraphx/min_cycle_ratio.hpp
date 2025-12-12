@@ -188,6 +188,7 @@ template <typename DiGraph, typename Ratio> class MinCycleRatioSolver {
      */
     template <typename Mapping, typename Domain> auto run(Ratio &r0, Mapping &dist, Domain dummy)
         -> Cycle {
+        (void)dummy;  // Mark as used to avoid compiler warning
         auto omega = CycleRatioAPI<DiGraph, Ratio>(gra);
         auto solver = MaxParametricSolver(gra, omega);
         return solver.run(dist, r0, std::move(dummy));
@@ -254,6 +255,8 @@ template <typename DiGraph, typename Ratio, typename Fn1, typename Fn2, typename
           typename Domain>
 auto min_cycle_ratio(const DiGraph &gra, Ratio &r0, Fn1 &&get_cost, Fn2 &&get_time, Mapping &dist,
                      Domain dummy) {
+    (void)dummy;  // Mark as used to avoid compiler warning
+    
     using Nbrs1 = decltype((*std::declval<DiGraph>().begin()).second);
     using Nbrs = std::remove_cv_t<std::remove_reference_t<Nbrs1>>;
     using Edge1 = decltype((*std::declval<Nbrs>().begin()).second);

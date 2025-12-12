@@ -321,6 +321,8 @@ inline auto min_parametric(const DiGraph& gra, Ratio ratio, Fn1&& distance, Fn2&
                     Mapping& dist, Domain domain, bool pick_one_only = false)
     -> std::pair<Ratio, std::vector<typename MinParametricSolver<DiGraph, Ratio, Domain>::Edge>> {
 
+    (void)domain;  // Mark as used to avoid compiler warning
+    
     // using Node1 = decltype((*std::declval<DiGraph>().begin()).first);
     // using Node = std::remove_cv_t<std::remove_reference_t<Node1>>;
     using Nbrs1 = decltype((*std::declval<DiGraph>().begin()).second);

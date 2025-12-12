@@ -106,6 +106,8 @@ template <typename DiGraph, typename ParametricAPI> class MaxParametricSolver {
      */
     template <typename Ratio, typename Mapping, typename Domain>
     auto run(Ratio &r_opt, Mapping &dist, Domain domain) {
+        (void)domain;  // Mark as used to avoid compiler warning
+        
         auto get_weight = [this,
                            &r_opt](const Edge &edge) -> Domain {  // note!!!
             return Domain(this->_omega.distance(r_opt, edge));
@@ -181,6 +183,8 @@ auto max_parametric(const DiGraph &gra, T &r_opt, Fn1 &&distance, Fn2 &&zero_can
     using Edge1 = decltype((*std::declval<Nbrs>().begin()).second);
     using Edge = std::remove_cv_t<std::remove_reference_t<Edge1>>;
     using Cycle = std::vector<Edge>;
+
+    (void)domain;  // Mark as used to avoid compiler warning
 
     auto get_weight = [&distance, &r_opt](const Edge &edge) -> D {  // note!!!
         return static_cast<D>(distance(r_opt, edge));
