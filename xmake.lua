@@ -43,7 +43,9 @@ target("test_digraphx")
 
     on_load(function (target)
         -- Ensure packages are properly linked
-        target:add("syslinks", "pthread")
+        if not is_plat("windows") then
+            target:add("syslinks", "pthread")
+        end
     end)
 
 target("standalone")
