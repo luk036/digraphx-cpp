@@ -176,7 +176,7 @@ class NegCycleFinderQ {
                 auto distance = dist[utx] + get_weight(edge);
                 if (dist[vtx] > distance && update_ok(dist[vtx], distance)) {
                     dist[vtx] = distance;
-                    this->_pred[vtx] = std::make_pair(utx, edge);
+                    this->_pred[vtx] = std::make_pair(utx, std::move(edge));
                     changed = true;
                 }
             }
@@ -203,7 +203,7 @@ class NegCycleFinderQ {
                 auto distance = dist[vtx] - get_weight(edge);
                 if (dist[utx] < distance && update_ok(dist[utx], distance)) {
                     dist[utx] = distance;
-                    this->_succ[utx] = std::make_pair(vtx, edge);
+                    this->_succ[utx] = std::make_pair(vtx, std::move(edge));
                     changed = true;
                 }
             }
@@ -223,7 +223,7 @@ class NegCycleFinderQ {
         auto cycle = Cycle{};
         while (true) {
             const auto &[utx, edge] = point_to.at(vtx);
-            cycle.push_back(edge);
+            cycle.push_back(std::move(edge));
             vtx = utx;
             if (vtx == handle) {
                 break;
@@ -285,7 +285,7 @@ class NegCycleFinderQ {
         while (!found && this->_relax_pred(dist, get_weight, update_ok)) {
             for (auto vtx : this->_find_cycle(this->_pred)) {
                 assert(this->_is_negative(vtx, dist, get_weight));
-                co_yield this->_cycle_list(vtx, this->_pred);
+                co_yield std::move(this->_cycle_list(vtx, this->_pred));
                 found = true;
             }
         }
@@ -312,7 +312,7 @@ class NegCycleFinderQ {
             for (auto vtx : this->_find_cycle(this->_succ)) {
                 // Note: Negative verification currently disabled as in Python version
                 // assert(this->_is_negative(vtx, dist, get_weight));
-                co_yield this->_cycle_list(vtx, this->_succ);
+                co_yield std::move(this->_cycle_list(vtx, this->_succ));
                 found = true;
             }
         }

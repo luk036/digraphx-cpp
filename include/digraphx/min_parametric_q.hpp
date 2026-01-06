@@ -203,11 +203,11 @@ class MinParametricSolver {
             // Search for cycles in either forward or reverse direction
             if (reverse) {
                 auto cycles = ncf.howard_succ(dist, get_weight, update_ok);
-                for (const auto& c_i : cycles) {
+                for (auto&& c_i : cycles) {
                     auto r_i = this->_omega.zero_cancel(c_i);
                     if (r_max < r_i) {
                         r_max = r_i;
-                        c_max = c_i;
+                        c_max = std::move(c_i);
                         if (pick_one_only) {  // Early exit if we only need one improvement
                             break;
                         }
@@ -215,11 +215,11 @@ class MinParametricSolver {
                 }
             } else {
                 auto cycles = ncf.howard_pred(dist, get_weight, update_ok);
-                for (const auto& c_i : cycles) {
+                for (auto&& c_i : cycles) {
                     auto r_i = this->_omega.zero_cancel(c_i);
                     if (r_max < r_i) {
                         r_max = r_i;
-                        c_max = c_i;
+                        c_max = std::move(c_i);
                         if (pick_one_only) {  // Early exit if we only need one improvement
                             break;
                         }
@@ -233,12 +233,12 @@ class MinParametricSolver {
             }
 
             // Update state for next iteration
-            cycle = c_max;
+            cycle = std::move(c_max);
             ratio = r_max;
             reverse = !reverse;  // Alternate search direction
         }
 
-        return std::make_pair(ratio, cycle);
+        return std::make_pair(ratio, std::move(cycle));
     }
 
     /**
@@ -352,11 +352,11 @@ inline auto min_parametric(const DiGraph& gra, Ratio ratio, Fn1&& distance, Fn2&
         // Search for cycles in either forward or reverse direction
         if (reverse) {
             auto cycles = ncf.howard_succ(dist, get_weight, update_ok);
-            for (const auto& c_i : cycles) {
+            for (auto&& c_i : cycles) {
                 auto r_i = zero_cancel(c_i);
                 if (r_max < r_i) {
                     r_max = r_i;
-                    c_max = c_i;
+                    c_max = std::move(c_i);
                     if (pick_one_only) {
                         break;
                     }
@@ -364,11 +364,11 @@ inline auto min_parametric(const DiGraph& gra, Ratio ratio, Fn1&& distance, Fn2&
             }
         } else {
             auto cycles = ncf.howard_pred(dist, get_weight, update_ok);
-            for (const auto& c_i : cycles) {
+            for (auto&& c_i : cycles) {
                 auto r_i = zero_cancel(c_i);
                 if (r_max < r_i) {
                     r_max = r_i;
-                    c_max = c_i;
+                    c_max = std::move(c_i);
                     if (pick_one_only) {
                         break;
                     }
@@ -382,10 +382,10 @@ inline auto min_parametric(const DiGraph& gra, Ratio ratio, Fn1&& distance, Fn2&
         }
 
         // Update state for next iteration
-        cycle = c_max;
+        cycle = std::move(c_max);
         ratio = r_max;
         reverse = !reverse;
     }
 
-    return std::make_pair(ratio, cycle);
+    return std::make_pair(ratio, std::move(cycle));
 }
