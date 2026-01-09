@@ -17,8 +17,8 @@ template <typename Node, typename Edge, typename Domain> class NegCycleFinder {
         bool changed = false;
         for (const auto& [utx, neighbors] : digraph) {
             for (const auto& [vtx, edge] : neighbors) {
-                Domain distance = dist[utx] + get_weight(edge);
-                if (dist[vtx] > distance) {
+                Domain distance = dist.at(utx) + get_weight(edge);
+                if (dist.at(vtx) > distance) {
                     dist[vtx] = distance;
                     pred[vtx] = std::make_pair(utx, edge);
                     changed = true;
@@ -32,7 +32,7 @@ template <typename Node, typename Edge, typename Domain> class NegCycleFinder {
         Node vtx = handle;
         while (true) {
             const auto& [utx, edge] = pred[vtx];
-            if (dist[vtx] > dist[utx] + get_weight(edge)) {
+            if (dist.at(vtx) > dist.at(utx) + get_weight(edge)) {
                 return true;
             }
             vtx = utx;
