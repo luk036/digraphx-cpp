@@ -3,7 +3,7 @@
 [![Actions Status](https://github.com/luk036/digraph-cpp/workflows/Windows/badge.svg)](https://github.com/luk036/digraph-cpp/actions)
 [![Actions Status](https://github.com/luk036/digraph-cpp/workflows/Ubuntu/badge.svg)](https://github.com/luk036/digraph-cpp/actions)
 [![Actions Status](https://github.com/luk036/digraph-cpp/workflows/Install/badge.svg)](https://github.com/luk036/digraph-cpp/actions)
-[![codecov](https://codecov.io/gh/luk036/digraph-cpp/branch/master/graph/badge.svg)](https://codecov.io/gh/luk036/digraph-cpp)
+[![codecov](https://codecov.io/gh/luk036/digraphx-cpp/graph/badge.svg?token=6wtXYLf7Zd)](https://codecov.io/gh/luk036/digraphx-cpp)
 
 <p align="center">
   <img src="https://repository-images.githubusercontent.com/254842585/4dfa7580-7ffb-11ea-99d0-46b8fe2f4170" height="175" width="auto" />
