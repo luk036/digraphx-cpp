@@ -9,3 +9,6 @@
 [2026-02-19 22:54:18.706] [file_logger] [info] DiGraphX message: Test 1: Basic logging
 [2026-02-19 22:54:18.711] [file_logger] [info] DiGraphX message: Test 2: Testing with negative cycle detection
 [2026-02-19 22:54:18.711] [file_logger] [info] DiGraphX message: Negative cycle detection completed
+[2026-02-19 23:02:40.609] [file_logger] [info] DiGraphX message: Test 1: Basic logging
+[2026-02-19 23:02:40.614] [file_logger] [info] DiGraphX message: Test 2: Testing with negative cycle detection
+[2026-02-19 23:02:40.615] [file_logger] [info] DiGraphX message: Negative cycle detection completed

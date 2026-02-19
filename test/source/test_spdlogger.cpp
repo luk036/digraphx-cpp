@@ -35,7 +35,7 @@ TEST_CASE("spdlogger integration test") {
     auto get_weight = [](const auto& edge) -> double { return edge; };
     auto dist = vector<double>(gra.size(), 0.0);
 
-    size_t cycle_count = 0;
+    [[maybe_unused]] size_t cycle_count = 0;
     for ([[maybe_unused]] auto const& ci : ncf.howard(dist, std::move(get_weight))) {
         ++cycle_count;
     }
