@@ -98,7 +98,7 @@ TEST_CASE("Property-based test: Positive weight graph has no negative cycles") {
                       ++cycle_count;
                   }
 
-                  RC_ASSERT(cycle_count == 0);
+                  RC_ASSERT(cycle_count == static_cast<size_t>(0));
               });
 }
 
@@ -117,7 +117,7 @@ TEST_CASE("Property-based test: Graph with negative cycle detects it") {
                       ++cycle_count;
                   }
 
-                  RC_ASSERT(cycle_count > 0);
+                  RC_ASSERT(cycle_count > static_cast<size_t>(0));
               });
 }
 
@@ -136,7 +136,7 @@ TEST_CASE("Property-based test: Empty graph has no cycles") {
                       ++cycle_count;
                   }
 
-                  RC_ASSERT(cycle_count == 0);
+                  RC_ASSERT(cycle_count == static_cast<size_t>(0));
               });
 }
 
@@ -155,7 +155,7 @@ TEST_CASE("Property-based test: Single node graph has no cycles") {
                       ++cycle_count;
                   }
 
-                  RC_ASSERT(cycle_count == 0);
+                  RC_ASSERT(cycle_count == static_cast<size_t>(0));
               });
 }
 
@@ -174,11 +174,11 @@ TEST_CASE("Property-based test: Self-loop with negative weight is detected") {
                       ++cycle_count;
                   }
 
-                  RC_ASSERT(cycle_count > 0);
+                  RC_ASSERT(cycle_count > static_cast<size_t>(0));
               });
 }
 
-TEST_CASE("Property-based test: Self-loop with positive weight is not negative cycle") {
+TEST_CASE("Property-based test: Self-loop with positive weight is not detected") {
     rc::check("Self-loop with positive weight is not detected as negative cycle",
               []() {
                   using Graph = list<pair<size_t, list<pair<size_t, double>>>>;
@@ -193,7 +193,7 @@ TEST_CASE("Property-based test: Self-loop with positive weight is not negative c
                       ++cycle_count;
                   }
 
-                  RC_ASSERT(cycle_count == 0);
+                  RC_ASSERT(cycle_count == static_cast<size_t>(0));
               });
 }
 
@@ -219,7 +219,7 @@ TEST_CASE("Property-based test: Graph with isolated nodes has no cycles") {
                       ++cycle_count;
                   }
 
-                  RC_ASSERT(cycle_count == 0);
+                  RC_ASSERT(cycle_count == static_cast<size_t>(0));
               });
 }
 
@@ -254,7 +254,7 @@ TEST_CASE("Property-based test: Linear chain has no cycles") {
                       ++cycle_count;
                   }
 
-                  RC_ASSERT(cycle_count == 0);
+                  RC_ASSERT(cycle_count == static_cast<size_t>(0));
               });
 }
 
@@ -294,7 +294,7 @@ TEST_CASE("Property-based test: Bidirectional edge chain has no cycles") {
                       ++cycle_count;
                   }
 
-                  RC_ASSERT(cycle_count == 0);
+                  RC_ASSERT(cycle_count == static_cast<size_t>(0));
               });
 }
 
@@ -388,7 +388,7 @@ TEST_CASE("Property-based test: Zero-weight edges don't create negative cycles")
                       ++cycle_count;
                   }
 
-                  RC_ASSERT(cycle_count == 0);
+                  RC_ASSERT(cycle_count == static_cast<size_t>(0));
               });
 }
 
@@ -426,7 +426,7 @@ TEST_CASE("Property-based test: Multiple negative edges still need to form cycle
                       ++cycle_count;
                   }
 
-                  RC_ASSERT(cycle_count == 0);
+                  RC_ASSERT(cycle_count == static_cast<size_t>(0));
               });
 }
 
@@ -466,7 +466,7 @@ TEST_CASE("Property-based test: Complete graph with positive weights has no cycl
                       ++cycle_count;
                   }
 
-                  RC_ASSERT(cycle_count == 0);
+                  RC_ASSERT(cycle_count == static_cast<size_t>(0));
               });
 }
 
@@ -545,7 +545,7 @@ TEST_CASE("Property-based test: MapAdapter works correctly with RapidCheck tests
                       ++cycle_count;
                   }
 
-                  RC_ASSERT(cycle_count == 0);
+                  RC_ASSERT(cycle_count == static_cast<size_t>(0));
               });
 }
 
