@@ -1,0 +1,11 @@
+[2026-02-19 21:01:02.559] [file_logger] [info] DiGraphX message: Test 1: Basic logging
+[2026-02-19 21:01:02.570] [file_logger] [info] DiGraphX message: Test 2: Testing with negative cycle detection
+[2026-02-19 21:01:02.571] [file_logger] [info] DiGraphX message: Negative cycle detection completed
+[2026-02-19 21:04:58.707] [file_logger] [info] DiGraphX message: Application started
+[2026-02-19 21:04:58.710] [file_logger] [info] DiGraphX message: Initializing graph...
+[2026-02-19 21:04:58.712] [file_logger] [info] DiGraphX message: Created graph with positive weights
+[2026-02-19 21:04:58.713] [file_logger] [info] DiGraphX message: Negative cycle detection completed
+[2026-02-19 21:04:58.715] [file_logger] [info] DiGraphX message: Final message - application completed successfully
+[2026-02-19 22:54:18.706] [file_logger] [info] DiGraphX message: Test 1: Basic logging
+[2026-02-19 22:54:18.711] [file_logger] [info] DiGraphX message: Test 2: Testing with negative cycle detection
+[2026-02-19 22:54:18.711] [file_logger] [info] DiGraphX message: Negative cycle detection completed

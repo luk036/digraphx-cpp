@@ -1,0 +1,5 @@
+[2026-02-19 21:04:58.714] [example_logger] [debug] Debug message - detailed information
+[2026-02-19 21:04:58.714] [example_logger] [info] Info message - general information
+[2026-02-19 21:04:58.714] [example_logger] [warning] Warning message - potential issues
+[2026-02-19 21:04:58.714] [example_logger] [error] Error message - error conditions
+[2026-02-19 21:04:58.714] [example_logger] [critical] Critical message - severe errors

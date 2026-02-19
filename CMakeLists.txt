@@ -83,3 +83,10 @@ packageProject(
   DEPENDENCIES "fmt 11.0.2"
 )
 
+# ---- Example executables ----
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/SPDLOGGER_EXAMPLE.cpp")
+  add_executable(SPDLOGGER_EXAMPLE SPDLOGGER_EXAMPLE.cpp)
+  target_link_libraries(SPDLOGGER_EXAMPLE ${PROJECT_NAME} ${SPECIFIC_LIBS})
+  set_target_properties(SPDLOGGER_EXAMPLE PROPERTIES CXX_STANDARD 20)
+endif()
+
