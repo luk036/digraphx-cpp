@@ -1,6 +1,6 @@
-[2025-11-28 15:50:24.529] [digraphx_logger] [info] Application started.
-[2025-11-28 15:50:24.531] [digraphx_logger] [info] Log message: Hello, spdlog!
-[2025-11-28 15:50:24.531] [digraphx_logger] [warning] This is a warning message.
-[2025-11-28 15:50:24.531] [digraphx_logger] [error] This is an error message.
-[2025-11-28 15:50:24.531] [digraphx_logger] [debug] Sum of numbers: 15
-[2025-11-28 15:50:24.531] [digraphx_logger] [info] Application finished.
+[2026-03-04 18:33:42.479] [digraphx_logger] [info] Application started.
+[2026-03-04 18:33:42.479] [digraphx_logger] [info] Log message: Hello, spdlog!
+[2026-03-04 18:33:42.479] [digraphx_logger] [warning] This is a warning message.
+[2026-03-04 18:33:42.479] [digraphx_logger] [error] This is an error message.
+[2026-03-04 18:33:42.479] [digraphx_logger] [debug] Sum of numbers: 15
+[2026-03-04 18:33:42.479] [digraphx_logger] [info] Application finished.

@@ -45,7 +45,8 @@ target("test_digraphx")
 
     on_load(function (target)
         -- Ensure packages are properly linked
-        if not is_plat("windows") then
+        -- pthread is built into libc on Android/Termux, so don't add it there
+        if not is_plat("windows") and not is_plat("android") then
             target:add("syslinks", "pthread")
         end
 
