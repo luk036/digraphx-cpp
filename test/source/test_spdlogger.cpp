@@ -28,12 +28,12 @@ TEST_CASE("spdlogger integration test") {
     digraphx::log_with_spdlog("Test 2: Testing with negative cycle detection");
 
     using Graph = list<pair<size_t, list<pair<size_t, double>>>>;
-    Graph gra{{0, {{1, 7.0}, {2, 5.0}}}, {1, {{0, 0.0}, {2, 3.0}}},
+    Graph digraph{{0, {{1, 7.0}, {2, 5.0}}}, {1, {{0, 0.0}, {2, 3.0}}},
               {2, {{1, 1.0}, {0, 2.0}, {0, 1.0}}}};
 
-    NegCycleFinder ncf(gra);
+    NegCycleFinder ncf(digraph);
     auto get_weight = [](const auto& edge) -> double { return edge; };
-    auto dist = vector<double>(gra.size(), 0.0);
+    auto dist = vector<double>(digraph.size(), 0.0);
 
     [[maybe_unused]] size_t cycle_count = 0;
     for ([[maybe_unused]] auto const& ci : ncf.howard(dist, std::move(get_weight))) {

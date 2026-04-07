@@ -73,10 +73,10 @@ template <typename DiGraph, typename ParametricAPI> class MaxParametricSolver {
      * provided ParametricAPI to calculate edge distances as functions of the
      * parameter.
      *
-     * @param[in] gra The directed graph on which to solve the parametric problem
+     * @param[in] digraph The directed graph on which to solve the parametric problem
      * @param[in] omega API object providing distance calculation methods
      */
-    MaxParametricSolver(const DiGraph &gra, ParametricAPI &omega) : _ncf{gra}, _omega{omega} {}
+    MaxParametricSolver(const DiGraph &digraph, ParametricAPI &omega) : _ncf{digraph}, _omega{omega} {}
 
     /**
      * @brief Execute the maximum parametric algorithm
@@ -167,7 +167,7 @@ template <typename DiGraph, typename ParametricAPI> class MaxParametricSolver {
  * @tparam Fn2 Type of the zero cancellation function
  * @tparam Mapping Type of the distance mapping (node -> distance)
  * @tparam Domain Type of the domain for distance calculations
- * @param[in] gra The directed graph to analyze
+ * @param[in] digraph The directed graph to analyze
  * @param[in,out] r_opt Initial and optimal parameter value
  * @param[in] distance Function calculating edge distance as function of r
  * @param[in] zero_cancel Function calculating parameter from a cycle
@@ -176,7 +176,7 @@ template <typename DiGraph, typename ParametricAPI> class MaxParametricSolver {
  * @return Cycle The critical cycle that determines the optimal parameter
  */
 template <typename DiGraph, typename T, typename Fn1, typename Fn2, typename Mapping, typename D>
-auto max_parametric(const DiGraph &gra, T &r_opt, Fn1 &&distance, Fn2 &&zero_cancel, Mapping &dist,
+auto max_parametric(const DiGraph &digraph, T &r_opt, Fn1 &&distance, Fn2 &&zero_cancel, Mapping &dist,
                     D domain) {
     using Nbrs1 = decltype((*std::declval<DiGraph>().begin()).second);
     using Nbrs = std::remove_cv_t<std::remove_reference_t<Nbrs1>>;
@@ -190,7 +190,7 @@ auto max_parametric(const DiGraph &gra, T &r_opt, Fn1 &&distance, Fn2 &&zero_can
         return static_cast<D>(distance(r_opt, edge));
     };
 
-    auto ncf = NegCycleFinder<DiGraph>(gra);
+    auto ncf = NegCycleFinder<DiGraph>(digraph);
     auto r_min = r_opt;
     auto c_min = Cycle{};
     auto c_opt = Cycle{};  // should initial outside

@@ -15,7 +15,7 @@ template <typename Node, typename Edge, typename Domain> class NegCycleFinder {
     Graph digraph;
 
   public:
-    NegCycleFinder(const Graph& gra) : digraph(gra) {}
+    NegCycleFinder(const Graph& digraph) : digraph(digraph) {}
 
     std::vector<Node> find_cycle() {
         std::unordered_map<Node, Node> visited;
@@ -120,8 +120,8 @@ template <typename Node, typename Edge, typename Ratio> class MaxParametricSolve
     ParametricAPI<Node, Edge, Ratio>& omega;
 
   public:
-    MaxParametricSolver(const Graph& gra, ParametricAPI<Node, Edge, Ratio>& api)
-        : ncf(gra), omega(api) {}
+    MaxParametricSolver(const Graph& digraph, ParametricAPI<Node, Edge, Ratio>& api)
+        : ncf(digraph), omega(api) {}
 
     std::pair<Ratio, Cycle> run(DistMap& dist, Ratio ratio) {
         using D = typename Ratio::value_type;
@@ -153,11 +153,11 @@ template <typename Node, typename Edge, typename Ratio> class CycleRatioAPI
     : public ParametricAPI<Node, std::map<std::string, typename Ratio::value_type>, Ratio> {
     using Graph = std::map<Node, std::map<Node, std::map<std::string, typename Ratio::value_type>>>;
 
-    Graph gra;
+    Graph digraph;
     using K = typename Ratio::value_type;
 
   public:
-    CycleRatioAPI(const Graph& gra) : gra(gra) {}
+    CycleRatioAPI(const Graph& digraph) : digraph(digraph) {}
 
     Ratio distance(Ratio ratio, std::map<std::string, typename Ratio::value_type> edge) override {
         return K(edge["cost"]) - ratio * edge["time"];
@@ -180,14 +180,14 @@ template <typename Node, typename Edge, typename Ratio> class MinCycleRatioSolve
     using DistMap = std::unordered_map<Node, typename Ratio::value_type>;
     using Cycle = std::vector<Edge>;
 
-    Graph gra;
+    Graph digraph;
 
   public:
-    MinCycleRatioSolver(const Graph& gra) : gra(gra) {}
+    MinCycleRatioSolver(const Graph& digraph) : digraph(digraph) {}
 
     std::pair<Ratio, Cycle> run(DistMap& dist, Ratio r0) {
-        CycleRatioAPI<Node, Edge, Ratio> omega(gra);
-        MaxParametricSolver<Node, Edge, Ratio> solver(gra, omega);
+        CycleRatioAPI<Node, Edge, Ratio> omega(digraph);
+        MaxParametricSolver<Node, Edge, Ratio> solver(digraph, omega);
         return solver.run(dist, r0);
     }
 };

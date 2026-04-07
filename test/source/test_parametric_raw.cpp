@@ -12,7 +12,7 @@ using std::unordered_map;
 using std::vector;
 
 TEST_CASE("Test Parametric Search (list of lists)") {
-    list<pair<size_t, list<pair<size_t, int>>>> gra{
+    list<pair<size_t, list<pair<size_t, int>>>> digraph{
         {0, {{1, 5}, {2, 1}}}, {1, {{0, 1}, {2, 1}}}, {2, {{1, 1}, {0, 1}}}};
 
     auto distance = [](double r, const auto& edge) { return edge - r; };
@@ -25,14 +25,14 @@ TEST_CASE("Test Parametric Search (list of lists)") {
         return cost / static_cast<double>(cycle.size());
     };
 
-    auto dist = vector<double>(gra.size(), 0.0);
+    auto dist = vector<double>(digraph.size(), 0.0);
     double r = 100.0;
-    max_parametric(gra, r, distance, zero_cancel, dist, 0.0);
+    max_parametric(digraph, r, distance, zero_cancel, dist, 0.0);
     CHECK_EQ(r, 1.0);
 }
 
 TEST_CASE("Test Parametric Search (dict of list's)") {
-    const unordered_map<uint32_t, list<pair<uint32_t, uint32_t>>> gra{
+    const unordered_map<uint32_t, list<pair<uint32_t, uint32_t>>> digraph{
         {0, {{1, 0}, {2, 1}}}, {1, {{0, 2}, {2, 3}}}, {2, {{1, 4}, {0, 5}}}};
     const vector<int> edge_cost{5, 1, 1, 1, 1, 1};
 
@@ -46,8 +46,8 @@ TEST_CASE("Test Parametric Search (dict of list's)") {
         return cost / static_cast<double>(cycle.size());
     };
 
-    auto dist = vector<double>(gra.size(), 0.0);
+    auto dist = vector<double>(digraph.size(), 0.0);
     double r = 100.0;
-    max_parametric(gra, r, distance, zero_cancel, dist, 0.0);
+    max_parametric(digraph, r, distance, zero_cancel, dist, 0.0);
     CHECK_EQ(r, 1.0);
 }

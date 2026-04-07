@@ -247,9 +247,9 @@ class NegCycleFinder {
      * directed graph. The graph is stored by reference, so it must remain valid
      * for the lifetime of the NegCycleFinder object.
      *
-     * @param[in] gra The directed graph to search for negative cycles
+     * @param[in] digraph The directed graph to search for negative cycles
      */
-    explicit NegCycleFinder(const DiGraph &gra) : _digraph{gra} {}
+    explicit NegCycleFinder(const DiGraph &digraph) : _digraph{digraph} {}
 
     /**
      * @brief Execute Howard's algorithm to find negative cycles

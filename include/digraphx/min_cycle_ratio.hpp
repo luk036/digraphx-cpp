@@ -63,9 +63,9 @@ template <typename DiGraph, typename Ratio> class CycleRatioAPI {
     using Edge = std::remove_cv_t<std::remove_reference_t<Edge1>>;
     using Cycle = std::vector<Edge>;
 
-    const DiGraph &gra;
-    // The line `const DiGraph& gra;` is declaring a constant reference variable
-    // named `gra` of type `DiGraph`. This variable  is used to store a
+    const DiGraph &digraph;
+    // The line `const DiGraph& digraph;` is declaring a constant reference variable
+    // named `digraph` of type `DiGraph`. This variable  is used to store a
     // reference to an object of type `DiGraph`. The `const` qualifier indicates
     // that the reference is   constant, meaning that the object it refers to
     // cannot be modified through this reference.
@@ -75,13 +75,13 @@ template <typename DiGraph, typename Ratio> class CycleRatioAPI {
      * @brief Construct a new Cycle Ratio API object
      *
      * The `CycleRatioAPI` class constructor takes a reference to a `DiGraph` object and initializes
-     * its `gra` member variable.
+     * its `digraph` member variable.
      *
-     * @param[in] gra The `gra` parameter is a reference to a `DiGraph` object. It is used to
-     * initialize the `gra` member variable of the `CycleRatioAPI` class. The `gra` member variable
+     * @param[in] digraph The `digraph` parameter is a reference to a `DiGraph` object. It is used to
+     * initialize the `digraph` member variable of the `CycleRatioAPI` class. The `digraph` member variable
      * is a constant reference to a `DiGraph` object, which means it cannot be modified
      */
-    explicit CycleRatioAPI(const DiGraph &gra) : gra(gra) {}
+    explicit CycleRatioAPI(const DiGraph &digraph) : digraph(digraph) {}
 
     /**
      * @brief distance between two end points of an edge
@@ -166,16 +166,16 @@ template <typename DiGraph, typename Ratio> class MinCycleRatioSolver {
     using Edge = std::remove_cv_t<std::remove_reference_t<Edge1>>;
     using Cycle = std::vector<Edge>;
 
-    const DiGraph &gra;
+    const DiGraph &digraph;
 
   public:
     /**
      * This function constructs a new MinCycleRatioSolver object with a given DiGraph.
      *
-     * @param[in] gra The parameter "gra" is of type DiGraph, which is a directed graph. It is used
+     * @param[in] digraph The parameter "digraph" is of type DiGraph, which is a directed graph. It is used
      * to represent the graph on which the Min Cycle Ratio Solver operates.
      */
-    explicit MinCycleRatioSolver(const DiGraph &gra) : gra(gra) {}
+    explicit MinCycleRatioSolver(const DiGraph &digraph) : digraph(digraph) {}
 
     /**
      * @brief run
@@ -189,8 +189,8 @@ template <typename DiGraph, typename Ratio> class MinCycleRatioSolver {
     template <typename Mapping, typename Domain> auto run(Ratio &r0, Mapping &dist, Domain dummy)
         -> Cycle {
         (void)dummy;  // Mark as used to avoid compiler warning
-        auto omega = CycleRatioAPI<DiGraph, Ratio>(gra);
-        auto solver = MaxParametricSolver(gra, omega);
+        auto omega = CycleRatioAPI<DiGraph, Ratio>(digraph);
+        auto solver = MaxParametricSolver(digraph, omega);
         return solver.run(dist, r0, std::move(dummy));
     }
 };
@@ -243,7 +243,7 @@ template <typename DiGraph, typename Ratio> class MinCycleRatioSolver {
  * @tparam Fn2 Type of time extraction function
  * @tparam Mapping Type of distance mapping (node -> distance)
  * @tparam Domain Type of the domain for distance calculations
- * @param[in] gra The directed graph to analyze
+ * @param[in] digraph The directed graph to analyze
  * @param[in,out] ratio Initial and final minimum ratio estimate
  * @param[in] get_cost Function to extract cost from an edge
  * @param[in] get_time Function to extract time from an edge
@@ -253,7 +253,7 @@ template <typename DiGraph, typename Ratio> class MinCycleRatioSolver {
  */
 template <typename DiGraph, typename Ratio, typename Fn1, typename Fn2, typename Mapping,
           typename Domain>
-auto min_cycle_ratio(const DiGraph &gra, Ratio &r0, Fn1 &&get_cost, Fn2 &&get_time, Mapping &dist,
+auto min_cycle_ratio(const DiGraph &digraph, Ratio &r0, Fn1 &&get_cost, Fn2 &&get_time, Mapping &dist,
                      Domain dummy) {
     (void)dummy;  // Mark as used to avoid compiler warning
     
@@ -279,5 +279,5 @@ auto min_cycle_ratio(const DiGraph &gra, Ratio &r0, Fn1 &&get_cost, Fn2 &&get_ti
         return get_cost(edge) - ratio * get_time(edge);
     };
 
-    return max_parametric(gra, r0, std::move(calc_weight), std::move(calc_ratio), dist, dummy);
+    return max_parametric(digraph, r0, std::move(calc_weight), std::move(calc_ratio), dist, dummy);
 }

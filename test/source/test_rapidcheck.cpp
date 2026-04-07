@@ -16,14 +16,14 @@ using std::pair;
 using std::unordered_map;
 using std::vector;
 
-// Helper function to create a random graph with positive weights only
-auto create_random_positive_graph(size_t num_nodes, size_t num_edges) {
+// Helper function to create a random digraph with positive weights only
+auto create_random_positive_digraphph(size_t num_nodes, size_t num_edges) {
     using Graph = list<pair<size_t, list<pair<size_t, double>>>>;
-    Graph gra;
+    Graph digraph;
 
     // Create nodes
     for (size_t i = 0; i < num_nodes; ++i) {
-        gra.push_back({i, {}});
+        digraph.push_back({i, {}});
     }
 
     // Add random edges with positive weights
@@ -34,7 +34,7 @@ auto create_random_positive_graph(size_t num_nodes, size_t num_edges) {
             auto weight = static_cast<double>(*rc::gen::positive<double>());
 
             // Find the node to add edge from
-            for (auto& node : gra) {
+            for (auto& node : digraph) {
                 if (node.first == from) {
                     node.second.push_back({to, weight});
                     break;
@@ -43,22 +43,22 @@ auto create_random_positive_graph(size_t num_nodes, size_t num_edges) {
         }
     }
 
-    return gra;
+    return digraph;
 }
 
-// Helper function to create a random graph with a known negative cycle
-auto create_graph_with_negative_cycle(size_t num_nodes) {
+// Helper function to create a random digraph with a known negative cycle
+auto create_digraphph_with_negative_cycle(size_t num_nodes) {
     using Graph = list<pair<size_t, list<pair<size_t, double>>>>;
-    Graph gra;
+    Graph digraph;
 
     // Create nodes
     for (size_t i = 0; i < num_nodes; ++i) {
-        gra.push_back({i, {}});
+        digraph.push_back({i, {}});
     }
 
     // Add edges to create a negative cycle: 0 -> 1 -> 2 -> 0
     // Edge weights: 1.0, -3.0, 1.0 (total: -1.0)
-    for (auto& node : gra) {
+    for (auto& node : digraph) {
         if (node.first == 0) {
             node.second.push_back({1, 1.0});
         } else if (node.first == 1) {
@@ -70,7 +70,7 @@ auto create_graph_with_negative_cycle(size_t num_nodes) {
 
     // Add some random positive edges
     if (num_nodes > 3) {
-        for (auto& node : gra) {
+        for (auto& node : digraph) {
             if (node.first >= 3) {
                 auto to = static_cast<size_t>(*rc::gen::inRange(0, static_cast<int>(num_nodes)));
                 auto weight = static_cast<double>(*rc::gen::positive<double>());
@@ -79,19 +79,19 @@ auto create_graph_with_negative_cycle(size_t num_nodes) {
         }
     }
 
-    return gra;
+    return digraph;
 }
 
-TEST_CASE("Property-based test: Positive weight graph has no negative cycles") {
+TEST_CASE("Property-based test: Positive weight digraph has no negative cycles") {
     rc::check("Graph with positive weights has no negative cycles",
               []() {
                   auto num_nodes = static_cast<size_t>(*rc::gen::inRange(1, 10));
                   auto num_edges = static_cast<size_t>(*rc::gen::inRange(0, 20));
 
-                  auto gra = create_random_positive_graph(num_nodes, num_edges);
-                  NegCycleFinder ncf(gra);
+                  auto digraph = create_random_positive_digraphph(num_nodes, num_edges);
+                  NegCycleFinder ncf(digraph);
                   auto get_weight = [](const auto& edge) -> double { return edge; };
-                  auto dist = vector<double>(gra.size(), 0.0);
+                  auto dist = vector<double>(digraph.size(), 0.0);
 
                   size_t cycle_count = 0;
                   for ([[maybe_unused]] auto const& ci : ncf.howard(dist, std::move(get_weight))) {
@@ -107,10 +107,10 @@ TEST_CASE("Property-based test: Graph with negative cycle detects it") {
               []() {
                   auto num_nodes = static_cast<size_t>(*rc::gen::inRange(3, 10));
 
-                  auto gra = create_graph_with_negative_cycle(num_nodes);
-                  NegCycleFinder ncf(gra);
+                  auto digraph = create_digraphph_with_negative_cycle(num_nodes);
+                  NegCycleFinder ncf(digraph);
                   auto get_weight = [](const auto& edge) -> double { return edge; };
-                  auto dist = vector<double>(gra.size(), 0.0);
+                  auto dist = vector<double>(digraph.size(), 0.0);
 
                   size_t cycle_count = 0;
                   for ([[maybe_unused]] auto const& ci : ncf.howard(dist, std::move(get_weight))) {
@@ -121,13 +121,13 @@ TEST_CASE("Property-based test: Graph with negative cycle detects it") {
               });
 }
 
-TEST_CASE("Property-based test: Empty graph has no cycles") {
-    rc::check("Empty graph has no negative cycles",
+TEST_CASE("Property-based test: Empty digraph has no cycles") {
+    rc::check("Empty digraph has no negative cycles",
               []() {
                   using Graph = list<pair<size_t, list<pair<size_t, double>>>>;
-                  Graph gra;
+                  Graph digraph;
 
-                  NegCycleFinder ncf(gra);
+                  NegCycleFinder ncf(digraph);
                   auto get_weight = [](const auto& edge) -> double { return edge; };
                   auto dist = vector<double>{};
 
@@ -140,13 +140,13 @@ TEST_CASE("Property-based test: Empty graph has no cycles") {
               });
 }
 
-TEST_CASE("Property-based test: Single node graph has no cycles") {
-    rc::check("Single node graph has no negative cycles",
+TEST_CASE("Property-based test: Single node digraph has no cycles") {
+    rc::check("Single node digraph has no negative cycles",
               []() {
                   using Graph = list<pair<size_t, list<pair<size_t, double>>>>;
-                  Graph gra{{0, {}}};
+                  Graph digraph{{0, {}}};
 
-                  NegCycleFinder ncf(gra);
+                  NegCycleFinder ncf(digraph);
                   auto get_weight = [](const auto& edge) -> double { return edge; };
                   auto dist = vector<double>{0.0};
 
@@ -163,9 +163,9 @@ TEST_CASE("Property-based test: Self-loop with negative weight is detected") {
     rc::check("Self-loop with negative weight is detected as negative cycle",
               []() {
                   using Graph = list<pair<size_t, list<pair<size_t, double>>>>;
-                  Graph gra{{0, {{0, -1.0}}}};
+                  Graph digraph{{0, {{0, -1.0}}}};
 
-                  NegCycleFinder ncf(gra);
+                  NegCycleFinder ncf(digraph);
                   auto get_weight = [](const auto& edge) -> double { return edge; };
                   auto dist = vector<double>{0.0};
 
@@ -182,9 +182,9 @@ TEST_CASE("Property-based test: Self-loop with positive weight is not detected")
     rc::check("Self-loop with positive weight is not detected as negative cycle",
               []() {
                   using Graph = list<pair<size_t, list<pair<size_t, double>>>>;
-                  Graph gra{{0, {{0, 1.0}}}};
+                  Graph digraph{{0, {{0, 1.0}}}};
 
-                  NegCycleFinder ncf(gra);
+                  NegCycleFinder ncf(digraph);
                   auto get_weight = [](const auto& edge) -> double { return edge; };
                   auto dist = vector<double>{0.0};
 
@@ -203,14 +203,14 @@ TEST_CASE("Property-based test: Graph with isolated nodes has no cycles") {
                   auto num_nodes = static_cast<size_t>(*rc::gen::inRange(1, 10));
 
                   using Graph = list<pair<size_t, list<pair<size_t, double>>>>;
-                  Graph gra;
+                  Graph digraph;
 
                   // Create isolated nodes
                   for (size_t i = 0; i < num_nodes; ++i) {
-                      gra.push_back({i, {}});
+                      digraph.push_back({i, {}});
                   }
 
-                  NegCycleFinder ncf(gra);
+                  NegCycleFinder ncf(digraph);
                   auto get_weight = [](const auto& edge) -> double { return edge; };
                   auto dist = vector<double>(num_nodes, 0.0);
 
@@ -224,20 +224,20 @@ TEST_CASE("Property-based test: Graph with isolated nodes has no cycles") {
 }
 
 TEST_CASE("Property-based test: Linear chain has no cycles") {
-    rc::check("Linear chain graph has no negative cycles",
+    rc::check("Linear chain digraph has no negative cycles",
               []() {
                   auto num_nodes = static_cast<size_t>(*rc::gen::inRange(1, 10));
 
                   using Graph = list<pair<size_t, list<pair<size_t, double>>>>;
-                  Graph gra;
+                  Graph digraph;
 
                   // Create linear chain: 0 -> 1 -> 2 -> ... -> n-1
                   for (size_t i = 0; i < num_nodes; ++i) {
-                      gra.push_back({i, {}});
+                      digraph.push_back({i, {}});
                   }
 
                   for (size_t i = 0; i < num_nodes - 1; ++i) {
-                      for (auto& node : gra) {
+                      for (auto& node : digraph) {
                           if (node.first == i) {
                               node.second.push_back({i + 1, 1.0});
                               break;
@@ -245,7 +245,7 @@ TEST_CASE("Property-based test: Linear chain has no cycles") {
                       }
                   }
 
-                  NegCycleFinder ncf(gra);
+                  NegCycleFinder ncf(digraph);
                   auto get_weight = [](const auto& edge) -> double { return edge; };
                   auto dist = vector<double>(num_nodes, 0.0);
 
@@ -264,15 +264,15 @@ TEST_CASE("Property-based test: Bidirectional edge chain has no cycles") {
                   auto num_nodes = static_cast<size_t>(*rc::gen::inRange(1, 10));
 
                   using Graph = list<pair<size_t, list<pair<size_t, double>>>>;
-                  Graph gra;
+                  Graph digraph;
 
                   // Create bidirectional chain
                   for (size_t i = 0; i < num_nodes; ++i) {
-                      gra.push_back({i, {}});
+                      digraph.push_back({i, {}});
                   }
 
                   for (size_t i = 0; i < num_nodes; ++i) {
-                      for (auto& node : gra) {
+                      for (auto& node : digraph) {
                           if (node.first == i) {
                               if (i > 0) {
                                   node.second.push_back({i - 1, 1.0});
@@ -285,7 +285,7 @@ TEST_CASE("Property-based test: Bidirectional edge chain has no cycles") {
                       }
                   }
 
-                  NegCycleFinder ncf(gra);
+                  NegCycleFinder ncf(digraph);
                   auto get_weight = [](const auto& edge) -> double { return edge; };
                   auto dist = vector<double>(num_nodes, 0.0);
 
@@ -304,16 +304,16 @@ TEST_CASE("Property-based test: Distance initialization doesn't affect cycle det
                   auto num_nodes = static_cast<size_t>(*rc::gen::inRange(3, 10));
 
                   using Graph = list<pair<size_t, list<pair<size_t, double>>>>;
-                  Graph gra;
+                  Graph digraph;
 
                   // Create nodes
                   for (size_t i = 0; i < num_nodes; ++i) {
-                      gra.push_back({i, {}});
+                      digraph.push_back({i, {}});
                   }
 
                   // Add random positive edges
                   for (size_t i = 0; i < num_nodes; ++i) {
-                      for (auto& node : gra) {
+                      for (auto& node : digraph) {
                           if (node.first == i) {
                               auto to = static_cast<size_t>(
                                   *rc::gen::inRange(0, static_cast<int>(num_nodes)));
@@ -326,7 +326,7 @@ TEST_CASE("Property-based test: Distance initialization doesn't affect cycle det
                       }
                   }
 
-                  NegCycleFinder ncf(gra);
+                  NegCycleFinder ncf(digraph);
                   auto get_weight = [](const auto& edge) -> double { return edge; };
 
                   // Test with different initializations
@@ -360,16 +360,16 @@ TEST_CASE("Property-based test: Zero-weight edges don't create negative cycles")
                   auto num_nodes = static_cast<size_t>(*rc::gen::inRange(1, 10));
 
                   using Graph = list<pair<size_t, list<pair<size_t, double>>>>;
-                  Graph gra;
+                  Graph digraph;
 
                   // Create nodes
                   for (size_t i = 0; i < num_nodes; ++i) {
-                      gra.push_back({i, {}});
+                      digraph.push_back({i, {}});
                   }
 
                   // Add edges with zero weights
                   for (size_t i = 0; i < num_nodes; ++i) {
-                      for (auto& node : gra) {
+                      for (auto& node : digraph) {
                           if (node.first == i) {
                               auto to = static_cast<size_t>(
                                   *rc::gen::inRange(0, static_cast<int>(num_nodes)));
@@ -379,7 +379,7 @@ TEST_CASE("Property-based test: Zero-weight edges don't create negative cycles")
                       }
                   }
 
-                  NegCycleFinder ncf(gra);
+                  NegCycleFinder ncf(digraph);
                   auto get_weight = [](const auto& edge) -> double { return edge; };
                   auto dist = vector<double>(num_nodes, 0.0);
 
@@ -398,17 +398,17 @@ TEST_CASE("Property-based test: Multiple negative edges still need to form cycle
                   auto num_nodes = static_cast<size_t>(*rc::gen::inRange(4, 10));
 
                   using Graph = list<pair<size_t, list<pair<size_t, double>>>>;
-                  Graph gra;
+                  Graph digraph;
 
                   // Create nodes
                   for (size_t i = 0; i < num_nodes; ++i) {
-                      gra.push_back({i, {}});
+                      digraph.push_back({i, {}});
                   }
 
                   // Add negative edges that don't form a cycle
                   // Create a DAG with negative edges
                   for (size_t i = 0; i < num_nodes - 1; ++i) {
-                      for (auto& node : gra) {
+                      for (auto& node : digraph) {
                           if (node.first == i) {
                               auto weight = static_cast<double>(*rc::gen::negative<double>());
                               node.second.push_back({i + 1, weight});
@@ -417,7 +417,7 @@ TEST_CASE("Property-based test: Multiple negative edges still need to form cycle
                       }
                   }
 
-                  NegCycleFinder ncf(gra);
+                  NegCycleFinder ncf(digraph);
                   auto get_weight = [](const auto& edge) -> double { return edge; };
                   auto dist = vector<double>(num_nodes, 0.0);
 
@@ -430,21 +430,21 @@ TEST_CASE("Property-based test: Multiple negative edges still need to form cycle
               });
 }
 
-TEST_CASE("Property-based test: Complete graph with positive weights has no cycles") {
-    rc::check("Complete graph with positive weights has no negative cycles",
+TEST_CASE("Property-based test: Complete digraph with positive weights has no cycles") {
+    rc::check("Complete digraph with positive weights has no negative cycles",
               []() {
                   auto num_nodes = static_cast<size_t>(*rc::gen::inRange(1, 8));
 
                   using Graph = list<pair<size_t, list<pair<size_t, double>>>>;
-                  Graph gra;
+                  Graph digraph;
 
-                  // Create complete graph with positive weights
+                  // Create complete digraph with positive weights
                   for (size_t i = 0; i < num_nodes; ++i) {
-                      gra.push_back({i, {}});
+                      digraph.push_back({i, {}});
                   }
 
                   for (size_t i = 0; i < num_nodes; ++i) {
-                      for (auto& node : gra) {
+                      for (auto& node : digraph) {
                           if (node.first == i) {
                               for (size_t j = 0; j < num_nodes; ++j) {
                                   if (i != j) {
@@ -457,7 +457,7 @@ TEST_CASE("Property-based test: Complete graph with positive weights has no cycl
                       }
                   }
 
-                  NegCycleFinder ncf(gra);
+                  NegCycleFinder ncf(digraph);
                   auto get_weight = [](const auto& edge) -> double { return edge; };
                   auto dist = vector<double>(num_nodes, 0.0);
 
@@ -471,15 +471,15 @@ TEST_CASE("Property-based test: Complete graph with positive weights has no cycl
 }
 
 TEST_CASE("Property-based test: Multiple calls to howard are idempotent") {
-    rc::check("Multiple calls to howard with same graph yield same results",
+    rc::check("Multiple calls to howard with same digraph yield same results",
               []() {
                   auto num_nodes = static_cast<size_t>(*rc::gen::inRange(1, 10));
                   auto num_edges = static_cast<size_t>(*rc::gen::inRange(0, 20));
 
-                  auto gra = create_random_positive_graph(num_nodes, num_edges);
-                  NegCycleFinder ncf(gra);
+                  auto digraph = create_random_positive_digraphph(num_nodes, num_edges);
+                  NegCycleFinder ncf(digraph);
                   auto get_weight = [](const auto& edge) -> double { return edge; };
-                  auto dist = vector<double>(gra.size(), 0.0);
+                  auto dist = vector<double>(digraph.size(), 0.0);
 
                   size_t cycle_count1 = 0;
                   for ([[maybe_unused]] auto const& ci : ncf.howard(dist, get_weight)) {
@@ -499,11 +499,11 @@ TEST_CASE("Property-based test: Negative cycle edge sum is negative") {
     rc::check("When a negative cycle is found, the sum of edge weights is negative",
               []() {
                   using Graph = list<pair<size_t, list<pair<size_t, double>>>>;
-                  Graph gra{{0, {{1, 1.0}}}, {1, {{2, -3.0}}}, {2, {{0, 1.0}}}};
+                  Graph digraph{{0, {{1, 1.0}}}, {1, {{2, -3.0}}}, {2, {{0, 1.0}}}};
 
-                  NegCycleFinder ncf(gra);
+                  NegCycleFinder ncf(digraph);
                   auto get_weight = [](const auto& edge) -> double { return edge; };
-                  auto dist = vector<double>(gra.size(), 0.0);
+                  auto dist = vector<double>(digraph.size(), 0.0);
 
                   for (auto const& cycle : ncf.howard(dist, get_weight)) {
                       double sum = 0.0;
@@ -521,9 +521,9 @@ TEST_CASE("Property-based test: MapAdapter works correctly with RapidCheck tests
                   auto num_nodes = static_cast<size_t>(*rc::gen::inRange(1, 10));
 
                   using RawGraph = vector<list<pair<size_t, double>>>;
-                  RawGraph gra(num_nodes);
+                  RawGraph digraph(num_nodes);
 
-                  // Create graph with positive weights
+                  // Create digraph with positive weights
                   for (size_t i = 0; i < num_nodes; ++i) {
                       auto num_outgoing =
                           static_cast<size_t>(*rc::gen::inRange(0, static_cast<int>(num_nodes)));
@@ -531,13 +531,13 @@ TEST_CASE("Property-based test: MapAdapter works correctly with RapidCheck tests
                           auto to = static_cast<size_t>(
                               *rc::gen::inRange(0, static_cast<int>(num_nodes)));
                           auto weight = static_cast<double>(*rc::gen::positive<double>());
-                          gra[i].push_back({to, weight});
+                          digraph[i].push_back({to, weight});
                       }
                   }
 
                   auto get_weight = [](const auto& edge) -> double { return edge; };
                   auto dist = vector<double>(num_nodes, 0.0);
-                  auto ga = MapConstAdapter{gra};
+                  auto ga = MapConstAdapter{digraph};
                   NegCycleFinder ncf(ga);
 
                   size_t cycle_count = 0;

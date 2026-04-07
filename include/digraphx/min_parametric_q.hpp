@@ -307,7 +307,7 @@ class MinParametricSolver {
  * @tparam Fn2 Type of zero cancellation function
  * @tparam Mapping Type of distance mapping (node -> distance)
  * @tparam Domain Type of the domain for distance calculations
- * @param[in] gra The directed graph to analyze
+ * @param[in] digraph The directed graph to analyze
  * @param[in] ratio Initial parameter value for optimization
  * @param[in] distance Function calculating edge distance as function of r
  * @param[in] zero_cancel Function calculating parameter from a cycle
@@ -317,7 +317,7 @@ class MinParametricSolver {
  * @return std::pair<Ratio, std::vector<typename MinParametricSolver<DiGraph, Ratio, Domain>::Edge>> Optimal parameter and critical cycle
  */
 template <typename DiGraph, typename Ratio, typename Fn1, typename Fn2, typename Mapping, typename Domain>
-inline auto min_parametric(const DiGraph& gra, Ratio ratio, Fn1&& distance, Fn2&& zero_cancel,
+inline auto min_parametric(const DiGraph& digraph, Ratio ratio, Fn1&& distance, Fn2&& zero_cancel,
                     Mapping& dist, Domain domain, bool pick_one_only = false)
     -> std::pair<Ratio, std::vector<typename MinParametricSolver<DiGraph, Ratio, Domain>::Edge>> {
 
@@ -345,7 +345,7 @@ inline auto min_parametric(const DiGraph& gra, Ratio ratio, Fn1&& distance, Fn2&
     auto cycle = Cycle{};
     auto reverse = true;
 
-    auto ncf = NegCycleFinderQ<DiGraph, Domain>{gra};
+    auto ncf = NegCycleFinderQ<DiGraph, Domain>{digraph};
 
     // Main optimization loop
     while (true) {

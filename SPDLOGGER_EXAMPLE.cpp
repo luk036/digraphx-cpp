@@ -41,20 +41,20 @@ int main() {
     using Graph = list<pair<size_t, list<pair<size_t, double>>>>;
 
     // Create a simple graph
-    Graph gra{
+    Graph digraph{
         {0, {{1, 7.0}, {2, 5.0}}},
         {1, {{0, 0.0}, {2, 3.0}}},
         {2, {{1, 1.0}, {0, 2.0}, {0, 1.0}}}
     };
 
-    cout << "Created graph with " << gra.size() << " nodes" << endl;
+    cout << "Created graph with " << digraph.size() << " nodes" << endl;
     digraphx::log_with_spdlog("Created graph with positive weights");
 
     // Perform negative cycle detection
     cout << "Running negative cycle detection..." << endl;
-    NegCycleFinder ncf(gra);
+    NegCycleFinder ncf(digraph);
     auto get_weight = [](const auto& edge) -> double { return edge; };
-    auto dist = vector<double>(gra.size(), 0.0);
+    auto dist = vector<double>(digraph.size(), 0.0);
 
     size_t cycle_count = 0;
     for ([[maybe_unused]] auto const& ci : ncf.howard(dist, std::move(get_weight))) {
