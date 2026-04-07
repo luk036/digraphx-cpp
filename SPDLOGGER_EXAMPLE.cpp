@@ -38,10 +38,10 @@ int main() {
     cout << "\nExample 2: Logging with negative cycle detection" << endl;
     cout << "------------------------------------------------" << endl;
 
-    using Graph = list<pair<size_t, list<pair<size_t, double>>>>;
+    using DiGraph = list<pair<size_t, list<pair<size_t, double>>>>;
 
     // Create a simple graph
-    Graph digraph{
+    DiGraph digraph{
         {0, {{1, 7.0}, {2, 5.0}}},
         {1, {{0, 0.0}, {2, 3.0}}},
         {2, {{1, 1.0}, {0, 2.0}, {0, 1.0}}}

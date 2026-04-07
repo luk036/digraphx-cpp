@@ -27,8 +27,8 @@ TEST_CASE("spdlogger integration test") {
     // Test 2: Logging with negative cycle detection
     digraphx::log_with_spdlog("Test 2: Testing with negative cycle detection");
 
-    using Graph = list<pair<size_t, list<pair<size_t, double>>>>;
-    Graph digraph{{0, {{1, 7.0}, {2, 5.0}}}, {1, {{0, 0.0}, {2, 3.0}}},
+    using DiGraph = list<pair<size_t, list<pair<size_t, double>>>>;
+    DiGraph digraph{{0, {{1, 7.0}, {2, 5.0}}}, {1, {{0, 0.0}, {2, 3.0}}},
               {2, {{1, 1.0}, {0, 2.0}, {0, 1.0}}}};
 
     NegCycleFinder ncf(digraph);
