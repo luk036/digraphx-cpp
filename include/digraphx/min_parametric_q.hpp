@@ -63,8 +63,7 @@
  * @tparam Ratio Type representing the parameter value
  * @tparam Domain Type of the domain for distance calculations
  */
-template <typename Node, typename Edge, typename Ratio>
-class MinParametricAPI {
+template <typename Node, typename Edge, typename Ratio> class MinParametricAPI {
   public:
     virtual ~MinParametricAPI() = default;
 
@@ -139,8 +138,7 @@ class MinParametricAPI {
  * @tparam Ratio Type representing the parameter value
  * @tparam Domain Type of the domain for distance calculations
  */
-template <typename DiGraph, typename Ratio, typename Domain>
-class MinParametricSolver {
+template <typename DiGraph, typename Ratio, typename Domain> class MinParametricSolver {
   public:
     using Node1 = decltype((*std::declval<DiGraph>().begin()).first);
     using Node = std::remove_cv_t<std::remove_reference_t<Node1>>;
@@ -180,10 +178,8 @@ class MinParametricSolver {
      *         - The minimum ratio found
      *         - The cycle that corresponds to this ratio
      */
-    template <typename Mapping>
-    auto run(Mapping& dist, Ratio ratio, const UpdateOk& update_ok, bool pick_one_only = false)
-        -> std::pair<Ratio, Cycle> {
-
+    template <typename Mapping> auto run(Mapping& dist, Ratio ratio, const UpdateOk& update_ok,
+                                         bool pick_one_only = false) -> std::pair<Ratio, Cycle> {
         // Helper function to calculate edge weights based on current ratio
         auto get_weight = [this, &ratio](const Edge& edge) -> Domain {
             return static_cast<Domain>(this->_omega.distance(ratio, edge));
@@ -314,15 +310,16 @@ class MinParametricSolver {
  * @param[in,out] dist Distance mapping updated during execution
  * @param[in] domain Type deduction parameter for distance domain
  * @param[in] pick_one_only If true, stop after first improving cycle
- * @return std::pair<Ratio, std::vector<typename MinParametricSolver<DiGraph, Ratio, Domain>::Edge>> Optimal parameter and critical cycle
+ * @return std::pair<Ratio, std::vector<typename MinParametricSolver<DiGraph, Ratio, Domain>::Edge>>
+ * Optimal parameter and critical cycle
  */
-template <typename DiGraph, typename Ratio, typename Fn1, typename Fn2, typename Mapping, typename Domain>
+template <typename DiGraph, typename Ratio, typename Fn1, typename Fn2, typename Mapping,
+          typename Domain>
 inline auto min_parametric(const DiGraph& digraph, Ratio ratio, Fn1&& distance, Fn2&& zero_cancel,
-                    Mapping& dist, Domain domain, bool pick_one_only = false)
+                           Mapping& dist, Domain domain, bool pick_one_only = false)
     -> std::pair<Ratio, std::vector<typename MinParametricSolver<DiGraph, Ratio, Domain>::Edge>> {
-
     (void)domain;  // Mark as used to avoid compiler warning
-    
+
     // using Node1 = decltype((*std::declval<DiGraph>().begin()).first);
     // using Node = std::remove_cv_t<std::remove_reference_t<Node1>>;
     using Nbrs1 = decltype((*std::declval<DiGraph>().begin()).second);

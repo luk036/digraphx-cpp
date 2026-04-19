@@ -63,7 +63,7 @@ template <typename DiGraph, typename Ratio> class CycleRatioAPI {
     using Edge = std::remove_cv_t<std::remove_reference_t<Edge1>>;
     using Cycle = std::vector<Edge>;
 
-    const DiGraph &digraph;
+    const DiGraph& digraph;
     // The line `const DiGraph& digraph;` is declaring a constant reference variable
     // named `digraph` of type `DiGraph`. This variable  is used to store a
     // reference to an object of type `DiGraph`. The `const` qualifier indicates
@@ -77,11 +77,12 @@ template <typename DiGraph, typename Ratio> class CycleRatioAPI {
      * The `CycleRatioAPI` class constructor takes a reference to a `DiGraph` object and initializes
      * its `digraph` member variable.
      *
-     * @param[in] digraph The `digraph` parameter is a reference to a `DiGraph` object. It is used to
-     * initialize the `digraph` member variable of the `CycleRatioAPI` class. The `digraph` member variable
-     * is a constant reference to a `DiGraph` object, which means it cannot be modified
+     * @param[in] digraph The `digraph` parameter is a reference to a `DiGraph` object. It is used
+     * to initialize the `digraph` member variable of the `CycleRatioAPI` class. The `digraph`
+     * member variable is a constant reference to a `DiGraph` object, which means it cannot be
+     * modified
      */
-    explicit CycleRatioAPI(const DiGraph &digraph) : digraph(digraph) {}
+    explicit CycleRatioAPI(const DiGraph& digraph) : digraph(digraph) {}
 
     /**
      * @brief distance between two end points of an edge
@@ -95,7 +96,7 @@ template <typename DiGraph, typename Ratio> class CycleRatioAPI {
      *
      * @return a `Ratio` object.
      */
-    auto distance(Ratio &ratio, const Edge &edge) const -> Ratio {
+    auto distance(Ratio& ratio, const Edge& edge) const -> Ratio {
         return Ratio(edge.at("cost")) - ratio * edge.at("time");
     }
 
@@ -110,10 +111,10 @@ template <typename DiGraph, typename Ratio> class CycleRatioAPI {
      * @return The `zero_cancel` function returns the ratio of the total cost to the total time for
      * a given cycle.
      */
-    auto zero_cancel(const Cycle &cycle) const -> Ratio {
+    auto zero_cancel(const Cycle& cycle) const -> Ratio {
         Ratio total_cost = 0;
         Ratio total_time = 0;
-        for (const auto &edge : cycle) {
+        for (const auto& edge : cycle) {
             total_cost += edge.at("cost");
             total_time += edge.at("time");
         }
@@ -166,16 +167,16 @@ template <typename DiGraph, typename Ratio> class MinCycleRatioSolver {
     using Edge = std::remove_cv_t<std::remove_reference_t<Edge1>>;
     using Cycle = std::vector<Edge>;
 
-    const DiGraph &digraph;
+    const DiGraph& digraph;
 
   public:
     /**
      * This function constructs a new MinCycleRatioSolver object with a given DiGraph.
      *
-     * @param[in] digraph The parameter "digraph" is of type DiGraph, which is a directed graph. It is used
-     * to represent the graph on which the Min Cycle Ratio Solver operates.
+     * @param[in] digraph The parameter "digraph" is of type DiGraph, which is a directed graph. It
+     * is used to represent the graph on which the Min Cycle Ratio Solver operates.
      */
-    explicit MinCycleRatioSolver(const DiGraph &digraph) : digraph(digraph) {}
+    explicit MinCycleRatioSolver(const DiGraph& digraph) : digraph(digraph) {}
 
     /**
      * @brief run
@@ -186,7 +187,7 @@ template <typename DiGraph, typename Ratio> class MinCycleRatioSolver {
      * @param[in] dummy Parameter for type deduction
      * @return Cycle The cycle achieving the minimum ratio
      */
-    template <typename Mapping, typename Domain> auto run(Ratio &r0, Mapping &dist, Domain dummy)
+    template <typename Mapping, typename Domain> auto run(Ratio& r0, Mapping& dist, Domain dummy)
         -> Cycle {
         (void)dummy;  // Mark as used to avoid compiler warning
         auto omega = CycleRatioAPI<DiGraph, Ratio>(digraph);
@@ -253,10 +254,10 @@ template <typename DiGraph, typename Ratio> class MinCycleRatioSolver {
  */
 template <typename DiGraph, typename Ratio, typename Fn1, typename Fn2, typename Mapping,
           typename Domain>
-auto min_cycle_ratio(const DiGraph &digraph, Ratio &r0, Fn1 &&get_cost, Fn2 &&get_time, Mapping &dist,
-                     Domain dummy) {
+auto min_cycle_ratio(const DiGraph& digraph, Ratio& r0, Fn1&& get_cost, Fn2&& get_time,
+                     Mapping& dist, Domain dummy) {
     (void)dummy;  // Mark as used to avoid compiler warning
-    
+
     using Nbrs1 = decltype((*std::declval<DiGraph>().begin()).second);
     using Nbrs = std::remove_cv_t<std::remove_reference_t<Nbrs1>>;
     using Edge1 = decltype((*std::declval<Nbrs>().begin()).second);
@@ -265,17 +266,17 @@ auto min_cycle_ratio(const DiGraph &digraph, Ratio &r0, Fn1 &&get_cost, Fn2 &&ge
     using cost_T = decltype(get_cost(std::declval<Edge>()));
     using time_T = decltype(get_time(std::declval<Edge>()));
 
-    auto calc_ratio = [&get_cost, &get_time](const Cycle &cycle) -> Ratio {
+    auto calc_ratio = [&get_cost, &get_time](const Cycle& cycle) -> Ratio {
         auto total_cost = cost_T(0);
         auto total_time = time_T(0);
-        for (const auto &edge : cycle) {
+        for (const auto& edge : cycle) {
             total_cost += get_cost(edge);
             total_time += get_time(edge);
         }
         return Ratio(std::move(total_cost)) / std::move(total_time);
     };
 
-    auto calc_weight = [&get_cost, &get_time](const Ratio &ratio, const Edge &edge) -> Ratio {
+    auto calc_weight = [&get_cost, &get_time](const Ratio& ratio, const Edge& edge) -> Ratio {
         return get_cost(edge) - ratio * get_time(edge);
     };
 

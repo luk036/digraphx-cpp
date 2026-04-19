@@ -39,8 +39,8 @@
 #include <queue>
 #include <stdexcept>
 #include <thread>
-#include <vector>
 #include <type_traits>
+#include <vector>
 
 /*!
  * @brief Thread pool for parallel task execution
@@ -100,7 +100,7 @@ class ThreadPool {
      * int result = future.get();  // result = 3
      * ```
      */
-    template <class F, class... Args> auto enqueue(F &&f, Args &&...args)
+    template <class F, class... Args> auto enqueue(F&& f, Args&&... args)
         -> std::future<typename std::invoke_result<F, Args...>::type>;
 
     /*!
@@ -181,7 +181,7 @@ inline ThreadPool::ThreadPool(size_t threads) : stop(false) {
  * @return std::future containing the result once task completes
  * @throw std::runtime_error if pool has been stopped
  */
-template <class F, class... Args> auto ThreadPool::enqueue(F &&f, Args &&...args)
+template <class F, class... Args> auto ThreadPool::enqueue(F&& f, Args&&... args)
     -> std::future<typename std::invoke_result<F, Args...>::type> {
     using return_type = typename std::invoke_result<F, Args...>::type;
 
@@ -218,7 +218,7 @@ inline ThreadPool::~ThreadPool() {
         stop = true;
     }
     condition.notify_all();
-    for (std::thread &worker : workers) worker.join();
+    for (std::thread& worker : workers) worker.join();
 }
 
 #endif

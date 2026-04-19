@@ -96,7 +96,7 @@ class NegCycleFinder {
     static_assert(std::is_same_v<Node, NodeTo>, "NodeFrom should be equal to NodeTo");
 
     std::unordered_map<Node, std::pair<Node, Edge>> _pred{};
-    const DiGraph &_digraph;
+    const DiGraph& _digraph;
 
     /**
      * @brief Perform one Bellman-Ford relaxation step on the graph
@@ -115,11 +115,11 @@ class NegCycleFinder {
      * @param[in] get_weight Function that extracts weight from an edge
      * @return true if any distances were updated, false if no changes occurred
      */
-    template <typename Mapping, typename Callable> auto _relax(Mapping &dist, Callable &&get_weight)
+    template <typename Mapping, typename Callable> auto _relax(Mapping& dist, Callable&& get_weight)
         -> bool {
         auto changed = false;
-        for (const auto &[utx, neighbors] : this->_digraph) {
-            for (const auto &[vtx, edge] : neighbors) {
+        for (const auto& [utx, neighbors] : this->_digraph) {
+            for (const auto& [vtx, edge] : neighbors) {
                 auto distance = dist[utx] + get_weight(edge);
                 if (dist[vtx] > distance) {
                     dist[vtx] = distance;
@@ -154,11 +154,11 @@ class NegCycleFinder {
      * @return true if the cycle is negative, false otherwise
      */
     template <typename Mapping, typename Callable>
-    auto _is_negative(const Node &handle, const Mapping &dist, Callable &&get_weight) const
+    auto _is_negative(const Node& handle, const Mapping& dist, Callable&& get_weight) const
         -> bool {
         auto vtx = handle;
         while (true) {
-            const auto &[utx, edge] = this->_pred.at(vtx);
+            const auto& [utx, edge] = this->_pred.at(vtx);
             if (dist.at(vtx) > dist.at(utx) + get_weight(edge)) {
                 return true;
             }
@@ -183,11 +183,11 @@ class NegCycleFinder {
      * @param[in] handle Starting node of the cycle (must be part of a cycle)
      * @return Cycle A vector of edges forming the complete cycle
      */
-    auto _cycle_list(const Node &handle) const -> Cycle {
+    auto _cycle_list(const Node& handle) const -> Cycle {
         auto vtx = handle;
         auto cycle = Cycle{};
         while (true) {
-            const auto &[utx, edge] = this->_pred.at(vtx);
+            const auto& [utx, edge] = this->_pred.at(vtx);
             cycle.push_back(std::move(edge));
             vtx = utx;
             if (vtx == handle) {
@@ -218,8 +218,8 @@ class NegCycleFinder {
      */
     auto _find_cycle() -> cppcoro::generator<Node> {
         auto visited = std::unordered_map<Node, Node>{};
-        for (const auto &result : this->_digraph) {
-            const auto &vtx = result.first;
+        for (const auto& result : this->_digraph) {
+            const auto& vtx = result.first;
             if (visited.find(vtx) != visited.end()) {  // contains vtx
                 continue;
             }
@@ -249,7 +249,7 @@ class NegCycleFinder {
      *
      * @param[in] digraph The directed graph to search for negative cycles
      */
-    explicit NegCycleFinder(const DiGraph &digraph) : _digraph{digraph} {}
+    explicit NegCycleFinder(const DiGraph& digraph) : _digraph{digraph} {}
 
     /**
      * @brief Execute Howard's algorithm to find negative cycles
@@ -275,8 +275,8 @@ class NegCycleFinder {
      * @param[in] get_weight Function to extract weight from an edge
      * @return cppcoro::generator<Cycle> Generator yielding negative cycles
      */
-    template <typename Mapping, typename Callable> auto howard(Mapping &dist, const Callable &get_weight)
-        -> cppcoro::generator<Cycle> {
+    template <typename Mapping, typename Callable>
+    auto howard(Mapping& dist, const Callable& get_weight) -> cppcoro::generator<Cycle> {
         this->_pred.clear();
         auto found = false;
         while (!found && this->_relax(dist, get_weight)) {

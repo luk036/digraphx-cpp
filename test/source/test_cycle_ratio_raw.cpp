@@ -1,9 +1,9 @@
 #include <doctest/doctest.h>  // for ResultBuilder, TestCase
 
-#include <cstdint>  // for uint32_t
-#include <mywheel/map_adapter.hpp>
+#include <cstdint>                       // for uint32_t
 #include <digraphx/min_cycle_ratio.hpp>  // for NegCycleFinder
 #include <list>
+#include <mywheel/map_adapter.hpp>
 #include <unordered_map>
 #include <vector>
 
@@ -21,8 +21,8 @@ TEST_CASE("Test minimum mean cycle (list of lists)") {
     list<pair<size_t, list<pair<size_t, int>>>> digraph{
         {0, {{1, 5}, {2, 1}}}, {1, {{0, 1}, {2, 1}}}, {2, {{1, 1}, {0, 1}}}};
 
-    const auto get_cost = [](const auto &edge) -> int { return edge; };
-    const auto get_time = [](const auto & /*edge*/) { return 1; };
+    const auto get_cost = [](const auto& edge) -> int { return edge; };
+    const auto get_time = [](const auto& /*edge*/) { return 1; };
 
     auto dist = vector<int>(digraph.size(), 0);
     auto r = 100.0;
@@ -41,12 +41,13 @@ TEST_CASE("Test minimum cost-to-time ratio (dict of list's)") {
     const vector<int> edge_cost{5, 1, 1, 1, 1, 1};
     const vector<int> edge_time{1, 1, 1, 1, 1, 1};
 
-    auto get_cost = [&edge_cost](const auto &edge) -> int { return edge_cost.at(edge); };
-    auto get_time = [&edge_time](const auto &edge) -> int { return edge_time.at(edge); };
+    auto get_cost = [&edge_cost](const auto& edge) -> int { return edge_cost.at(edge); };
+    auto get_time = [&edge_time](const auto& edge) -> int { return edge_time.at(edge); };
 
     auto dist = vector<int>(digraph.size(), 0);
     auto r = 100.0;
-    const auto cycle = min_cycle_ratio(digraph, r, std::move(get_cost), std::move(get_time), dist, 0);
+    const auto cycle
+        = min_cycle_ratio(digraph, r, std::move(get_cost), std::move(get_time), dist, 0);
     CHECK(!cycle.empty());
     CHECK_EQ(r, 1.0);
 }

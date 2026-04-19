@@ -1,10 +1,10 @@
 // -*- coding: utf-8 -*-
 #include <doctest/doctest.h>  // for ResultBuilder, TestCase
 
-#include <cstdint>  // for uint32_t
-#include <mywheel/map_adapter.hpp>
+#include <cstdint>                 // for uint32_t
 #include <digraphx/neg_cycle.hpp>  // for NegCycleFinder
 #include <list>
+#include <mywheel/map_adapter.hpp>
 #include <unordered_map>
 #include <vector>
 

@@ -1,12 +1,12 @@
-#include <cstdint> // for uint32_t
 #include <doctest/doctest.h>
+
+#include <cstdint>  // for uint32_t
 #include <digraphx/parametric.hpp>
 #include <list>
 #include <unordered_map>
 #include <vector>
 
-template <typename DiGraph>
-void run_parametric_test(const DiGraph& digraph) {
+template <typename DiGraph> void run_parametric_test(const DiGraph& digraph) {
     auto distance = [](double r, const auto& edge) { return edge - r; };
 
     auto zero_cancel = [](const auto& cycle) {

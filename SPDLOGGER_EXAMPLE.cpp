@@ -8,20 +8,20 @@
  * more advanced logging scenarios.
  */
 
+#include <spdlog/sinks/basic_file_sink.h>
+#include <spdlog/spdlog.h>
+
 #include <digraphx/logger.hpp>
 #include <digraphx/neg_cycle.hpp>
-
+#include <iostream>
 #include <list>
 #include <vector>
-#include <iostream>
-#include <spdlog/spdlog.h>
-#include <spdlog/sinks/basic_file_sink.h>
 
+using std::cout;
+using std::endl;
 using std::list;
 using std::pair;
 using std::vector;
-using std::cout;
-using std::endl;
 
 int main() {
     cout << "========================================" << endl;
@@ -42,10 +42,7 @@ int main() {
 
     // Create a simple graph
     DiGraph digraph{
-        {0, {{1, 7.0}, {2, 5.0}}},
-        {1, {{0, 0.0}, {2, 3.0}}},
-        {2, {{1, 1.0}, {0, 2.0}, {0, 1.0}}}
-    };
+        {0, {{1, 7.0}, {2, 5.0}}}, {1, {{0, 0.0}, {2, 3.0}}}, {2, {{1, 1.0}, {0, 2.0}, {0, 1.0}}}};
 
     cout << "Created graph with " << digraph.size() << " nodes" << endl;
     digraphx::log_with_spdlog("Created graph with positive weights");

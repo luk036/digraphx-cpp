@@ -62,7 +62,7 @@ template <typename DiGraph, typename ParametricAPI> class MaxParametricSolver {
 
   private:
     NegCycleFinder<DiGraph> _ncf;
-    ParametricAPI &_omega;
+    ParametricAPI& _omega;
 
   public:
     /**
@@ -76,7 +76,8 @@ template <typename DiGraph, typename ParametricAPI> class MaxParametricSolver {
      * @param[in] digraph The directed graph on which to solve the parametric problem
      * @param[in] omega API object providing distance calculation methods
      */
-    MaxParametricSolver(const DiGraph &digraph, ParametricAPI &omega) : _ncf{digraph}, _omega{omega} {}
+    MaxParametricSolver(const DiGraph& digraph, ParametricAPI& omega)
+        : _ncf{digraph}, _omega{omega} {}
 
     /**
      * @brief Execute the maximum parametric algorithm
@@ -101,15 +102,16 @@ template <typename DiGraph, typename ParametricAPI> class MaxParametricSolver {
      * @tparam Domain Type of the domain for distance calculations
      * @param[in,out] r_opt Initial and final optimal parameter value
      * @param[in,out] dist Distance mapping that gets updated during execution
-     * @param[in] domain Type deduction parameter for distance domain (typically default-constructed)
+     * @param[in] domain Type deduction parameter for distance domain (typically
+     * default-constructed)
      * @return Cycle The critical cycle that determines the optimal parameter
      */
     template <typename Ratio, typename Mapping, typename Domain>
-    auto run(Ratio &r_opt, Mapping &dist, Domain domain) {
+    auto run(Ratio& r_opt, Mapping& dist, Domain domain) {
         (void)domain;  // Mark as used to avoid compiler warning
-        
+
         auto get_weight = [this,
-                           &r_opt](const Edge &edge) -> Domain {  // note!!!
+                           &r_opt](const Edge& edge) -> Domain {  // note!!!
             return Domain(this->_omega.distance(r_opt, edge));
         };
 
@@ -118,7 +120,7 @@ template <typename DiGraph, typename ParametricAPI> class MaxParametricSolver {
         auto c_opt = Cycle{};
 
         while (true) {
-            for (auto &&ci : this->_ncf.howard(dist, std::move(get_weight))) {
+            for (auto&& ci : this->_ncf.howard(dist, std::move(get_weight))) {
                 auto ri = this->_omega.zero_cancel(ci);
                 if (r_min > ri) {
                     r_min = ri;
@@ -176,8 +178,8 @@ template <typename DiGraph, typename ParametricAPI> class MaxParametricSolver {
  * @return Cycle The critical cycle that determines the optimal parameter
  */
 template <typename DiGraph, typename T, typename Fn1, typename Fn2, typename Mapping, typename D>
-auto max_parametric(const DiGraph &digraph, T &r_opt, Fn1 &&distance, Fn2 &&zero_cancel, Mapping &dist,
-                    D domain) {
+auto max_parametric(const DiGraph& digraph, T& r_opt, Fn1&& distance, Fn2&& zero_cancel,
+                    Mapping& dist, D domain) {
     using Nbrs1 = decltype((*std::declval<DiGraph>().begin()).second);
     using Nbrs = std::remove_cv_t<std::remove_reference_t<Nbrs1>>;
     using Edge1 = decltype((*std::declval<Nbrs>().begin()).second);
@@ -186,7 +188,7 @@ auto max_parametric(const DiGraph &digraph, T &r_opt, Fn1 &&distance, Fn2 &&zero
 
     (void)domain;  // Mark as used to avoid compiler warning
 
-    auto get_weight = [&distance, &r_opt](const Edge &edge) -> D {  // note!!!
+    auto get_weight = [&distance, &r_opt](const Edge& edge) -> D {  // note!!!
         return static_cast<D>(distance(r_opt, edge));
     };
 
@@ -196,7 +198,7 @@ auto max_parametric(const DiGraph &digraph, T &r_opt, Fn1 &&distance, Fn2 &&zero
     auto c_opt = Cycle{};  // should initial outside
 
     while (true) {
-        for (auto &&ci : ncf.howard(dist, std::move(get_weight))) {
+        for (auto&& ci : ncf.howard(dist, std::move(get_weight))) {
             auto ri = zero_cancel(ci);
             if (r_min > ri) {
                 r_min = ri;

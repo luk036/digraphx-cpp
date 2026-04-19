@@ -20,8 +20,8 @@ namespace cppcoro {
             promise_type() noexcept
                 : m_value(nullptr), m_exception(nullptr), m_root(this), m_parentOrLeaf(this) {}
 
-            promise_type(const promise_type &) = delete;
-            promise_type(promise_type &&) = delete;
+            promise_type(const promise_type&) = delete;
+            promise_type(promise_type&&) = delete;
 
             auto get_return_object() noexcept { return recursive_generator<T>{*this}; }
 
@@ -33,23 +33,23 @@ namespace cppcoro {
 
             void return_void() noexcept {}
 
-            cppcoro::suspend_always yield_value(T &value) noexcept {
+            cppcoro::suspend_always yield_value(T& value) noexcept {
                 m_value = std::addressof(value);
                 return {};
             }
 
-            cppcoro::suspend_always yield_value(T &&value) noexcept {
+            cppcoro::suspend_always yield_value(T&& value) noexcept {
                 m_value = std::addressof(value);
                 return {};
             }
 
-            auto yield_value(recursive_generator &&generator) noexcept {
+            auto yield_value(recursive_generator&& generator) noexcept {
                 return yield_value(generator);
             }
 
-            auto yield_value(recursive_generator &generator) noexcept {
+            auto yield_value(recursive_generator& generator) noexcept {
                 struct awaitable {
-                    awaitable(promise_type *childPromise) : m_childPromise(childPromise) {}
+                    awaitable(promise_type* childPromise) : m_childPromise(childPromise) {}
 
                     bool await_ready() noexcept { return this->m_childPromise == nullptr; }
 
@@ -62,7 +62,7 @@ namespace cppcoro {
                     }
 
                   private:
-                    promise_type *m_childPromise;
+                    promise_type* m_childPromise;
                 };
 
                 if (generator.m_promise != nullptr) {
@@ -83,7 +83,7 @@ namespace cppcoro {
 
             // Don't allow any use of 'co_await' inside the recursive_generator
             // coroutine.
-            template <typename U> cppcoro::suspend_never await_transform(U &&value) = delete;
+            template <typename U> cppcoro::suspend_never await_transform(U&& value) = delete;
 
             void destroy() noexcept {
                 cppcoro::coroutine_handle<promise_type>::from_promise(*this).destroy();
@@ -99,7 +99,7 @@ namespace cppcoro {
                 return cppcoro::coroutine_handle<promise_type>::from_promise(*this).done();
             }
 
-            T &value() noexcept {
+            T& value() noexcept {
                 assert(this == m_root);
                 assert(!is_complete());
                 return *(m_parentOrLeaf->m_value);
@@ -125,24 +125,24 @@ namespace cppcoro {
             std::add_pointer_t<T> m_value;
             std::exception_ptr m_exception;
 
-            promise_type *m_root;
+            promise_type* m_root;
 
             // If this is the promise of the root generator then this field
             // is a pointer to the leaf promise.
             // For non-root generators this is a pointer to the parent promise.
-            promise_type *m_parentOrLeaf;
+            promise_type* m_parentOrLeaf;
         };
 
         recursive_generator() noexcept : m_promise(nullptr) {}
 
-        recursive_generator(promise_type &promise) noexcept : m_promise(&promise) {}
+        recursive_generator(promise_type& promise) noexcept : m_promise(&promise) {}
 
-        recursive_generator(recursive_generator &&other) noexcept : m_promise(other.m_promise) {
+        recursive_generator(recursive_generator&& other) noexcept : m_promise(other.m_promise) {
             other.m_promise = nullptr;
         }
 
-        recursive_generator(const recursive_generator &other) = delete;
-        recursive_generator &operator=(const recursive_generator &other) = delete;
+        recursive_generator(const recursive_generator& other) = delete;
+        recursive_generator& operator=(const recursive_generator& other) = delete;
 
         ~recursive_generator() {
             if (m_promise != nullptr) {
@@ -150,7 +150,7 @@ namespace cppcoro {
             }
         }
 
-        recursive_generator &operator=(recursive_generator &&other) noexcept {
+        recursive_generator& operator=(recursive_generator&& other) noexcept {
             if (this != &other) {
                 if (m_promise != nullptr) {
                     m_promise->destroy();
@@ -170,28 +170,28 @@ namespace cppcoro {
             // infinite sequence?
             using difference_type = std::ptrdiff_t;
             using value_type = std::remove_reference_t<T>;
-            using reference = std::conditional_t<std::is_reference_v<T>, T, T &>;
+            using reference = std::conditional_t<std::is_reference_v<T>, T, T&>;
             using pointer = std::add_pointer_t<T>;
 
             iterator() noexcept : m_promise(nullptr) {}
 
-            explicit iterator(promise_type *promise) noexcept : m_promise(promise) {}
+            explicit iterator(promise_type* promise) noexcept : m_promise(promise) {}
 
-            bool operator==(const iterator &other) const noexcept {
+            bool operator==(const iterator& other) const noexcept {
                 return m_promise == other.m_promise;
             }
 
-            bool operator!=(const iterator &other) const noexcept {
+            bool operator!=(const iterator& other) const noexcept {
                 return m_promise != other.m_promise;
             }
 
-            iterator &operator++() {
+            iterator& operator++() {
                 assert(m_promise != nullptr);
                 assert(!m_promise->is_complete());
 
                 m_promise->pull();
                 if (m_promise->is_complete()) {
-                    auto *temp = m_promise;
+                    auto* temp = m_promise;
                     m_promise = nullptr;
                     temp->throw_if_exception();
                 }
@@ -209,7 +209,7 @@ namespace cppcoro {
             pointer operator->() const noexcept { return std::addressof(operator*()); }
 
           private:
-            promise_type *m_promise;
+            promise_type* m_promise;
         };
 
         iterator begin() {
@@ -227,15 +227,15 @@ namespace cppcoro {
 
         iterator end() noexcept { return iterator(nullptr); }
 
-        void swap(recursive_generator &other) noexcept { std::swap(m_promise, other.m_promise); }
+        void swap(recursive_generator& other) noexcept { std::swap(m_promise, other.m_promise); }
 
       private:
         friend class promise_type;
 
-        promise_type *m_promise;
+        promise_type* m_promise;
     };
 
-    template <typename T> void swap(recursive_generator<T> &a, recursive_generator<T> &b) noexcept {
+    template <typename T> void swap(recursive_generator<T>& a, recursive_generator<T>& b) noexcept {
         a.swap(b);
     }
 
@@ -243,9 +243,9 @@ namespace cppcoro {
     // non-recursive generator since we generally won't be using the result in a
     // recursive context.
     template <typename FUNC, typename T>
-    generator<std::invoke_result_t<FUNC &, typename recursive_generator<T>::iterator::reference>>
+    generator<std::invoke_result_t<FUNC&, typename recursive_generator<T>::iterator::reference>>
     fmap(FUNC func, recursive_generator<T> source) {
-        for (auto &&value : source) {
+        for (auto&& value : source) {
             co_yield std::invoke(func, static_cast<decltype(value)>(value));
         }
     }

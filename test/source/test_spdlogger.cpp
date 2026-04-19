@@ -1,17 +1,15 @@
 // -*- coding: utf-8 -*-
 #include <doctest/doctest.h>
+#include <spdlog/sinks/basic_file_sink.h>
+#include <spdlog/spdlog.h>
 
 #include <digraphx/logger.hpp>
 #include <digraphx/neg_cycle.hpp>
-
 #include <fstream>
 #include <iostream>
 #include <list>
 #include <string>
 #include <vector>
-
-#include <spdlog/spdlog.h>
-#include <spdlog/sinks/basic_file_sink.h>
 
 using std::list;
 using std::pair;
@@ -28,8 +26,8 @@ TEST_CASE("spdlogger integration test") {
     digraphx::log_with_spdlog("Test 2: Testing with negative cycle detection");
 
     using DiGraph = list<pair<size_t, list<pair<size_t, double>>>>;
-    DiGraph digraph{{0, {{1, 7.0}, {2, 5.0}}}, {1, {{0, 0.0}, {2, 3.0}}},
-              {2, {{1, 1.0}, {0, 2.0}, {0, 1.0}}}};
+    DiGraph digraph{
+        {0, {{1, 7.0}, {2, 5.0}}}, {1, {{0, 0.0}, {2, 3.0}}}, {2, {{1, 1.0}, {0, 2.0}, {0, 1.0}}}};
 
     NegCycleFinder ncf(digraph);
     auto get_weight = [](const auto& edge) -> double { return edge; };

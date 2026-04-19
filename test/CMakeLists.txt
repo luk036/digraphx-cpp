@@ -67,8 +67,8 @@ endif()
 
 enable_testing()
 
-# Add a single test that runs all tests (both doctest and RapidCheck)
-# Note: We disable doctest auto-discovery to avoid conflicts with RapidCheck
+# Add a single test that runs all tests (both doctest and RapidCheck) Note: We disable doctest
+# auto-discovery to avoid conflicts with RapidCheck
 add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
 
 # ---- code coverage ----
