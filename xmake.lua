@@ -13,7 +13,9 @@ end
 
 if is_plat("linux") then
     set_warnings("all", "error")
-    add_cxflags("-Wconversion -Wno-deprecated-experimental-coroutine -Wno-deprecated-coroutine -Wno-unknown-warning-option", {force = true})
+    -- add_cxflags("-Wconversion -Wno-deprecated-experimental-coroutine -Wno-deprecated-coroutine -Wno-unknown-warning-option", {force = true})
+    -- add_cxflags("-Wno-unused-command-line-argument -Wno-sign-conversion -Wno-implicit-int-float-conversion", {force = true})
+    add_cxflags("-Wno-deprecated-experimental-coroutine -Wno-deprecated-coroutine -Wno-unknown-warning-option", {force = true})
     add_cxflags("-Wno-unused-command-line-argument", {force = true})
     -- Check if we're on Termux/Android
     local termux_prefix = os.getenv("PREFIX")
@@ -43,27 +45,47 @@ target("test_digraphx")
     add_packages("doctest", "fmt", "spdlog")
     add_tests("default")
 
-    on_load(function (target)
-        -- Ensure packages are properly linked
-        -- pthread is built into libc on Android/Termux, so don't add it there
-        if not is_plat("windows") and not is_plat("android") then
-            target:add("syslinks", "pthread")
-        end
+    -- Check if rapidcheck was built by CMake
+    local rapidcheck_dir = path.join(os.projectdir(), "build", "_deps", "rapidcheck-src")
+    local rapidcheck_lib_dir = path.join(os.projectdir(), "build", "_deps", "rapidcheck-build")
+    local rapidcheck_lib = nil
 
-        -- Check if rapidcheck was downloaded by CMake
-        local rapidcheck_dir = path.join(os.projectdir(), "build", "_deps", "rapidcheck-src")
-        local rapidcheck_lib_dir = path.join(os.projectdir(), "build", "_deps", "rapidcheck-build")
-        if is_plat("windows") then
-            rapidcheck_lib_dir = path.join(rapidcheck_lib_dir, "Release")
-        end
+    if is_plat("windows") then
+        rapidcheck_lib_dir = path.join(rapidcheck_lib_dir, "Release")
+        rapidcheck_lib = path.join(rapidcheck_lib_dir, "rapidcheck.lib")
+    else
+        rapidcheck_lib = path.join(rapidcheck_lib_dir, "librapidcheck.a")
+    end
 
-        if os.isdir(rapidcheck_dir) and os.isdir(rapidcheck_lib_dir) then
-            target:add("includedirs", path.join(rapidcheck_dir, "include"))
-            target:add("linkdirs", rapidcheck_lib_dir)
-            target:add("links", "rapidcheck")
-            target:add("defines", "RAPIDCHECK_H")
-        end
-    end)
+    if os.isdir(rapidcheck_dir) and os.isfile(rapidcheck_lib) then
+        add_includedirs(path.join(rapidcheck_dir, "include"))
+        add_linkdirs(rapidcheck_lib_dir)
+        add_links("rapidcheck")
+        add_defines("RAPIDCHECK_H")
+    end
+
+
+    -- on_load(function (target)
+    --     -- Ensure packages are properly linked
+    --     -- pthread is built into libc on Android/Termux, so don't add it there
+    --     if not is_plat("windows") and not is_plat("android") then
+    --         target:add("syslinks", "pthread")
+    --     end
+    --
+    --     -- Check if rapidcheck was downloaded by CMake
+    --     local rapidcheck_dir = path.join(os.projectdir(), "build", "_deps", "rapidcheck-src")
+    --     local rapidcheck_lib_dir = path.join(os.projectdir(), "build", "_deps", "rapidcheck-build")
+    --     if is_plat("windows") then
+    --         rapidcheck_lib_dir = path.join(rapidcheck_lib_dir, "Release")
+    --     end
+    --
+    --     if os.isdir(rapidcheck_dir) and os.isdir(rapidcheck_lib_dir) then
+    --         target:add("includedirs", path.join(rapidcheck_dir, "include"))
+    --         target:add("linkdirs", rapidcheck_lib_dir)
+    --         target:add("links", "rapidcheck")
+    --         target:add("defines", "RAPIDCHECK_H")
+    --     end
+    -- end)
 
 target("standalone")
     set_kind("binary")
