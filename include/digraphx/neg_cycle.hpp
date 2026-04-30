@@ -188,7 +188,7 @@ class NegCycleFinder {
         auto cycle = Cycle{};
         while (true) {
             const auto& [utx, edge] = this->_pred.at(vtx);
-            cycle.push_back(std::move(edge));
+            cycle.emplace_back(std::move(edge));
             vtx = utx;
             if (vtx == handle) {
                 break;

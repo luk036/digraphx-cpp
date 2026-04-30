@@ -20,7 +20,7 @@
  * auto result = pool.enqueue([](int x) { return x * 2; }, 21);
  *
  * // Wait for result
- * std::cout << result.get() << std::endl;  // Outputs: 42
+ * std::cout << result.get() << '\n';  // Outputs: 42
  * ```
  *
  * Performance characteristics:

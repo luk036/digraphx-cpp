@@ -225,7 +225,7 @@ class NegCycleFinderQ {
         auto cycle = Cycle{};
         while (true) {
             const auto& [utx, edge] = point_to.at(vtx);
-            cycle.push_back(std::move(edge));
+            cycle.emplace_back(std::move(edge));
             vtx = utx;
             if (vtx == handle) {
                 break;

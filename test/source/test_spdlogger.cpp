@@ -16,11 +16,11 @@ using std::pair;
 using std::vector;
 
 TEST_CASE("spdlogger integration test") {
-    std::cout << "Testing spdlogger integration..." << std::endl;
+    std::cout << "Testing spdlogger integration...\n";
 
     // Test 1: Basic logging with wrapper function
     digraphx::log_with_spdlog("Test 1: Basic logging");
-    std::cout << "Logged a message to digraphx.log" << std::endl;
+    std::cout << "Logged a message to digraphx.log\n";
 
     // Test 2: Logging with negative cycle detection
     digraphx::log_with_spdlog("Test 2: Testing with negative cycle detection");
@@ -48,9 +48,9 @@ TEST_CASE("spdlogger integration test") {
         logger->flush_on(spdlog::level::info);
         logger->info("Direct spdlog test message");
         logger->flush();
-        std::cout << "Direct spdlog test completed" << std::endl;
+        std::cout << "Direct spdlog test completed\n";
     } catch (const spdlog::spdlog_ex& ex) {
-        std::cerr << "Direct spdlog error: " << ex.what() << std::endl;
+        std::cerr << "Direct spdlog error: " << ex.what() << '\n';
     }
 
     // Test 4: Verify log files exist
@@ -60,5 +60,5 @@ TEST_CASE("spdlogger integration test") {
     std::ifstream direct_log("test_direct.log");
     CHECK(direct_log.is_open());
 
-    std::cout << "Check digraphx.log for the logged messages" << std::endl;
+    std::cout << "Check digraphx.log for the logged messages\n";
 }

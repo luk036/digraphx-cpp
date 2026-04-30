@@ -48,7 +48,7 @@ template <typename Node, typename Edge, typename Domain> class NegCycleFinder {
         Cycle cycle;
         while (true) {
             const auto& [utx, edge] = pred[vtx];
-            cycle.push_back(edge);
+            cycle.emplace_back(edge);
             vtx = utx;
             if (vtx == handle) {
                 break;
@@ -63,7 +63,7 @@ template <typename Node, typename Edge, typename Domain> class NegCycleFinder {
         while (relax(dist, get_weight)) {
             for (const auto& vtx : find_cycle()) {
                 assert(is_negative(vtx, dist, get_weight));
-                cycles.push_back(cycle_list(vtx));
+                cycles.emplace_back(cycle_list(vtx));
             }
         }
         return cycles;
@@ -84,7 +84,7 @@ template <typename Node, typename Edge, typename Domain> class NegCycleFinder {
                     const auto& [next_utx, _] = pred[utx];
                     if (visited.find(next_utx) != visited.end()) {
                         if (visited[next_utx] == vtx) {
-                            cycles.push_back(next_utx);
+                            cycles.emplace_back(next_utx);
                         }
                         break;
                     }
@@ -125,7 +125,7 @@ int main() {
         for (const auto& edge : cycle) {
             std::cout << edge << " ";
         }
-        std::cout << std::endl;
+        std::cout << '\n';
     }
 
     return 0;
