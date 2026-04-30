@@ -56,7 +56,7 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     DiGraphX PUBLIC -Wall -Wpedantic -Wextra -Werror -Wno-deprecated-literal-operator
   )
 elseif(MSVC)
-  target_compile_options(DiGraphX PUBLIC /W4 /WX /wd4996)
+  target_compile_options(DiGraphX PUBLIC /W4 /WX /wd4459 /wd4996)
   target_compile_definitions(${PROJECT_NAME} PUBLIC DOCTEST_CONFIG_USE_STD_HEADERS)
 endif()
 
@@ -84,7 +84,7 @@ packageProject(
   INCLUDE_DESTINATION include/${PROJECT_NAME}-${PROJECT_VERSION}
   VERSION_HEADER "${VERSION_HEADER_LOCATION}"
   COMPATIBILITY SameMajorVersion
-  DEPENDENCIES "fmt 11.0.2"
+  DEPENDENCIES "fmt 12.1.0"
 )
 
 # ---- Example executables ----
