@@ -63,7 +63,7 @@ TEST_CASE("Test Min Parametric Q") {
     auto [ratio, cycle] = solver.run(dist, 0.0, update_ok);
 
     // Verify results
-    CHECK(ratio == 0.0);
+    CHECK_EQ(ratio, 0.0);
     CHECK(cycle.empty());
 }
 
@@ -102,7 +102,7 @@ TEST_CASE("Test Min Parametric Q") {
 
 //     auto [ratio, cycle] = solver.run(dist, 0.0, update_ok);
 
-//     CHECK(ratio == 0.0);
+//     CHECK_EQ(ratio, 0.0);
 //     CHECK(cycle.empty());
 // }
 
@@ -130,7 +130,7 @@ TEST_CASE("Test Min Parametric Q with Negative Cycle") {
 
     // With cost -4 in one edge, we expect a negative ratio
     // Total cost: 1 + 1 - 4 = -2, total time: 3, ratio = -2/3 ≈ -0.666...
-    // CHECK(ratio == doctest::Approx(-0.666).epsilon(0.01));
+    // CHECK_EQ(ratio, doctest::Approx(-0.666).epsilon(0.01));
     // CHECK_FALSE(cycle.empty());
 }
 
@@ -155,7 +155,7 @@ TEST_CASE("Test Min Parametric Q Pick One Only") {
     // Test with pick_one_only = true
     auto [ratio, cycle] = solver.run(dist, 0.0, update_ok, true);
 
-    CHECK(ratio == 0.0);
+    CHECK_EQ(ratio, 0.0);
     // With pick_one_only, we might get an empty cycle or stop early
     // The exact behavior depends on the implementation
 }
@@ -219,6 +219,6 @@ TEST_CASE("Test Min Parametric Q with List of Lists") {
 
     auto [ratio, cycle] = solver.run(dist, 0.0, update_ok);
 
-    CHECK(ratio == 0.0);
+    CHECK_EQ(ratio, 0.0);
     CHECK(cycle.empty());
 }
