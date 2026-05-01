@@ -27,7 +27,7 @@ TEST_CASE("Test minimum mean cycle (list of lists)") {
     auto dist = vector<int>(digraph.size(), 0);
     auto r = 100.0;
     const auto c = min_cycle_ratio(digraph, r, get_cost, get_time, dist, 0);
-    CHECK(!c.empty());
+    CHECK_FALSE(c.empty());
     CHECK_EQ(r, 1.0);
 }
 
@@ -48,6 +48,6 @@ TEST_CASE("Test minimum cost-to-time ratio (dict of list's)") {
     auto r = 100.0;
     const auto cycle
         = min_cycle_ratio(digraph, r, std::move(get_cost), std::move(get_time), dist, 0);
-    CHECK(!cycle.empty());
+    CHECK_FALSE(cycle.empty());
     CHECK_EQ(r, 1.0);
 }
