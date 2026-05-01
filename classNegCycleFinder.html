@@ -49,10 +49,11 @@
     <div class="m-row">
       <div class="m-col-l-10 m-push-l-1">
         <h1>
+          <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="neg__cycle_8hpp.html">&lt;digraphx/neg_cycle.hpp&gt;</a></div>
           <div class="m-doc-template">template&lt;typename DiGraph&gt;</div>
           NegCycleFinder <span class="m-thin">class</span>
         </h1>
-        <p>Negative Cycle Finder by Howard&#x27;s method.</p>
+        <p>Negative Cycle Finder using Howard&#x27;s policy iteration method.</p>
         <table class="m-table m-fullwidth m-flat">
           <thead>
             <tr><th colspan="2">Template parameters</th></tr>
@@ -60,7 +61,7 @@
           <tbody>
             <tr>
               <td style="width: 1%">DiGraph</td>
-              <td></td>
+              <td>Type of the directed graph representation</td>
             </tr>
           </tbody>
         </table>
@@ -76,25 +77,14 @@
             </li>
           </ul>
         </nav>
-<p>Negative cycle detection for weighed graphs.</p><pre class="m-code">// Example of a negative cycle
-+-----&gt; a ------+
-|      |       |
-|      | -1    | 2
-|      |       |
-|      v       |
-|     b -------&gt; c
-|     |  -2     |
-|     |         |
-|     +-----&gt;&lt;--+
-|          1
-+---- -3 (weight)</pre><p>Howard&#x27;s method is a minimum cycle ratio (MCR) algorithm that uses a policy iteration algorithm to find the minimum cycle ratio of a directed graph. The algorithm maintains a set of candidate cycles and iteratively updates the cycle with the minimum ratio until convergence. To detect negative cycles, Howard&#x27;s method uses a cycle detection algorithm that is based on the Bellman-Ford relaxation algorithm. Specifically, the algorithm maintains a predecessor graph of the original graph and performs cycle detection on this graph using the Bellman-Ford relaxation algorithm. If a negative cycle is detected, the algorithm terminates and returns the cycle.</p><p>Note: Bellman-Ford&#x27;s shortest-path algorithm (BF) is NOT the best way to detect negative cycles, because</p><ol><li>BF needs a source node.</li><li>BF detect whether there is a negative cycle at the fianl stage.</li><li>BF restarts the solution (dist[utx]) every time.</li></ol>
+<p>This class implements Howard&#x27;s algorithm for efficient negative cycle detection in directed graphs. Unlike traditional Bellman-Ford approaches, Howard&#x27;s method uses policy iteration to maintain a set of candidate cycles and iteratively improves them until convergence.</p><p>Algorithm overview:</p><ol><li>Initialize a policy (predecessor mapping)</li><li>Perform relaxation steps to improve the policy</li><li>Detect cycles in the current policy graph</li><li>Verify if detected cycles are negative</li><li>Yield negative cycles and continue until no improvements possible</li></ol><p>Advantages over Bellman-Ford:</p><ul><li>No source node required</li><li>Detects negative cycles during iteration, not just at the end</li><li>Reuses previous distance estimates instead of restarting</li><li>Often faster for graphs with many negative cycles</li></ul><p>Template requirements for DiGraph:</p><ul><li>Must be iterable with begin()/end()</li><li>Each element must be a pair: (node, neighbors_mapping)</li><li>neighbors_mapping must be iterable with begin()/end()</li><li>Each neighbor must be a pair: (target_node, edge_data)</li></ul>
         <section id="typeless-methods">
           <h2><a href="#typeless-methods">Constructors, destructors, conversion operators</a></h2>
           <dl class="m-doc">
             <dt>
-              <span class="m-doc-wrap-bumper"><a href="#ac4e5f0d346217c9d33da3a30452b30e2" class="m-doc">NegCycleFinder</a>(</span><span class="m-doc-wrap">const DiGraph&amp; gra) <span class="m-label m-flat m-info">explicit</span> </span>
+              <span class="m-doc-wrap-bumper"><a href="#a1f2a75ba4e012310bc07b289cf18789a" class="m-doc">NegCycleFinder</a>(</span><span class="m-doc-wrap">const DiGraph&amp; digraph) <span class="m-label m-flat m-info">explicit</span> </span>
             </dt>
-            <dd></dd>
+            <dd>Construct a Negative Cycle Finder for the given graph.</dd>
           </dl>
         </section>
         <section id="pub-methods">
@@ -105,30 +95,31 @@
               <span class="m-doc-wrap-bumper">auto <a href="#ada288e0af35ecd1640d430a611a86f19" class="m-doc">howard</a>(</span><span class="m-doc-wrap">Mapping&amp; dist,
               const Callable&amp; get_weight) -&gt; cppcoro::generator&lt; Cycle &gt; -&gt; auto</span>
             </dt>
-            <dd></dd>
+            <dd>Execute Howard&#x27;s algorithm to find negative cycles.</dd>
           </dl>
         </section>
         <section>
           <h2>Function documentation</h2>
-          <section class="m-doc-details" id="ac4e5f0d346217c9d33da3a30452b30e2"><div>
+          <section class="m-doc-details" id="a1f2a75ba4e012310bc07b289cf18789a"><div>
             <h3>
               <div class="m-doc-template">
                 template&lt;typename DiGraph&gt;
               </div>
-              <span class="m-doc-wrap-bumper"> NegCycleFinder&lt;DiGraph&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ac4e5f0d346217c9d33da3a30452b30e2" class="m-doc-self">NegCycleFinder</a>(</span><span class="m-doc-wrap">const DiGraph&amp; gra) <span class="m-label m-info">explicit</span> </span></span>
+              <span class="m-doc-wrap-bumper"> NegCycleFinder&lt;DiGraph&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a1f2a75ba4e012310bc07b289cf18789a" class="m-doc-self">NegCycleFinder</a>(</span><span class="m-doc-wrap">const DiGraph&amp; digraph) <span class="m-label m-info">explicit</span> </span></span>
             </h3>
+            <p>Construct a Negative Cycle Finder for the given graph.</p>
             <table class="m-table m-fullwidth m-flat">
               <thead>
                 <tr><th colspan="2">Parameters</th></tr>
               </thead>
               <tbody>
                 <tr>
-                  <td style="width: 1%">gra&nbsp;<span class="m-label m-flat m-info">in</span></td>
-                  <td>The <code>gra</code> parameter is of type <code>DiGraph</code> and represents a directed graph. It is used to initialize the <code>_digraph</code> member variable of the <code><a href="classNegCycleFinder.html" class="m-doc">NegCycleFinder</a></code> class.</td>
+                  <td style="width: 1%">digraph&nbsp;<span class="m-label m-flat m-info">in</span></td>
+                  <td>The directed graph to search for negative cycles</td>
                 </tr>
               </tbody>
             </table>
-<p>The constructor initializes a <code><a href="classNegCycleFinder.html" class="m-doc">NegCycleFinder</a></code> object with a given <code>DiGraph</code> object.</p>
+<p>Creates a new <a href="classNegCycleFinder.html" class="m-doc">NegCycleFinder</a> instance that will operate on the provided directed graph. The graph is stored by reference, so it must remain valid for the lifetime of the <a href="classNegCycleFinder.html" class="m-doc">NegCycleFinder</a> object.</p>
           </div></section>
           <section class="m-doc-details" id="ada288e0af35ecd1640d430a611a86f19"><div>
             <h3>
@@ -139,6 +130,7 @@
               <span class="m-doc-wrap-bumper">auto NegCycleFinder&lt;DiGraph&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ada288e0af35ecd1640d430a611a86f19" class="m-doc-self">howard</a>(</span><span class="m-doc-wrap">Mapping&amp; dist,
               const Callable&amp; get_weight) -&gt; cppcoro::generator&lt; Cycle &gt;</span></span>
             </h3>
+            <p>Execute Howard&#x27;s algorithm to find negative cycles.</p>
             <table class="m-table m-fullwidth m-flat">
               <thead>
                 <tr><th colspan="2">Template parameters</th></tr>
@@ -146,11 +138,11 @@
               <tbody>
                 <tr>
                   <td style="width: 1%">Mapping</td>
-                  <td></td>
+                  <td>Type of the distance mapping (node -&gt; distance)</td>
                 </tr>
                 <tr>
                   <td>Callable</td>
-                  <td></td>
+                  <td>Type of the weight extraction function</td>
                 </tr>
               </tbody>
               <thead>
@@ -159,15 +151,21 @@
               <tbody>
                 <tr>
                   <td>dist&nbsp;<span class="m-label m-flat m-danger">in/out</span></td>
-                  <td>A mapping object that stores the distances between vertices in the graph.</td>
+                  <td>Initial and updated distance estimates</td>
                 </tr>
                 <tr>
                   <td>get_weight&nbsp;<span class="m-label m-flat m-info">in</span></td>
-                  <td>The <code>get_weight</code> parameter is a callable object that is used to retrieve the weight of an edge in the graph. It takes in two arguments: the source vertex and the destination vertex of the edge, and returns the weight of the edge.</td>
+                  <td>Function to extract weight from an edge</td>
                 </tr>
               </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>cppcoro::generator&lt;Cycle&gt; Generator yielding negative cycles</td>
+                </tr>
+              </tfoot>
             </table>
-<p>The function &quot;howard&quot; finds a negative cycle in a graph using the Howard&#x27;s algorithm.</p>
+<p>This is the main method that implements Howard&#x27;s policy iteration algorithm for negative cycle detection. It repeatedly performs relaxation steps and cycle detection until no more negative cycles can be found.</p><p>Algorithm flow:</p><ol><li>Clear predecessor mapping (start fresh)</li><li>While relaxation makes changes and no negative cycles found: a. Perform relaxation step to improve policy b. Search for cycles in current policy graph c. For each cycle found, verify it&#x27;s negative d. Yield all negative cycles found</li></ol><p>The method uses a generator to efficiently return cycles as they are found, avoiding the need to store all cycles simultaneously.</p>
           </div></section>
         </section>
       </div>

@@ -49,6 +49,7 @@
     <div class="m-row">
       <div class="m-col-l-10 m-push-l-1">
         <h1>
+          <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="min__cycle__ratio_8hpp.html">&lt;digraphx/min_cycle_ratio.hpp&gt;</a></div>
           <div class="m-doc-template">template&lt;typename DiGraph, typename Ratio&gt;</div>
           MinCycleRatioSolver <span class="m-thin">class</span>
         </h1>
@@ -60,11 +61,11 @@
           <tbody>
             <tr>
               <td style="width: 1%">DiGraph</td>
-              <td></td>
+              <td>Type of the directed graph representation</td>
             </tr>
             <tr>
               <td>Ratio</td>
-              <td></td>
+              <td>Type representing ratio values (typically double)</td>
             </tr>
           </tbody>
         </table>
@@ -80,12 +81,15 @@
             </li>
           </ul>
         </nav>
-<p>The minimum cycle ratio (MCR) problem is a fundamental problem in the analysis of directed graphs. Given a directed graph, the MCR problem seeks to find the cycle with the minimum ratio of the sum of edge weights to the number of edges in the cycle. In other words, the MCR problem seeks to find the &quot;tightest&quot; cycle in the graph, where the tightness of a cycle is measured by the ratio of the total weight of the cycle to its length.</p><p>The MCR problem has many applications in the analysis of discrete event systems, such as digital circuits and communication networks. It is closely related to other problems in graph theory, such as the shortest path problem and the maximum flow problem. Efficient algorithms for solving the MCR problem are therefore of great practical importance.</p>
+<p>This class provides algorithms for solving the minimum cycle ratio (MCR) problem in directed graphs. The MCR problem seeks to find the cycle with the minimum ratio of total cost to total time, which is crucial for analyzing performance characteristics of discrete event systems.</p><p>Problem definition:</p><pre class="m-code"><span class="n">min</span><span class="w">  </span><span class="p">(</span><span class="n">sum</span><span class="p">(</span><span class="n">costs</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">sum</span><span class="p">(</span><span class="n">times</span><span class="p">))</span>
+<span class="n">s</span><span class="p">.</span><span class="n">t</span><span class="p">.</span><span class="w"> </span><span class="n">cycle</span><span class="w"> </span><span class="n">is</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">directed</span><span class="w"> </span><span class="n">cycle</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="n">G</span><span class="p">(</span><span class="n">V</span><span class="p">,</span><span class="w"> </span><span class="n">E</span><span class="p">)</span></pre><p>Algorithm approach: The solver transforms the MCR problem into a parametric problem:</p><pre class="m-code"><span class="n">max</span><span class="w">  </span><span class="n">r</span>
+<span class="n">s</span><span class="p">.</span><span class="n">t</span><span class="p">.</span><span class="w"> </span><span class="n">dist</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">dist</span><span class="p">[</span><span class="n">u</span><span class="p">]</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">cost</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">time</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="n">v</span><span class="p">)</span>
+<span class="w">     </span><span class="k">for</span><span class="w"> </span><span class="n">all</span><span class="w"> </span><span class="n">edges</span><span class="w"> </span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="n">G</span></pre><p>Key insights:</p><ul><li>A cycle has ratio ≤ r iff cost - r*time has negative cycle</li><li>Binary search on r with negative cycle detection</li><li>Uses Howard&#x27;s method for efficient cycle detection</li><li>Converges to optimal minimum cycle ratio</li></ul><p>Applications:</p><ul><li>Digital circuit performance analysis</li><li>Real-time system scheduling</li><li>Communication network optimization</li><li>Manufacturing system analysis</li><li>Economic equilibrium computation</li></ul>
         <section id="typeless-methods">
           <h2><a href="#typeless-methods">Constructors, destructors, conversion operators</a></h2>
           <dl class="m-doc">
             <dt>
-              <span class="m-doc-wrap-bumper"><a href="#ae753e7637fad12de070547c190a4ff60" class="m-doc">MinCycleRatioSolver</a>(</span><span class="m-doc-wrap">const DiGraph&amp; gra) <span class="m-label m-flat m-info">explicit</span> </span>
+              <span class="m-doc-wrap-bumper"><a href="#a64b2c2033e08d4184e2aba331a8a3684" class="m-doc">MinCycleRatioSolver</a>(</span><span class="m-doc-wrap">const DiGraph&amp; digraph) <span class="m-label m-flat m-info">explicit</span> </span>
             </dt>
             <dd></dd>
           </dl>
@@ -104,12 +108,12 @@
         </section>
         <section>
           <h2>Function documentation</h2>
-          <section class="m-doc-details" id="ae753e7637fad12de070547c190a4ff60"><div>
+          <section class="m-doc-details" id="a64b2c2033e08d4184e2aba331a8a3684"><div>
             <h3>
               <div class="m-doc-template">
                 template&lt;typename DiGraph, typename Ratio&gt;
               </div>
-              <span class="m-doc-wrap-bumper"> MinCycleRatioSolver&lt;DiGraph, Ratio&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ae753e7637fad12de070547c190a4ff60" class="m-doc-self">MinCycleRatioSolver</a>(</span><span class="m-doc-wrap">const DiGraph&amp; gra) <span class="m-label m-info">explicit</span> </span></span>
+              <span class="m-doc-wrap-bumper"> MinCycleRatioSolver&lt;DiGraph, Ratio&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a64b2c2033e08d4184e2aba331a8a3684" class="m-doc-self">MinCycleRatioSolver</a>(</span><span class="m-doc-wrap">const DiGraph&amp; digraph) <span class="m-label m-info">explicit</span> </span></span>
             </h3>
             <table class="m-table m-fullwidth m-flat">
               <thead>
@@ -117,8 +121,8 @@
               </thead>
               <tbody>
                 <tr>
-                  <td style="width: 1%">gra&nbsp;<span class="m-label m-flat m-info">in</span></td>
-                  <td>The parameter &quot;gra&quot; is of type DiGraph, which is a directed graph. It is used to represent the graph on which the Min Cycle Ratio Solver operates.</td>
+                  <td style="width: 1%">digraph&nbsp;<span class="m-label m-flat m-info">in</span></td>
+                  <td>The parameter &quot;digraph&quot; is of type DiGraph, which is a directed graph. It is used to represent the graph on which the Min Cycle Ratio Solver operates.</td>
                 </tr>
               </tbody>
             </table>
@@ -155,21 +159,21 @@
               <tbody>
                 <tr>
                   <td>r0&nbsp;<span class="m-label m-flat m-info">in</span></td>
-                  <td></td>
+                  <td>Initial and final minimum ratio estimate</td>
                 </tr>
                 <tr>
                   <td>dist&nbsp;<span class="m-label m-flat m-info">in</span></td>
-                  <td></td>
+                  <td>Distance mapping that gets updated during execution</td>
                 </tr>
                 <tr>
                   <td>dummy&nbsp;<span class="m-label m-flat m-info">in</span></td>
-                  <td></td>
+                  <td>Parameter for type deduction</td>
                 </tr>
               </tbody>
               <tfoot>
                 <tr>
                   <th>Returns</th>
-                  <td>Cycle</td>
+                  <td>Cycle The cycle achieving the minimum ratio</td>
                 </tr>
               </tfoot>
             </table>

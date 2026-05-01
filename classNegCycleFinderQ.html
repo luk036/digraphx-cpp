@@ -49,10 +49,26 @@
     <div class="m-row">
       <div class="m-col-l-10 m-push-l-1">
         <h1>
+          <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="neg__cycle__q_8hpp.html">&lt;digraphx/neg_cycle_q.hpp&gt;</a></div>
           <div class="m-doc-template">template&lt;typename DiGraph, typename Domain&gt;</div>
           NegCycleFinderQ <span class="m-thin">class</span>
         </h1>
-        <p>Negative Cycle Finder with constraints by Howard&#x27;s method.</p>
+        <p>Negative Cycle Finder with constraints using Howard&#x27;s method.</p>
+        <table class="m-table m-fullwidth m-flat">
+          <thead>
+            <tr><th colspan="2">Template parameters</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="width: 1%">DiGraph</td>
+              <td>Type of the directed graph representation</td>
+            </tr>
+            <tr>
+              <td>Domain</td>
+              <td>Numeric type for distance calculations</td>
+            </tr>
+          </tbody>
+        </table>
         <nav class="m-block m-default">
           <h3>Contents</h3>
           <ul>
@@ -65,27 +81,9 @@
             </li>
           </ul>
         </nav>
-<p>Negative cycle detection for weighed graphs with constraints.</p><pre class="m-code">// Example of constraint-based negative cycle detection
-+-----&gt; a ------+
-|      |       |
-|      | -1    | 2
-|      |       | (with constraint: dist[a] - dist[b] &lt;= 1)
-|      v       |
-|     b -------&gt; c
-|     |  -2     |
-|     |         | (with constraint: dist[c] - dist[b] &lt;= 2)
-|     +-----&gt;&lt;--+
-|          1
-+---- -3 (weight)</pre><p>This class implements both predecessor and successor versions of Howard&#x27;s algorithm for negative cycle detection in directed graphs with constraints.</p><pre class="m-code">Predecessor version (pred):
-    a &lt;----- b
-    |       |
-    +--&gt; c &lt;-+
-    
-Successor version (succ):
-    a -----&gt; b
-    |       |
-    v       v
-    d &lt;----- e</pre>
+<p>This class extends the basic negative cycle detection to support constrained optimization problems. It implements both predecessor and successor versions of Howard&#x27;s algorithm, providing flexibility in how cycles are detected and how distance updates are constrained.</p><p>Algorithm variants:</p><ol><li>Predecessor-based (howard_pred):<ul><li>Follows traditional Bellman-Ford relaxation</li><li>Updates dist[v] based on dist[u] + weight(u,v)</li><li>Useful when constraints apply to forward updates</li></ul><pre class="m-code"><span class="n">Predecessor</span><span class="w"> </span><span class="n">relaxation</span><span class="o">:</span><span class="w"> </span><span class="n">dist</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">dist</span><span class="p">[</span><span class="n">u</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">w</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="n">v</span><span class="p">)</span>
+<span class="n">a</span><span class="w"> </span><span class="o">-----&gt;</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="n">becomes</span><span class="o">:</span><span class="w"> </span><span class="n">pred</span><span class="p">[</span><span class="n">b</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span></pre></li><li>Successor-based (howard_succ):<ul><li>Uses reverse relaxation logic</li><li>Updates dist[u] based on dist[v] - weight(u,v)</li><li>Useful when constraints apply to backward updates</li></ul><pre class="m-code"><span class="n">Successor</span><span class="w"> </span><span class="n">relaxation</span><span class="o">:</span><span class="w"> </span><span class="n">dist</span><span class="p">[</span><span class="n">u</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">dist</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">w</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="n">v</span><span class="p">)</span>
+<span class="n">a</span><span class="w"> </span><span class="o">-----&gt;</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="n">becomes</span><span class="o">:</span><span class="w"> </span><span class="n">succ</span><span class="p">[</span><span class="n">a</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span></pre></li></ol><p>Constraint handling:</p><ul><li>The UpdateOk callback controls when distance updates are allowed</li><li>This enables domain-specific constraints and optimization strategies</li><li>Can implement bounds, step size limits, or custom validation</li></ul><p>Template requirements:</p><ul><li>DiGraph: Same as basic <a href="classNegCycleFinder.html" class="m-doc">NegCycleFinder</a></li><li>Domain: Numeric type for distance calculations</li></ul>
         <section id="typeless-methods">
           <h2><a href="#typeless-methods">Constructors, destructors, conversion operators</a></h2>
           <dl class="m-doc">

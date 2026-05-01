@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>MinParametricAPI class | DiGraphX</title>
+  <title>ThreadPool.h file | DiGraphX</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
   <link rel="stylesheet" href="m-dark+documentation.compiled.css" />
   <link rel="icon" href="favicon-dark.png" type="image/png" />
@@ -49,104 +49,35 @@
     <div class="m-row">
       <div class="m-col-l-10 m-push-l-1">
         <h1>
-          <div class="m-doc-template">template&lt;typename Node, typename Edge, typename Ratio&gt;</div>
-          MinParametricAPI <span class="m-thin">class</span>
+          ThreadPool.h <span class="m-thin">file</span>
         </h1>
-        <p>Minimum Parametric API Interface.</p>
+        <p>Thread pool implementation for parallel task execution.</p>
         <nav class="m-block m-default">
           <h3>Contents</h3>
           <ul>
             <li>
               Reference
               <ul>
-                <li><a href="#pub-methods">Public functions</a></li>
+                <li><a href="#nested-classes">Classes</a></li>
               </ul>
             </li>
           </ul>
         </nav>
-<p>This abstract class defines the interface for minimum parametric problems. Concrete implementations must provide distance and zero_cancel methods.</p><pre class="m-code">Example of parametric problem with constraints:
-a ----d(5,r)----&gt; b
-|                |
-|d(2,r)    d(3,r)|
-|                |
-v      c(1)      v
-d ----d(4,r)----&gt; e
+<p>This module provides a thread pool implementation that enables parallel execution of tasks using a fixed number of worker threads. Tasks are submitted to a queue and executed by available workers.</p><p>Key features:</p><ul><li>Fixed number of worker threads</li><li>Thread-safe task queue</li><li>std::future-based result retrieval</li><li>Automatic thread cleanup on destruction</li></ul><p>Example usage:</p><pre class="m-code"><span class="n">ThreadPool</span><span class="w"> </span><span class="nf">pool</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span><span class="w">  </span><span class="c1">// Create pool with 4 workers</span>
 
-Where d(i,r) represents distance depending on parameter r
-and c(1) represents a constraint</pre>
-        <section id="pub-methods">
-          <h2><a href="#pub-methods">Public functions</a></h2>
+<span class="c1">// Submit a task and get a future</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pool</span><span class="p">.</span><span class="n">enqueue</span><span class="p">([](</span><span class="kt">int</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="mi">21</span><span class="p">);</span>
+
+<span class="c1">// Wait for result</span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">result</span><span class="p">.</span><span class="n">get</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="sc">&#39;\n&#39;</span><span class="p">;</span><span class="w">  </span><span class="c1">// Outputs: 42</span></pre><p>Performance characteristics:</p><ul><li>Task submission: O(1) amortized</li><li>Task execution: Dependent on worker availability</li><li>Memory: O(threads) for worker threads + O(queued tasks)</li></ul>
+        <section id="nested-classes">
+          <h2><a href="#nested-classes">Classes</a></h2>
           <dl class="m-doc">
             <dt>
-              <span class="m-doc-wrap-bumper">auto <a href="#ab77e988f0c6b96e8c105b29142118649" class="m-doc">distance</a>(</span><span class="m-doc-wrap">const Ratio&amp; ratio,
-              const Edge&amp; edge) -&gt; Ratio -&gt; auto <span class="m-label m-flat m-warning">pure virtual</span></span>
+              class <a href="classThreadPool.html" class="m-doc">ThreadPool</a>
             </dt>
-            <dd>Calculate the distance for a given ratio and edge.</dd>
-            <dt>
-              <span class="m-doc-wrap-bumper">auto <a href="#a150cb861b7e3cc3556a0a98b66e66126" class="m-doc">zero_cancel</a>(</span><span class="m-doc-wrap">const std::vector&lt;Edge&gt;&amp; cycle) -&gt; Ratio -&gt; auto <span class="m-label m-flat m-warning">pure virtual</span></span>
-            </dt>
-            <dd>Calculate the ratio that would make the cycle&#x27;s total distance zero.</dd>
+            <dd>Thread pool for parallel task execution.</dd>
           </dl>
-        </section>
-        <section>
-          <h2>Function documentation</h2>
-          <section class="m-doc-details" id="ab77e988f0c6b96e8c105b29142118649"><div>
-            <h3>
-              <div class="m-doc-template">
-                template&lt;typename Node, typename Edge, typename Ratio&gt;
-              </div>
-              <span class="m-doc-wrap-bumper">auto MinParametricAPI&lt;Node, Edge, Ratio&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ab77e988f0c6b96e8c105b29142118649" class="m-doc-self">distance</a>(</span><span class="m-doc-wrap">const Ratio&amp; ratio,
-              const Edge&amp; edge) -&gt; Ratio <span class="m-label m-warning">pure virtual</span></span></span>
-            </h3>
-            <p>Calculate the distance for a given ratio and edge.</p>
-            <table class="m-table m-fullwidth m-flat">
-              <thead>
-                <tr><th colspan="2">Parameters</th></tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td style="width: 1%">ratio</td>
-                  <td>The ratio parameter that affects the distance calculation</td>
-                </tr>
-                <tr>
-                  <td>edge</td>
-                  <td>The edge in the graph</td>
-                </tr>
-              </tbody>
-              <tfoot>
-                <tr>
-                  <th>Returns</th>
-                  <td>Ratio The calculated distance based on the given ratio and edge</td>
-                </tr>
-              </tfoot>
-            </table>
-          </div></section>
-          <section class="m-doc-details" id="a150cb861b7e3cc3556a0a98b66e66126"><div>
-            <h3>
-              <div class="m-doc-template">
-                template&lt;typename Node, typename Edge, typename Ratio&gt;
-              </div>
-              <span class="m-doc-wrap-bumper">auto MinParametricAPI&lt;Node, Edge, Ratio&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a150cb861b7e3cc3556a0a98b66e66126" class="m-doc-self">zero_cancel</a>(</span><span class="m-doc-wrap">const std::vector&lt;Edge&gt;&amp; cycle) -&gt; Ratio <span class="m-label m-warning">pure virtual</span></span></span>
-            </h3>
-            <p>Calculate the ratio that would make the cycle&#x27;s total distance zero.</p>
-            <table class="m-table m-fullwidth m-flat">
-              <thead>
-                <tr><th colspan="2">Parameters</th></tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td style="width: 1%">cycle</td>
-                  <td>The cycle in the graph that needs to be evaluated</td>
-                </tr>
-              </tbody>
-              <tfoot>
-                <tr>
-                  <th>Returns</th>
-                  <td>Ratio The ratio that would make the cycle&#x27;s total distance zero</td>
-                </tr>
-              </tfoot>
-            </table>
-          </div></section>
         </section>
       </div>
     </div>

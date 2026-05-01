@@ -49,10 +49,30 @@
     <div class="m-row">
       <div class="m-col-l-10 m-push-l-1">
         <h1>
+          <div class="m-doc-include m-code m-inverted m-right-m m-text-right"><span class="cp">#include</span> <a class="cpf" href="min__parametric__q_8hpp.html">&lt;digraphx/min_parametric_q.hpp&gt;</a></div>
           <div class="m-doc-template">template&lt;typename DiGraph, typename Ratio, typename Domain&gt;</div>
           MinParametricSolver <span class="m-thin">class</span>
         </h1>
-        <p>Minimum Parametric Solver with constraints.</p>
+        <p>Minimum Parametric Solver with constraint support.</p>
+        <table class="m-table m-fullwidth m-flat">
+          <thead>
+            <tr><th colspan="2">Template parameters</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="width: 1%">DiGraph</td>
+              <td>Type of the directed graph representation</td>
+            </tr>
+            <tr>
+              <td>Ratio</td>
+              <td>Type representing the parameter value</td>
+            </tr>
+            <tr>
+              <td>Domain</td>
+              <td>Type of the domain for distance calculations</td>
+            </tr>
+          </tbody>
+        </table>
         <nav class="m-block m-default">
           <h3>Contents</h3>
           <ul>
@@ -65,7 +85,18 @@
             </li>
           </ul>
         </nav>
-<p>This class solves the following parametric network problem:</p><p>min r s.t. dist[v] - dist[u] &lt;= distance(e, r) forall e(u, v) in G(V, E)</p><p>A parametric network problem refers to a type of optimization problem that involves finding the optimal solution to a network flow problem as a function of one single parameter.</p>
+<p>This class implements algorithms for solving constrained parametric network optimization problems. It extends the basic parametric solver by incorporating constraint handling through callback functions and providing both predecessor and successor-based algorithm variants.</p><p>Problem formulation:</p><pre class="m-code"><span class="n">min</span><span class="w">  </span><span class="n">r</span>
+<span class="n">s</span><span class="p">.</span><span class="n">t</span><span class="p">.</span><span class="w"> </span><span class="n">dist</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">dist</span><span class="p">[</span><span class="n">u</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">distance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="p">)</span>
+<span class="w">     </span><span class="n">forall</span><span class="w"> </span><span class="n">e</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="n">G</span><span class="p">(</span><span class="n">V</span><span class="p">,</span><span class="w"> </span><span class="n">E</span><span class="p">)</span>
+<span class="w">     </span><span class="n">subject</span><span class="w"> </span><span class="n">to</span><span class="o">:</span><span class="w"> </span><span class="n">update_ok</span><span class="p">(</span><span class="n">old_dist</span><span class="p">,</span><span class="w"> </span><span class="n">new_dist</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nb">true</span></pre><p>Algorithm approach:</p><ol><li>Initialize with starting parameter value</li><li>Use constrained negative cycle detection</li><li>Apply update constraints during relaxation</li><li>Adjust parameter based on violating cycles</li><li>Alternate between predecessor/successor methods</li></ol><p>Key innovations:</p><ul><li>Constraint-aware relaxation: Updates validated by callback</li><li>Dual algorithm support: Both forward and reverse relaxation</li><li>Alternating strategy: Improves robustness and convergence</li><li>Early termination: Option to stop after first improvement</li></ul><p>Constraint handling: The UpdateOk callback enables sophisticated constraint strategies:</p><pre class="m-code"><span class="c1">// Example: Only allow significant improvements</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">update_ok</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[](</span><span class="kt">double</span><span class="w"> </span><span class="n">old_val</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">new_val</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">new_val</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">old_val</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">0.01</span><span class="p">;</span><span class="w">  </span><span class="c1">// Minimum improvement threshold</span>
+<span class="p">};</span>
+
+<span class="c1">// Example: Bounded updates</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">update_ok</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[](</span><span class="kt">double</span><span class="w"> </span><span class="n">old_val</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">new_val</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="n">new_val</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">old_val</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">max_step_size</span><span class="p">;</span>
+<span class="p">};</span></pre><p>Use cases:</p><ul><li>Resource allocation with capacity constraints</li><li>Economic equilibrium with market frictions</li><li>Network optimization with budget limitations</li><li>Scheduling with time window constraints</li></ul>
         <section id="typeless-methods">
           <h2><a href="#typeless-methods">Constructors, destructors, conversion operators</a></h2>
           <dl class="m-doc">

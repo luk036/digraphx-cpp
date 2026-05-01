@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>digraphx/min_parametric_q.hpp file | DiGraphX</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i%7CSource+Code+Pro:400,400i,600" />
+  <link rel="stylesheet" href="m-dark+documentation.compiled.css" />
+  <link rel="icon" href="favicon-dark.png" type="image/png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#22272e" />
+</head>
+<body>
+<header><nav id="navigation">
+  <div class="m-container">
+    <div class="m-row">
+      <a href="index.html" id="m-navbar-brand" class="m-col-t-8 m-col-m-none m-left-m">DiGraphX</a>
+      <div class="m-col-t-4 m-hide-m m-text-right m-nopadr">
+        <a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
+          <path id="m-doc-search-icon-path" d="m6 0c-3.31 0-6 2.69-6 6 0 3.31 2.69 6 6 6 1.49 0 2.85-0.541 3.89-1.44-0.0164 0.338 0.147 0.759 0.5 1.15l3.22 3.79c0.552 0.614 1.45 0.665 2 0.115 0.55-0.55 0.499-1.45-0.115-2l-3.79-3.22c-0.392-0.353-0.812-0.515-1.15-0.5 0.895-1.05 1.44-2.41 1.44-3.89 0-3.31-2.69-6-6-6zm0 1.56a4.44 4.44 0 0 1 4.44 4.44 4.44 4.44 0 0 1-4.44 4.44 4.44 4.44 0 0 1-4.44-4.44 4.44 4.44 0 0 1 4.44-4.44z"/>
+        </svg></a>
+        <a id="m-navbar-show" href="#navigation" title="Show navigation"></a>
+        <a id="m-navbar-hide" href="#" title="Hide navigation"></a>
+      </div>
+      <div id="m-navbar-collapse" class="m-col-t-12 m-show-m m-col-m-none m-right-m">
+        <div class="m-row">
+          <ol class="m-col-t-6 m-col-m-none">
+            <li>
+              <a href="pages.html">Pages</a>
+              <ol>
+                <li><a href="about.html">About</a></li>
+              </ol>
+            </li>
+            <li><a href="namespaces.html">Namespaces</a></li>
+          </ol>
+          <ol class="m-col-t-6 m-col-m-none" start="3">
+            <li><a href="annotated.html">Classes</a></li>
+            <li><a href="files.html">Files</a></li>
+            <li class="m-show-m"><a href="#search" class="m-doc-search-icon" title="Search" onclick="return showSearch()"><svg style="height: 0.9rem;" viewBox="0 0 16 16">
+              <use href="#m-doc-search-icon-path" />
+            </svg></a></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav></header>
+<main><article>
+  <div class="m-container m-container-inflatable">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <h1>
+          <span class="m-breadcrumb"><a href="dir_6fb5fa9d54de7aa30fd501f914de99ba.html">digraphx</a>/</span>min_parametric_q.hpp <span class="m-thin">file</span>
+        </h1>
+        <p>Minimum parametric network problem solver with constraints.</p>
+        <nav class="m-block m-default">
+          <h3>Contents</h3>
+          <ul>
+            <li>
+              Reference
+              <ul>
+                <li><a href="#nested-classes">Classes</a></li>
+                <li><a href="#func-members">Functions</a></li>
+              </ul>
+            </li>
+          </ul>
+        </nav>
+<p>This module provides algorithms for solving constrained parametric network optimization problems. It extends the basic parametric solver to support constraint handling and both predecessor/successor-based algorithms.</p><p>Problem formulation:</p><pre class="m-code"><span class="n">min</span><span class="w">  </span><span class="n">r</span>
+<span class="n">s</span><span class="p">.</span><span class="n">t</span><span class="p">.</span><span class="w"> </span><span class="n">dist</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">dist</span><span class="p">[</span><span class="n">u</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">distance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="p">)</span>
+<span class="w">     </span><span class="n">forall</span><span class="w"> </span><span class="n">e</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="n">G</span><span class="p">(</span><span class="n">V</span><span class="p">,</span><span class="w"> </span><span class="n">E</span><span class="p">)</span>
+<span class="w">     </span><span class="n">subject</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">update</span><span class="w"> </span><span class="n">constraints</span></pre><p>Key features:</p><ul><li>Support for distance update constraints</li><li>Both predecessor and successor algorithm variants</li><li>Flexible callback-based constraint handling</li><li>Early termination options for optimization</li><li>Abstract API interface for extensibility</li></ul><p>Constraint types:</p><ul><li>Upper/lower bounds on distance updates</li><li>Step size limitations</li><li>Domain-specific validation rules</li><li>Custom feasibility conditions</li></ul><p>Example constrained parametric problem:</p><pre class="m-code"><span class="w">   </span><span class="n">a</span><span class="w"> </span><span class="o">----</span><span class="n">d</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="n">r</span><span class="p">)</span><span class="o">----&gt;</span><span class="w"> </span><span class="n">b</span>
+<span class="w">   </span><span class="o">|</span><span class="w">                </span><span class="o">|</span>
+<span class="w">   </span><span class="o">|</span><span class="n">d</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">r</span><span class="p">)</span><span class="w">    </span><span class="n">d</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">r</span><span class="p">)</span><span class="o">|</span>
+<span class="w">   </span><span class="o">|</span><span class="w">                </span><span class="o">|</span>
+<span class="w">   </span><span class="n">v</span><span class="w">      </span><span class="n">c</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w">      </span><span class="n">v</span>
+<span class="w">   </span><span class="n">d</span><span class="w"> </span><span class="o">----</span><span class="n">d</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="n">r</span><span class="p">)</span><span class="o">----&gt;</span><span class="w"> </span><span class="n">e</span>
+
+<span class="n">Where</span><span class="w"> </span><span class="n">d</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">r</span><span class="p">)</span><span class="w"> </span><span class="n">represents</span><span class="w"> </span><span class="n">distance</span><span class="w"> </span><span class="n">depending</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="n">parameter</span><span class="w"> </span><span class="n">r</span>
+<span class="k">and</span><span class="w"> </span><span class="n">c</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">represents</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">constraint</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="n">updates</span></pre><p>Algorithm variants:</p><ul><li>Predecessor-based: Traditional forward relaxation</li><li>Successor-based: Reverse relaxation for different constraint types</li><li>Alternating: Switches between both for robustness</li></ul><p>Performance characteristics:</p><ul><li>Time complexity depends on constraint restrictiveness</li><li>Space complexity: O(V + E) for mappings</li><li>Constraints can significantly improve convergence</li></ul>
+        <section id="nested-classes">
+          <h2><a href="#nested-classes">Classes</a></h2>
+          <dl class="m-doc">
+            <dt>
+              <div class="m-doc-template">template&lt;typename DiGraph, typename Ratio, typename Domain&gt;</div>
+              class <a href="classMinParametricSolver.html" class="m-doc">MinParametricSolver</a>
+            </dt>
+            <dd>Minimum Parametric Solver with constraint support.</dd>
+          </dl>
+        </section>
+        <section id="func-members">
+          <h2><a href="#func-members">Functions</a></h2>
+          <dl class="m-doc">
+            <dt>
+              <div class="m-doc-template">template&lt;typename DiGraph, typename Ratio, typename Fn1, typename Fn2, typename Mapping, typename Domain&gt;</div>
+              <span class="m-doc-wrap-bumper">auto <a href="#a2e0be37115aecc8f03f74055451ba2fc" class="m-doc">min_parametric</a>(</span><span class="m-doc-wrap">const DiGraph&amp; digraph,
+              Ratio ratio,
+              Fn1&amp;&amp; distance,
+              Fn2&amp;&amp; zero_cancel,
+              Mapping&amp; dist,
+              Domain domain,
+              bool pick_one_only = false) -&gt; std::pair&lt; Ratio, std::vector&lt; typename MinParametricSolver&lt; DiGraph, Ratio, Domain &gt;::Edge &gt; &gt; -&gt; auto</span>
+            </dt>
+            <dd>Free function for constrained minimum parametric problems.</dd>
+          </dl>
+        </section>
+        <section>
+          <h2>Function documentation</h2>
+          <section class="m-doc-details" id="a2e0be37115aecc8f03f74055451ba2fc"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;typename DiGraph, typename Ratio, typename Fn1, typename Fn2, typename Mapping, typename Domain&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto </span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a2e0be37115aecc8f03f74055451ba2fc" class="m-doc-self">min_parametric</a>(</span><span class="m-doc-wrap">const DiGraph&amp; digraph,
+              Ratio ratio,
+              Fn1&amp;&amp; distance,
+              Fn2&amp;&amp; zero_cancel,
+              Mapping&amp; dist,
+              Domain domain,
+              bool pick_one_only = false) -&gt; std::pair&lt; Ratio, std::vector&lt; typename MinParametricSolver&lt; DiGraph, Ratio, Domain &gt;::Edge &gt; &gt;</span></span>
+            </h3>
+            <p>Free function for constrained minimum parametric problems.</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Template parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">DiGraph</td>
+                  <td>Type of the directed graph representation</td>
+                </tr>
+                <tr>
+                  <td>Ratio</td>
+                  <td>Type representing the parameter value</td>
+                </tr>
+                <tr>
+                  <td>Fn1</td>
+                  <td>Type of distance calculation function</td>
+                </tr>
+                <tr>
+                  <td>Fn2</td>
+                  <td>Type of zero cancellation function</td>
+                </tr>
+                <tr>
+                  <td>Mapping</td>
+                  <td>Type of distance mapping (node -&gt; distance)</td>
+                </tr>
+                <tr>
+                  <td>Domain</td>
+                  <td>Type of the domain for distance calculations</td>
+                </tr>
+              </tbody>
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>digraph&nbsp;<span class="m-label m-flat m-info">in</span></td>
+                  <td>The directed graph to analyze</td>
+                </tr>
+                <tr>
+                  <td>ratio&nbsp;<span class="m-label m-flat m-info">in</span></td>
+                  <td>Initial parameter value for optimization</td>
+                </tr>
+                <tr>
+                  <td>distance&nbsp;<span class="m-label m-flat m-info">in</span></td>
+                  <td>Function calculating edge distance as function of r</td>
+                </tr>
+                <tr>
+                  <td>zero_cancel&nbsp;<span class="m-label m-flat m-info">in</span></td>
+                  <td>Function calculating parameter from a cycle</td>
+                </tr>
+                <tr>
+                  <td>dist&nbsp;<span class="m-label m-flat m-danger">in/out</span></td>
+                  <td>Distance mapping updated during execution</td>
+                </tr>
+                <tr>
+                  <td>domain&nbsp;<span class="m-label m-flat m-info">in</span></td>
+                  <td>Type deduction parameter for distance domain</td>
+                </tr>
+                <tr>
+                  <td>pick_one_only&nbsp;<span class="m-label m-flat m-info">in</span></td>
+                  <td>If true, stop after first improving cycle</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>std::pair&lt;Ratio, std::vector&lt;typename <a href="classMinParametricSolver.html#a21960858d510e137743629f9f799e97f" class="m-doc">MinParametricSolver&lt;DiGraph, Ratio, Domain&gt;::<wbr />Edge</a>&gt;&gt; Optimal parameter and critical cycle</td>
+                </tr>
+              </tfoot>
+            </table>
+<p>This function provides a functional interface for solving constrained parametric network problems without requiring class instantiation. It combines the flexibility of callback-based programming with sophisticated constraint handling.</p><p>Problem formulation:</p><pre class="m-code"><span class="n">min</span><span class="w">  </span><span class="n">r</span>
+<span class="n">s</span><span class="p">.</span><span class="n">t</span><span class="p">.</span><span class="w"> </span><span class="n">dist</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">dist</span><span class="p">[</span><span class="n">u</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">distance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="p">)</span>
+<span class="w">     </span><span class="n">forall</span><span class="w"> </span><span class="n">e</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="n">G</span><span class="p">(</span><span class="n">V</span><span class="p">,</span><span class="w"> </span><span class="n">E</span><span class="p">)</span>
+<span class="w">     </span><span class="n">subject</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">update_ok</span><span class="p">(</span><span class="n">old_dist</span><span class="p">,</span><span class="w"> </span><span class="n">new_dist</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nb">true</span></pre><p>Algorithm features:</p><ul><li>Alternating predecessor/successor search strategy</li><li>Constraint-aware relaxation through update_ok callback</li><li>Early termination option for faster convergence</li><li>Memory-efficient cycle enumeration</li></ul><p>Usage patterns:</p><ol><li><p>Basic constrained optimization:</p><pre class="m-code"><span class="k">auto</span><span class="w"> </span><span class="n">distance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[](</span><span class="kt">double</span><span class="w"> </span><span class="n">r</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">Edge</span><span class="o">&amp;</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">cost</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">time</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">zero_cancel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[](</span><span class="k">const</span><span class="w"> </span><span class="n">Cycle</span><span class="o">&amp;</span><span class="w"> </span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">calculate_ratio</span><span class="p">(</span><span class="n">c</span><span class="p">);</span><span class="w"> </span><span class="p">};</span>
+<span class="k">auto</span><span class="w"> </span><span class="n">update_ok</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[](</span><span class="kt">double</span><span class="w"> </span><span class="n">old</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="k">new</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">old</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
+
+<span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">ratio</span><span class="p">,</span><span class="w"> </span><span class="n">cycle</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">min_parametric</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span><span class="w"> </span><span class="n">r0</span><span class="p">,</span><span class="w"> </span><span class="n">distance</span><span class="p">,</span><span class="w"> </span><span class="n">zero_cancel</span><span class="p">,</span><span class="w"> </span><span class="n">dist</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">);</span></pre></li><li><p>Step-size limited optimization:</p><pre class="m-code"><span class="k">auto</span><span class="w"> </span><span class="n">update_ok</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">max_step</span><span class="p">](</span><span class="kt">double</span><span class="w"> </span><span class="n">old</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="k">new</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">abs</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">old</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">max_step</span><span class="p">;</span>
+<span class="p">};</span></pre></li><li><p>Threshold-based improvements:</p><pre class="m-code"><span class="k">auto</span><span class="w"> </span><span class="n">update_ok</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">min_improvement</span><span class="p">](</span><span class="kt">double</span><span class="w"> </span><span class="n">old</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="k">new</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">old</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">min_improvement</span><span class="p">;</span>
+<span class="p">};</span></pre></li></ol><p>Return value:</p><ul><li>First element: Optimal parameter value found</li><li>Second element: Critical cycle achieving this value (empty if none)</li></ul>
+          </div></section>
+        </section>
+      </div>
+    </div>
+  </div>
+</article></main>
+<div class="m-doc-search" id="search">
+  <a href="#!" onclick="return hideSearch()"></a>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-m-8 m-push-m-2">
+        <div class="m-doc-search-header m-text m-small">
+          <div><span class="m-label m-default">Tab</span> / <span class="m-label m-default">T</span> to search, <span class="m-label m-default">Esc</span> to close</div>
+          <div id="search-symbolcount">&hellip;</div>
+        </div>
+        <div class="m-doc-search-content">
+          <form>
+            <input type="search" name="q" id="search-input" placeholder="Loading &hellip;" disabled="disabled" autofocus="autofocus" autocomplete="off" spellcheck="false" />
+          </form>
+          <noscript class="m-text m-danger m-text-center">Unlike everything else in the docs, the search functionality <em>requires</em> JavaScript.</noscript>
+          <div id="search-help" class="m-text m-dim m-text-center">
+            <p class="m-noindent">Search for symbols, directories, files, pages or
+            modules. You can omit any prefix from the symbol or file path; adding a
+            <code>:</code> or <code>/</code> suffix lists all members of given symbol or
+            directory.</p>
+            <p class="m-noindent">Use <span class="m-label m-dim">&darr;</span>
+            / <span class="m-label m-dim">&uarr;</span> to navigate through the list,
+            <span class="m-label m-dim">Enter</span> to go.
+            <span class="m-label m-dim">Tab</span> autocompletes common prefix, you can
+            copy a link to the result using <span class="m-label m-dim">⌘</span>
+            <span class="m-label m-dim">L</span> while <span class="m-label m-dim">⌘</span>
+            <span class="m-label m-dim">M</span> produces a Markdown link.</p>
+          </div>
+          <div id="search-notfound" class="m-text m-warning m-text-center">Sorry, nothing was found.</div>
+          <ul id="search-results"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="search-v2.js"></script>
+<script src="searchdata-v2.js" async="async"></script>
+<footer><nav>
+  <div class="m-container">
+    <div class="m-row">
+      <div class="m-col-l-10 m-push-l-1">
+        <p>DiGraphX. Created with <a href="https://doxygen.org/">Doxygen</a> 1.9.8 and <a href="https://mcss.mosra.cz/">m.css</a>.</p>
+      </div>
+    </div>
+  </div>
+</nav></footer>
+</body>
+</html>
