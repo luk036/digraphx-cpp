@@ -13,7 +13,7 @@
  * - Automatic thread cleanup on destruction
  *
  * Example usage:
- * ```cpp
+ * @verbatim
  * ThreadPool pool(4);  // Create pool with 4 workers
  *
  * // Submit a task and get a future
@@ -21,7 +21,7 @@
  *
  * // Wait for result
  * std::cout << result.get() << '\n';  // Outputs: 42
- * ```
+ * @endverbatim
  *
  * Performance characteristics:
  * - Task submission: O(1) amortized
@@ -74,9 +74,9 @@ class ThreadPool {
      * @throw std::runtime_error if thread creation fails
      *
      * Example:
-     * ```cpp
+     * @verbatim
      * ThreadPool pool(4);  // Create 4 worker threads
-     * ```
+     * @endverbatim
      */
     ThreadPool(size_t);
 
@@ -95,10 +95,10 @@ class ThreadPool {
      * @throw std::runtime_error if called after the pool is stopped
      *
      * Example:
-     * ```cpp
+     * @verbatim
      * auto future = pool.enqueue([](int a, int b) { return a + b; }, 1, 2);
      * int result = future.get();  // result = 3
-     * ```
+     * @endverbatim
      */
     template <class F, class... Args> auto enqueue(F&& f, Args&&... args)
         -> std::future<typename std::invoke_result<F, Args...>::type>;

@@ -13,15 +13,15 @@
  * applications in performance analysis, scheduling, and discrete event systems.
  *
  * The cycle ratio of a cycle is defined as:
- * ```
+ * @verbatim
  * ratio(cycle) = sum(costs) / sum(times)
- * ```
+ * @endverbatim
  *
  * Problem formulation:
- * ```
+ * @verbatim
  *  min  ratio(cycle)
  *  s.t. cycle is a directed cycle in G(V, E)
- * ```
+ * @endverbatim
  *
  * Key applications:
  * - Performance analysis of digital circuits
@@ -31,7 +31,7 @@
  * - Economic equilibrium problems
  *
  * Example cycle ratio calculation:
- * ```
+ * @verbatim
  *    a ----2----> b
  *    |           |
  *   1|           |3
@@ -41,7 +41,7 @@
  *
  *    For cycle a->b->d->c->a with costs [2, 3, 4, 1] and times [1, 1, 1, 1]:
  *    ratio = (2 + 3 + 4 + 1) / (1 + 1 + 1 + 1) = 10 / 4 = 2.5
- * ```
+ * @endverbatim
  *
  * Algorithm approach:
  * - Transforms to parametric problem: max r s.t. cost(e) - r * time(e) >= 0
@@ -131,18 +131,18 @@ template <typename DiGraph, typename Ratio> class CycleRatioAPI {
  * characteristics of discrete event systems.
  *
  * Problem definition:
- * ```
+ * @verbatim
  *  min  (sum(costs) / sum(times))
  *  s.t. cycle is a directed cycle in G(V, E)
- * ```
+ * @endverbatim
  *
  * Algorithm approach:
  * The solver transforms the MCR problem into a parametric problem:
- * ```
+ * @verbatim
  *  max  r
  *  s.t. dist[v] - dist[u] >= cost(u,v) - r * time(u,v)
  *       for all edges (u,v) in G
- * ```
+ * @endverbatim
  *
  * Key insights:
  * - A cycle has ratio ≤ r iff cost - r*time has negative cycle
@@ -203,11 +203,11 @@ template <typename DiGraph, typename Ratio> class MinCycleRatioSolver {
  * ratio problem without requiring explicit class instantiation. It solves the
  * parametric network problem:
  *
- * ```
+ * @verbatim
  *     max  r
  *     s.t. dist[vtx] - dist[utx] ≥ cost(utx, vtx) - r * time(utx, vtx)
  *          ∀ edge(utx, vtx) ∈ G(V, E)
- * ```
+ * @endverbatim
  *
  * The function uses the same algorithmic approach as MinCycleRatioSolver but
  * with a more flexible callback-based interface. This is particularly useful
@@ -224,7 +224,7 @@ template <typename DiGraph, typename Ratio> class MinCycleRatioSolver {
  * 4. Iteratively refines the minimum ratio estimate
  *
  * Usage example:
- * ```cpp
+ * @verbatim
  * // Define cost and time extraction functions
  * auto get_cost = [](const Edge& e) { return e["cost"]; };
  * auto get_time = [](const Edge& e) { return e["time"]; };
@@ -236,7 +236,7 @@ template <typename DiGraph, typename Ratio> class MinCycleRatioSolver {
  * // Find minimum cycle ratio
  * double ratio = 0.0;  // initial estimate
  * auto cycle = min_cycle_ratio(graph, ratio, get_cost, get_time, dist, 0.0);
- * ```
+ * @endverbatim
  *
  * @tparam DiGraph Type of the directed graph representation
  * @tparam Ratio Type representing ratio values

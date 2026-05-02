@@ -16,7 +16,7 @@
  * - Template-based design for various graph representations
  *
  * Example usage:
- * ```cpp
+ * @verbatim
  * // Define a directed graph with weighted edges
  * std::unordered_map<int, std::unordered_map<int, double>> graph = {
  *     {0, {{1, 2.0}, {2, 3.0}}},
@@ -37,7 +37,7 @@
  * for (const auto& cycle : finder.howard(dist, [](const auto& edge) { return edge; })) {
  *     std::cout << "Found negative cycle with " << cycle.size() << " edges\n";
  * }
- * ```
+ * @endverbatim
  *
  * Performance characteristics:
  * - Time complexity: O(V * E * C) where C is the number of policy iterations

@@ -22,7 +22,7 @@
  * - Domain-specific validation rules
  *
  * Example usage with constraints:
- * ```cpp
+ * @verbatim
  * // Define a graph
  * std::unordered_map<int, std::unordered_map<int, double>> graph = {
  *     {0, {{1, 2.0}, {2, 3.0}}},
@@ -46,7 +46,7 @@
  *         [](const auto& edge) { return edge; }, update_ok)) {
  *     std::cout << "Found constrained negative cycle\n";
  * }
- * ```
+ * @endverbatim
  *
  * Performance characteristics:
  * - Time complexity: O(V * E * C) where C is constrained by update_ok
