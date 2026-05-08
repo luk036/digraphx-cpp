@@ -29,7 +29,7 @@ auto has_negative_cycle_pred(const DiGraph& digraph, Mapping& dist, GetWeight&& 
     -> bool {
     auto finder = NegCycleFinderQ<DiGraph, double>{digraph};
     for (const auto& cycle :
-         finder.howard_pred(dist, get_weight, [](const auto&, const auto&) { return true; })) {
+         finder.howard_pred(dist, std::forward<GetWeight>(get_weight), [](const auto&, const auto&) { return true; })) {
         if (!cycle.empty()) {
             return true;
         }
@@ -53,7 +53,7 @@ auto has_negative_cycle_succ(const DiGraph& digraph, Mapping& dist, GetWeight&& 
     -> bool {
     auto finder = NegCycleFinderQ<DiGraph, double>{digraph};
     for (const auto& cycle :
-         finder.howard_succ(dist, get_weight, [](const auto&, const auto&) { return true; })) {
+         finder.howard_succ(dist, std::forward<GetWeight>(get_weight), [](const auto&, const auto&) { return true; })) {
         if (!cycle.empty()) {
             return true;
         }

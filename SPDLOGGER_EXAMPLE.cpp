@@ -24,19 +24,19 @@ using std::pair;
 using std::vector;
 
 int main() {
-    cout << "========================================" << endl;
-    cout << "  DiGraphX Spdlogger Example            " << endl;
-    cout << "========================================" << endl;
+    cout << "========================================" << '\n';
+    cout << "  DiGraphX Spdlogger Example            " << '\n';
+    cout << "========================================" << '\n';
 
     // Example 1: Basic logging with wrapper function
-    cout << "\nExample 1: Basic logging" << endl;
-    cout << "----------------------------" << endl;
+    cout << "\nExample 1: Basic logging" << '\n';
+    cout << "----------------------------" << '\n';
     digraphx::log_with_spdlog("Application started");
     digraphx::log_with_spdlog("Initializing graph...");
 
     // Example 2: Logging with negative cycle detection
-    cout << "\nExample 2: Logging with negative cycle detection" << endl;
-    cout << "------------------------------------------------" << endl;
+    cout << "\nExample 2: Logging with negative cycle detection" << '\n';
+    cout << "------------------------------------------------" << '\n';
 
     using DiGraph = list<pair<size_t, list<pair<size_t, double>>>>;
 
@@ -44,11 +44,11 @@ int main() {
     DiGraph digraph{
         {0, {{1, 7.0}, {2, 5.0}}}, {1, {{0, 0.0}, {2, 3.0}}}, {2, {{1, 1.0}, {0, 2.0}, {0, 1.0}}}};
 
-    cout << "Created graph with " << digraph.size() << " nodes" << endl;
+    cout << "Created graph with " << digraph.size() << " nodes" << '\n';
     digraphx::log_with_spdlog("Created graph with positive weights");
 
     // Perform negative cycle detection
-    cout << "Running negative cycle detection..." << endl;
+    cout << "Running negative cycle detection..." << '\n';
     NegCycleFinder ncf(digraph);
     auto get_weight = [](const auto& edge) -> double { return edge; };
     auto dist = vector<double>(digraph.size(), 0.0);
@@ -58,12 +58,12 @@ int main() {
         ++cycle_count;
     }
 
-    cout << "Negative cycles found: " << cycle_count << endl;
+    cout << "Negative cycles found: " << cycle_count << '\n';
     digraphx::log_with_spdlog("Negative cycle detection completed");
 
     // Example 3: Using direct spdlog for advanced features
-    cout << "\nExample 3: Direct spdlog usage" << endl;
-    cout << "---------------------------------" << endl;
+    cout << "\nExample 3: Direct spdlog usage" << '\n';
+    cout << "---------------------------------" << '\n';
 
     try {
         // Create a logger with custom configuration
@@ -80,25 +80,25 @@ int main() {
         logger->critical("Critical message - severe errors");
 
         logger->flush();
-        cout << "Direct spdlog test completed" << endl;
+        cout << "Direct spdlog test completed" << '\n';
     } catch (const spdlog::spdlog_ex& ex) {
-        std::cerr << "Direct spdlog error: " << ex.what() << endl;
+        std::cerr << "Direct spdlog error: " << ex.what() << '\n';
     }
 
     // Example 4: Multiple log levels
-    cout << "\nExample 4: Testing different log levels" << endl;
-    cout << "-----------------------------------------" << endl;
+    cout << "\nExample 4: Testing different log levels" << '\n';
+    cout << "-----------------------------------------" << '\n';
 
     digraphx::log_with_spdlog("Final message - application completed successfully");
 
-    cout << "\n========================================" << endl;
-    cout << "Summary" << endl;
-    cout << "========================================" << endl;
-    cout << "Check the following log files:" << endl;
-    cout << "  - digraphx.log (wrapper function)" << endl;
-    cout << "  - example.log (direct spdlog)" << endl;
-    cout << "\nAll examples completed successfully!" << endl;
-    cout << "========================================" << endl;
+    cout << "\n========================================" << '\n';
+    cout << "Summary" << '\n';
+    cout << "========================================" << '\n';
+    cout << "Check the following log files:" << '\n';
+    cout << "  - digraphx.log (wrapper function)" << '\n';
+    cout << "  - example.log (direct spdlog)" << '\n';
+    cout << "\nAll examples completed successfully!" << '\n';
+    cout << "========================================" << '\n';
 
     return 0;
 }

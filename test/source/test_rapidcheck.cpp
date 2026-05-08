@@ -4,7 +4,6 @@
 #ifdef RAPIDCHECK_H
 #    include <rapidcheck.h>
 
-#    include <cstdint>
 #    include <digraphx/neg_cycle.hpp>
 #    include <list>
 #    include <mywheel/map_adapter.hpp>
