@@ -35,7 +35,7 @@ auto create_random_positive_digraph(size_t num_nodes, size_t num_edges) {
             // Find the node to add edge from
             for (auto& node : digraph) {
                 if (node.first == from) {
-                    node.second.push_back({to, weight});
+                    node.second.emplace_back(to, weight);
                     break;
                 }
             }
@@ -59,11 +59,11 @@ auto create_digraph_with_negative_cycle(size_t num_nodes) {
     // Edge weights: 1.0, -3.0, 1.0 (total: -1.0)
     for (auto& node : digraph) {
         if (node.first == 0) {
-            node.second.push_back({1, 1.0});
+            node.second.emplace_back(1, 1.0);
         } else if (node.first == 1) {
-            node.second.push_back({2, -3.0});
+            node.second.emplace_back(2, -3.0);
         } else if (node.first == 2) {
-            node.second.push_back({0, 1.0});
+            node.second.emplace_back(0, 1.0);
         }
     }
 
@@ -73,7 +73,7 @@ auto create_digraph_with_negative_cycle(size_t num_nodes) {
             if (node.first >= 3) {
                 auto to = static_cast<size_t>(*rc::gen::inRange(0, static_cast<int>(num_nodes)));
                 auto weight = static_cast<double>(*rc::gen::positive<double>());
-                node.second.push_back({to, weight});
+                node.second.emplace_back(to, weight);
             }
         }
     }
@@ -230,7 +230,7 @@ TEST_CASE("Property-based test: Linear chain has no cycles") {
         for (size_t i = 0; i < num_nodes - 1; ++i) {
             for (auto& node : digraph) {
                 if (node.first == i) {
-                    node.second.push_back({i + 1, 1.0});
+                    node.second.emplace_back(i + 1, 1.0);
                     break;
                 }
             }
@@ -265,10 +265,10 @@ TEST_CASE("Property-based test: Bidirectional edge chain has no cycles") {
             for (auto& node : digraph) {
                 if (node.first == i) {
                     if (i > 0) {
-                        node.second.push_back({i - 1, 1.0});
+                        node.second.emplace_back(i - 1, 1.0);
                     }
                     if (i < num_nodes - 1) {
-                        node.second.push_back({i + 1, 1.0});
+                        node.second.emplace_back(i + 1, 1.0);
                     }
                     break;
                 }
@@ -308,7 +308,7 @@ TEST_CASE("Property-based test: Distance initialization doesn't affect cycle det
                         = static_cast<size_t>(*rc::gen::inRange(0, static_cast<int>(num_nodes)));
                     if (to != i) {
                         auto weight = static_cast<double>(*rc::gen::positive<double>());
-                        node.second.push_back({to, weight});
+                        node.second.emplace_back(to, weight);
                     }
                     break;
                 }
@@ -361,7 +361,7 @@ TEST_CASE("Property-based test: Zero-weight edges don't create negative cycles")
                 if (node.first == i) {
                     auto to
                         = static_cast<size_t>(*rc::gen::inRange(0, static_cast<int>(num_nodes)));
-                    node.second.push_back({to, 0.0});
+                    node.second.emplace_back(to, 0.0);
                     break;
                 }
             }
@@ -398,7 +398,7 @@ TEST_CASE("Property-based test: Multiple negative edges still need to form cycle
             for (auto& node : digraph) {
                 if (node.first == i) {
                     auto weight = static_cast<double>(*rc::gen::negative<double>());
-                    node.second.push_back({i + 1, weight});
+                    node.second.emplace_back(i + 1, weight);
                     break;
                 }
             }
@@ -435,7 +435,7 @@ TEST_CASE("Property-based test: Complete digraph with positive weights has no cy
                     for (size_t j = 0; j < num_nodes; ++j) {
                         if (i != j) {
                             auto weight = static_cast<double>(*rc::gen::positive<double>());
-                            node.second.push_back({j, weight});
+                            node.second.emplace_back(j, weight);
                         }
                     }
                     break;
@@ -513,7 +513,7 @@ TEST_CASE("Property-based test: MapAdapter works correctly with RapidCheck tests
             for (size_t j = 0; j < num_outgoing; ++j) {
                 auto to = static_cast<size_t>(*rc::gen::inRange(0, static_cast<int>(num_nodes)));
                 auto weight = static_cast<double>(*rc::gen::positive<double>());
-                digraph[i].push_back({to, weight});
+                digraph[i].emplace_back(to, weight);
             }
         }
 
