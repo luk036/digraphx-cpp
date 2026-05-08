@@ -28,8 +28,8 @@ template <typename DiGraph, typename Mapping, typename GetWeight>
 auto has_negative_cycle_pred(const DiGraph& digraph, Mapping& dist, GetWeight&& get_weight)
     -> bool {
     auto finder = NegCycleFinderQ<DiGraph, double>{digraph};
-    for (const auto& cycle :
-         finder.howard_pred(dist, std::forward<GetWeight>(get_weight), [](const auto&, const auto&) { return true; })) {
+    for (const auto& cycle : finder.howard_pred(dist, std::forward<GetWeight>(get_weight),
+                                                [](const auto&, const auto&) { return true; })) {
         if (!cycle.empty()) {
             return true;
         }
@@ -52,8 +52,8 @@ template <typename DiGraph, typename Mapping, typename GetWeight>
 auto has_negative_cycle_succ(const DiGraph& digraph, Mapping& dist, GetWeight&& get_weight)
     -> bool {
     auto finder = NegCycleFinderQ<DiGraph, double>{digraph};
-    for (const auto& cycle :
-         finder.howard_succ(dist, std::forward<GetWeight>(get_weight), [](const auto&, const auto&) { return true; })) {
+    for (const auto& cycle : finder.howard_succ(dist, std::forward<GetWeight>(get_weight),
+                                                [](const auto&, const auto&) { return true; })) {
         if (!cycle.empty()) {
             return true;
         }
