@@ -275,8 +275,8 @@ class NegCycleFinder {
      * @param[in] get_weight Function to extract weight from an edge
      * @return cppcoro::generator<Cycle> Generator yielding negative cycles
      */
-    template <typename Mapping, typename Callable>
-    auto howard(Mapping dist, Callable get_weight) -> cppcoro::generator<Cycle> {
+    template <typename Mapping, typename Callable> auto howard(Mapping dist, Callable get_weight)
+        -> cppcoro::generator<Cycle> {
         this->_pred.clear();
         auto found = false;
         while (!found && this->_relax(dist, get_weight)) {

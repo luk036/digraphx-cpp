@@ -276,7 +276,8 @@ auto min_cycle_ratio(const DiGraph& digraph, Ratio& r0, Fn1&& get_cost, Fn2&& ge
         return Ratio(std::move(total_cost)) / std::move(total_time);
     };
 
-    auto calc_weight = [&get_cost = get_cost, &get_time = get_time](const Ratio& ratio, const Edge& edge) -> Ratio {
+    auto calc_weight = [&get_cost = get_cost, &get_time = get_time](const Ratio& ratio,
+                                                                    const Edge& edge) -> Ratio {
         return get_cost(edge) - ratio * std::forward<Fn2>(get_time)(edge);
     };
 

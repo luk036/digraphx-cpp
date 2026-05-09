@@ -174,7 +174,8 @@ class NegCycleFinderQ {
         for (const auto& [utx, neighbors] : this->_digraph) {
             for (const auto& [vtx, edge] : neighbors) {
                 auto distance = dist[utx] + std::forward<GetWeight>(get_weight)(edge);
-                if (dist[vtx] > distance && std::forward<UpdateOk>(update_ok)(dist[vtx], distance)) {
+                if (dist[vtx] > distance
+                    && std::forward<UpdateOk>(update_ok)(dist[vtx], distance)) {
                     dist[vtx] = distance;
                     this->_pred[vtx] = std::make_pair(utx, std::move(edge));
                     changed = true;
@@ -201,7 +202,8 @@ class NegCycleFinderQ {
         for (const auto& [utx, neighbors] : this->_digraph) {
             for (const auto& [vtx, edge] : neighbors) {
                 auto distance = dist[vtx] - std::forward<GetWeight>(get_weight)(edge);
-                if (dist[utx] < distance && std::forward<UpdateOk>(update_ok)(dist[utx], distance)) {
+                if (dist[utx] < distance
+                    && std::forward<UpdateOk>(update_ok)(dist[utx], distance)) {
                     dist[utx] = distance;
                     this->_succ[utx] = std::make_pair(vtx, std::move(edge));
                     changed = true;
