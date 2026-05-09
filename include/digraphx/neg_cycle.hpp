@@ -120,7 +120,7 @@ class NegCycleFinder {
         auto changed = false;
         for (const auto& [utx, neighbors] : this->_digraph) {
             for (const auto& [vtx, edge] : neighbors) {
-                auto distance = dist[utx] + get_weight(edge);
+                auto distance = dist[utx] + std::forward<Callable>(get_weight)(edge);
                 if (dist[vtx] > distance) {
                     dist[vtx] = distance;
                     this->_pred[vtx] = std::make_pair(utx, std::move(edge));
@@ -159,7 +159,7 @@ class NegCycleFinder {
         auto vtx = handle;
         while (true) {
             const auto& [utx, edge] = this->_pred.at(vtx);
-            if (dist.at(vtx) > dist.at(utx) + get_weight(edge)) {
+            if (dist.at(vtx) > dist.at(utx) + std::forward<Callable>(get_weight)(edge)) {
                 return true;
             }
             vtx = utx;
@@ -276,7 +276,7 @@ class NegCycleFinder {
      * @return cppcoro::generator<Cycle> Generator yielding negative cycles
      */
     template <typename Mapping, typename Callable>
-    auto howard(Mapping& dist, const Callable& get_weight) -> cppcoro::generator<Cycle> {
+    auto howard(Mapping dist, Callable get_weight) -> cppcoro::generator<Cycle> {
         this->_pred.clear();
         auto found = false;
         while (!found && this->_relax(dist, get_weight)) {

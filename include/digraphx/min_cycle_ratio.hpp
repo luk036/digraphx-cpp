@@ -266,18 +266,18 @@ auto min_cycle_ratio(const DiGraph& digraph, Ratio& r0, Fn1&& get_cost, Fn2&& ge
     using cost_T = decltype(get_cost(std::declval<Edge>()));
     using time_T = decltype(get_time(std::declval<Edge>()));
 
-    auto calc_ratio = [&get_cost, &get_time](const Cycle& cycle) -> Ratio {
+    auto calc_ratio = [&get_cost = get_cost, &get_time = get_time](const Cycle& cycle) -> Ratio {
         auto total_cost = cost_T(0);
         auto total_time = time_T(0);
         for (const auto& edge : cycle) {
             total_cost += get_cost(edge);
-            total_time += get_time(edge);
+            total_time += std::forward<Fn2>(get_time)(edge);
         }
         return Ratio(std::move(total_cost)) / std::move(total_time);
     };
 
-    auto calc_weight = [&get_cost, &get_time](const Ratio& ratio, const Edge& edge) -> Ratio {
-        return get_cost(edge) - ratio * get_time(edge);
+    auto calc_weight = [&get_cost = get_cost, &get_time = get_time](const Ratio& ratio, const Edge& edge) -> Ratio {
+        return get_cost(edge) - ratio * std::forward<Fn2>(get_time)(edge);
     };
 
     return max_parametric(digraph, r0, std::move(calc_weight), std::move(calc_ratio), dist, dummy);

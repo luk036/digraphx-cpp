@@ -173,8 +173,8 @@ class NegCycleFinderQ {
         auto changed = false;
         for (const auto& [utx, neighbors] : this->_digraph) {
             for (const auto& [vtx, edge] : neighbors) {
-                auto distance = dist[utx] + get_weight(edge);
-                if (dist[vtx] > distance && update_ok(dist[vtx], distance)) {
+                auto distance = dist[utx] + std::forward<GetWeight>(get_weight)(edge);
+                if (dist[vtx] > distance && std::forward<UpdateOk>(update_ok)(dist[vtx], distance)) {
                     dist[vtx] = distance;
                     this->_pred[vtx] = std::make_pair(utx, std::move(edge));
                     changed = true;
@@ -200,8 +200,8 @@ class NegCycleFinderQ {
         auto changed = false;
         for (const auto& [utx, neighbors] : this->_digraph) {
             for (const auto& [vtx, edge] : neighbors) {
-                auto distance = dist[vtx] - get_weight(edge);
-                if (dist[utx] < distance && update_ok(dist[utx], distance)) {
+                auto distance = dist[vtx] - std::forward<GetWeight>(get_weight)(edge);
+                if (dist[utx] < distance && std::forward<UpdateOk>(update_ok)(dist[utx], distance)) {
                     dist[utx] = distance;
                     this->_succ[utx] = std::make_pair(vtx, std::move(edge));
                     changed = true;
@@ -250,7 +250,7 @@ class NegCycleFinderQ {
         auto vtx = handle;
         while (true) {
             const auto& [utx, edge] = this->_pred.at(vtx);
-            if (dist.at(vtx) > dist.at(utx) + get_weight(edge)) {
+            if (dist.at(vtx) > dist.at(utx) + std::forward<GetWeight>(get_weight)(edge)) {
                 return true;
             }
             vtx = utx;
@@ -281,7 +281,7 @@ class NegCycleFinderQ {
      * @return cppcoro::generator<Cycle> Each negative cycle found as a list of edges
      */
     template <typename Mapping, typename GetWeight, typename UpdateOk>
-    auto howard_pred(Mapping& dist, GetWeight&& get_weight, UpdateOk&& update_ok)
+    auto howard_pred(Mapping dist, GetWeight get_weight, UpdateOk update_ok)
         -> cppcoro::generator<Cycle> {
         this->_pred.clear();
         auto found = false;
@@ -307,7 +307,7 @@ class NegCycleFinderQ {
      * @return cppcoro::generator<Cycle> Each negative cycle found as a list of edges
      */
     template <typename Mapping, typename GetWeight, typename UpdateOk>
-    auto howard_succ(Mapping& dist, GetWeight&& get_weight, UpdateOk&& update_ok)
+    auto howard_succ(Mapping dist, GetWeight get_weight, UpdateOk update_ok)
         -> cppcoro::generator<Cycle> {
         this->_succ.clear();
         auto found = false;
