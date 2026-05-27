@@ -297,7 +297,7 @@ class NegCycleFinderQ {
         while (!found && this->_relax_pred(dist, get_weight, update_ok)) {
             for (auto vtx : this->_find_cycle(this->_pred)) {
                 assert(this->_is_negative(vtx, dist, get_weight));
-                co_yield std::move(this->_cycle_list(vtx, this->_pred));
+                co_yield this->_cycle_list(vtx, this->_pred);
                 found = true;
             }
         }
@@ -327,7 +327,7 @@ class NegCycleFinderQ {
             for (auto vtx : this->_find_cycle(this->_succ)) {
                 // Note: Negative verification currently disabled as in Python version
                 // assert(this->_is_negative(vtx, dist, get_weight));
-                co_yield std::move(this->_cycle_list(vtx, this->_succ));
+                co_yield this->_cycle_list(vtx, this->_succ);
                 found = true;
             }
         }

@@ -288,7 +288,7 @@ class NegCycleFinder {
         while (!found && this->_relax(dist, get_weight)) {
             for (const auto vtx : this->_find_cycle()) {
                 assert(this->_is_negative(vtx, dist, get_weight));
-                co_yield std::move(this->_cycle_list(vtx));
+                co_yield this->_cycle_list(vtx);
                 found = true;
             }
         }
