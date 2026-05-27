@@ -123,7 +123,7 @@ class NegCycleFinder {
                 auto distance = dist[utx] + std::forward<Callable>(get_weight)(edge);
                 if (dist[vtx] > distance) {
                     dist[vtx] = distance;
-                    this->_pred[vtx] = std::make_pair(utx, std::move(edge));
+                    this->_pred.insert_or_assign(vtx, std::pair(utx, edge));
                     changed = true;
                 }
             }
@@ -188,7 +188,7 @@ class NegCycleFinder {
         auto cycle = Cycle{};
         while (true) {
             const auto& [utx, edge] = this->_pred.at(vtx);
-            cycle.emplace_back(std::move(edge));
+            cycle.emplace_back(edge);
             vtx = utx;
             if (vtx == handle) {
                 break;
@@ -218,17 +218,20 @@ class NegCycleFinder {
      */
     auto _find_cycle() -> cppcoro::generator<Node> {
         auto visited = std::unordered_map<Node, Node>{};
-        for (const auto& result : this->_digraph) {
-            const auto& vtx = result.first;
-            if (visited.find(vtx) != visited.end()) {  // contains vtx
+        if constexpr (requires { this->_digraph.size(); }) {
+            visited.reserve(this->_digraph.size());
+        }
+        for (const auto& [vtx, _] : this->_digraph) {
+            if (visited.contains(vtx)) {
                 continue;
             }
             auto utx = vtx;
             visited[utx] = vtx;
-            while (this->_pred.find(utx) != this->_pred.end()) {
+            while (this->_pred.contains(utx)) {
                 utx = this->_pred[utx].first;
-                if (visited.find(utx) != visited.end()) {  // contains utx
-                    if (visited[utx] == vtx) {
+                auto it = visited.find(utx);
+                if (it != visited.end()) {
+                    if (it->second == vtx) {
                         co_yield utx;
                     }
                     break;
@@ -275,9 +278,12 @@ class NegCycleFinder {
      * @param[in] get_weight Function to extract weight from an edge
      * @return cppcoro::generator<Cycle> Generator yielding negative cycles
      */
-    template <typename Mapping, typename Callable> auto howard(Mapping dist, Callable get_weight)
+    template <typename Mapping, typename Callable> auto howard(Mapping& dist, Callable get_weight)
         -> cppcoro::generator<Cycle> {
         this->_pred.clear();
+        if constexpr (requires { this->_digraph.size(); }) {
+            this->_pred.reserve(this->_digraph.size());
+        }
         auto found = false;
         while (!found && this->_relax(dist, get_weight)) {
             for (const auto vtx : this->_find_cycle()) {

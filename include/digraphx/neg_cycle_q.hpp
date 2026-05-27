@@ -134,19 +134,23 @@ class NegCycleFinderQ {
     auto _find_cycle(const std::unordered_map<Node, std::pair<Node, Edge>>& point_to)
         -> cppcoro::generator<Node> {
         auto visited = std::unordered_map<Node, Node>{};
+        if constexpr (requires { this->_digraph.size(); }) {
+            visited.reserve(this->_digraph.size());
+        }
 
         for (const auto& [vtx, _] : this->_digraph) {
-            if (visited.find(vtx) != visited.end()) {
+            if (visited.contains(vtx)) {
                 continue;
             }
 
             auto utx = vtx;
             visited[utx] = vtx;
 
-            while (point_to.find(utx) != point_to.end()) {
+            while (point_to.contains(utx)) {
                 utx = point_to.at(utx).first;
-                if (visited.find(utx) != visited.end()) {
-                    if (visited[utx] == vtx) {
+                auto it = visited.find(utx);
+                if (it != visited.end()) {
+                    if (it->second == vtx) {
                         co_yield utx;
                     }
                     break;
@@ -177,7 +181,7 @@ class NegCycleFinderQ {
                 if (dist[vtx] > distance
                     && std::forward<UpdateOk>(update_ok)(dist[vtx], distance)) {
                     dist[vtx] = distance;
-                    this->_pred[vtx] = std::make_pair(utx, std::move(edge));
+                    this->_pred.insert_or_assign(vtx, std::pair(utx, edge));
                     changed = true;
                 }
             }
@@ -205,7 +209,7 @@ class NegCycleFinderQ {
                 if (dist[utx] < distance
                     && std::forward<UpdateOk>(update_ok)(dist[utx], distance)) {
                     dist[utx] = distance;
-                    this->_succ[utx] = std::make_pair(vtx, std::move(edge));
+                    this->_succ.insert_or_assign(utx, std::pair(vtx, edge));
                     changed = true;
                 }
             }
@@ -227,7 +231,7 @@ class NegCycleFinderQ {
         auto cycle = Cycle{};
         while (true) {
             const auto& [utx, edge] = point_to.at(vtx);
-            cycle.emplace_back(std::move(edge));
+            cycle.emplace_back(edge);
             vtx = utx;
             if (vtx == handle) {
                 break;
@@ -283,9 +287,12 @@ class NegCycleFinderQ {
      * @return cppcoro::generator<Cycle> Each negative cycle found as a list of edges
      */
     template <typename Mapping, typename GetWeight, typename UpdateOk>
-    auto howard_pred(Mapping dist, GetWeight get_weight, UpdateOk update_ok)
+    auto howard_pred(Mapping& dist, GetWeight get_weight, UpdateOk update_ok)
         -> cppcoro::generator<Cycle> {
         this->_pred.clear();
+        if constexpr (requires { this->_digraph.size(); }) {
+            this->_pred.reserve(this->_digraph.size());
+        }
         auto found = false;
         while (!found && this->_relax_pred(dist, get_weight, update_ok)) {
             for (auto vtx : this->_find_cycle(this->_pred)) {
@@ -309,9 +316,12 @@ class NegCycleFinderQ {
      * @return cppcoro::generator<Cycle> Each negative cycle found as a list of edges
      */
     template <typename Mapping, typename GetWeight, typename UpdateOk>
-    auto howard_succ(Mapping dist, GetWeight get_weight, UpdateOk update_ok)
+    auto howard_succ(Mapping& dist, GetWeight get_weight, UpdateOk update_ok)
         -> cppcoro::generator<Cycle> {
         this->_succ.clear();
+        if constexpr (requires { this->_digraph.size(); }) {
+            this->_succ.reserve(this->_digraph.size());
+        }
         auto found = false;
         while (!found && this->_relax_succ(dist, get_weight, update_ok)) {
             for (auto vtx : this->_find_cycle(this->_succ)) {

@@ -120,7 +120,7 @@ template <typename DiGraph, typename ParametricAPI> class MaxParametricSolver {
         auto c_opt = Cycle{};
 
         while (true) {
-            for (auto&& ci : this->_ncf.howard(dist, std::move(get_weight))) {
+            for (auto&& ci : this->_ncf.howard(dist, get_weight)) {
                 auto ri = this->_omega.zero_cancel(ci);
                 if (r_min > ri) {
                     r_min = ri;
@@ -178,7 +178,7 @@ template <typename DiGraph, typename ParametricAPI> class MaxParametricSolver {
  * @return Cycle The critical cycle that determines the optimal parameter
  */
 template <typename DiGraph, typename T, typename Fn1, typename Fn2, typename Mapping, typename D>
-auto max_parametric(const DiGraph& digraph, T& r_opt, Fn1&& distance, Fn2&& zero_cancel,
+auto max_parametric(const DiGraph& digraph, T& r_opt, Fn1 distance, Fn2 zero_cancel,
                     Mapping& dist, D domain) {
     using Nbrs1 = decltype((*std::declval<DiGraph>().begin()).second);
     using Nbrs = std::remove_cv_t<std::remove_reference_t<Nbrs1>>;
@@ -198,7 +198,7 @@ auto max_parametric(const DiGraph& digraph, T& r_opt, Fn1&& distance, Fn2&& zero
     auto c_opt = Cycle{};  // should initial outside
 
     while (true) {
-        for (auto&& ci : ncf.howard(dist, std::move(get_weight))) {
+        for (auto&& ci : ncf.howard(dist, get_weight)) {
             auto ri = zero_cancel(ci);
             if (r_min > ri) {
                 r_min = ri;

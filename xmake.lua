@@ -1,6 +1,11 @@
 set_languages("c++20")
+set_policy("build.optimization.lto", true)
 
 add_rules("mode.debug", "mode.release", "mode.coverage")
+
+if is_mode("release") then
+    set_optimize("fastest")
+end
 add_requires("doctest", {alias = "doctest"})
 add_requires("fmt", {alias = "fmt"})
 add_requires("benchmark", {alias = "benchmark"})

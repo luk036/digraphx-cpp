@@ -320,7 +320,7 @@ template <typename DiGraph, typename Ratio, typename Domain> class MinParametric
  */
 template <typename DiGraph, typename Ratio, typename Fn1, typename Fn2, typename Mapping,
           typename Domain>
-inline auto min_parametric(const DiGraph& digraph, Ratio ratio, Fn1&& distance, Fn2&& zero_cancel,
+inline auto min_parametric(const DiGraph& digraph, Ratio ratio, Fn1 distance, Fn2 zero_cancel,
                            Mapping& dist, Domain domain, bool pick_one_only = false)
     -> std::pair<Ratio, std::vector<typename MinParametricSolver<DiGraph, Ratio, Domain>::Edge>> {
     (void)domain;  // Mark as used to avoid compiler warning
@@ -338,8 +338,8 @@ inline auto min_parametric(const DiGraph& digraph, Ratio ratio, Fn1&& distance, 
     auto update_ok = [](const Domain& /*old_val*/, const Domain& /*new_val*/) { return true; };
 
     // Helper function to calculate edge weights based on current ratio
-    auto get_weight = [&ratio, &distance = distance](const Edge& edge) -> Domain {
-        return static_cast<Domain>(std::forward<Fn1>(distance)(ratio, edge));
+    auto get_weight = [&ratio, &distance](const Edge& edge) -> Domain {
+        return static_cast<Domain>(distance(ratio, edge));
     };
 
     auto r_max = ratio;
@@ -355,7 +355,7 @@ inline auto min_parametric(const DiGraph& digraph, Ratio ratio, Fn1&& distance, 
         if (reverse) {
             auto cycles = ncf.howard_succ(dist, get_weight, update_ok);
             for (auto&& c_i : cycles) {
-                auto r_i = std::forward<Fn2>(zero_cancel)(c_i);
+                auto r_i = zero_cancel(c_i);
                 if (r_max < r_i) {
                     r_max = r_i;
                     c_max = std::move(c_i);
