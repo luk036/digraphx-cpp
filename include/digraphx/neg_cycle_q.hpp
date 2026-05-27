@@ -56,7 +56,7 @@
  * @see neg_cycle.hpp for unconstrained version
  */
 #include <cassert>
-#include <cppcoro/generator.hpp>
+#include <py2cpp/gen.hpp>
 #include <type_traits>  // for is_same_v
 #include <unordered_map>
 #include <utility>  // for pair
@@ -129,10 +129,10 @@ class NegCycleFinderQ {
      * @brief Detect cycles in the current predecessor/successor graph
      *
      * @param point_to Either _pred or _succ dictionary defining the graph edges
-     * @return cppcoro::generator<Node> Each node that starts a cycle in the graph
+     * @return py::Generator<Node> Each node that starts a cycle in the graph
      */
     auto _find_cycle(const std::unordered_map<Node, std::pair<Node, Edge>>& point_to)
-        -> cppcoro::generator<Node> {
+        -> py::Generator<Node> {
         auto visited = std::unordered_map<Node, Node>{};
         if constexpr (requires { this->_digraph.size(); }) {
             visited.reserve(this->_digraph.size());
@@ -284,11 +284,11 @@ class NegCycleFinderQ {
      * @param dist Initial distance estimates (often zero-initialized)
      * @param get_weight Function to get weight of an edge
      * @param update_ok Function to determine if distance updates are allowed
-     * @return cppcoro::generator<Cycle> Each negative cycle found as a list of edges
+     * @return py::Generator<Cycle> Each negative cycle found as a list of edges
      */
     template <typename Mapping, typename GetWeight, typename UpdateOk>
     auto howard_pred(Mapping& dist, GetWeight get_weight, UpdateOk update_ok)
-        -> cppcoro::generator<Cycle> {
+        -> py::Generator<Cycle> {
         this->_pred.clear();
         if constexpr (requires { this->_digraph.size(); }) {
             this->_pred.reserve(this->_digraph.size());
@@ -313,11 +313,11 @@ class NegCycleFinderQ {
      * @param dist Initial distance estimates (often zero-initialized)
      * @param get_weight Function to get weight of an edge
      * @param update_ok Function to determine if distance updates are allowed
-     * @return cppcoro::generator<Cycle> Each negative cycle found as a list of edges
+     * @return py::Generator<Cycle> Each negative cycle found as a list of edges
      */
     template <typename Mapping, typename GetWeight, typename UpdateOk>
     auto howard_succ(Mapping& dist, GetWeight get_weight, UpdateOk update_ok)
-        -> cppcoro::generator<Cycle> {
+        -> py::Generator<Cycle> {
         this->_succ.clear();
         if constexpr (requires { this->_digraph.size(); }) {
             this->_succ.reserve(this->_digraph.size());

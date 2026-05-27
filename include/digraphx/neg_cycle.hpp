@@ -47,7 +47,7 @@
  * @see Howard, R. A. (1960). Dynamic programming and Markov processes.
  */
 #include <cassert>
-#include <cppcoro/generator.hpp>
+#include <py2cpp/gen.hpp>
 #include <type_traits>  // for is_same_v
 #include <unordered_map>
 #include <utility>  // for pair
@@ -214,9 +214,9 @@ class NegCycleFinder {
      * Using a generator allows memory-efficient cycle enumeration, as cycles
      * are produced on-demand rather than stored all at once.
      *
-     * @return cppcoro::generator<Node> Generator yielding nodes that start cycles
+     * @return py::Generator<Node> Generator yielding nodes that start cycles
      */
-    auto _find_cycle() -> cppcoro::generator<Node> {
+    auto _find_cycle() -> py::Generator<Node> {
         auto visited = std::unordered_map<Node, Node>{};
         if constexpr (requires { this->_digraph.size(); }) {
             visited.reserve(this->_digraph.size());
@@ -276,10 +276,10 @@ class NegCycleFinder {
      * @tparam Callable Type of the weight extraction function
      * @param[in,out] dist Initial and updated distance estimates
      * @param[in] get_weight Function to extract weight from an edge
-     * @return cppcoro::generator<Cycle> Generator yielding negative cycles
+     * @return py::Generator<Cycle> Generator yielding negative cycles
      */
     template <typename Mapping, typename Callable> auto howard(Mapping& dist, Callable get_weight)
-        -> cppcoro::generator<Cycle> {
+        -> py::Generator<Cycle> {
         this->_pred.clear();
         if constexpr (requires { this->_digraph.size(); }) {
             this->_pred.reserve(this->_digraph.size());
