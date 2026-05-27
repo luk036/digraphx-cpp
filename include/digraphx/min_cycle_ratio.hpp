@@ -254,8 +254,8 @@ template <typename DiGraph, typename Ratio> class MinCycleRatioSolver {
  */
 template <typename DiGraph, typename Ratio, typename Fn1, typename Fn2, typename Mapping,
           typename Domain>
-auto min_cycle_ratio(const DiGraph& digraph, Ratio& r0, Fn1 get_cost, Fn2 get_time,
-                     Mapping& dist, Domain dummy) {
+auto min_cycle_ratio(const DiGraph& digraph, Ratio& r0, Fn1 get_cost, Fn2 get_time, Mapping& dist,
+                     Domain dummy) {
     (void)dummy;  // Mark as used to avoid compiler warning
 
     using Nbrs1 = decltype((*std::declval<DiGraph>().begin()).second);
@@ -276,8 +276,7 @@ auto min_cycle_ratio(const DiGraph& digraph, Ratio& r0, Fn1 get_cost, Fn2 get_ti
         return Ratio(total_cost) / total_time;
     };
 
-    auto calc_weight = [&get_cost, &get_time](const Ratio& ratio,
-                                              const Edge& edge) -> Ratio {
+    auto calc_weight = [&get_cost, &get_time](const Ratio& ratio, const Edge& edge) -> Ratio {
         return get_cost(edge) - ratio * get_time(edge);
     };
 

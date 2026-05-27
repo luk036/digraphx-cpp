@@ -178,8 +178,8 @@ template <typename DiGraph, typename ParametricAPI> class MaxParametricSolver {
  * @return Cycle The critical cycle that determines the optimal parameter
  */
 template <typename DiGraph, typename T, typename Fn1, typename Fn2, typename Mapping, typename D>
-auto max_parametric(const DiGraph& digraph, T& r_opt, Fn1 distance, Fn2 zero_cancel,
-                    Mapping& dist, D domain) {
+auto max_parametric(const DiGraph& digraph, T& r_opt, Fn1 distance, Fn2 zero_cancel, Mapping& dist,
+                    D domain) {
     using Nbrs1 = decltype((*std::declval<DiGraph>().begin()).second);
     using Nbrs = std::remove_cv_t<std::remove_reference_t<Nbrs1>>;
     using Edge1 = decltype((*std::declval<Nbrs>().begin()).second);
