@@ -26,10 +26,15 @@ jobs:
           path: "**/cpm_modules"
           key: ${{ github.workflow }}-cpm-modules-${{ hashFiles('**/CMakeLists.txt', '**/*.cmake') }}
 
-      # - name: Before Install
-      #   run: |
-      #     sudo apt-get install g++-11
-      #     sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-11 90
+      - name: Install GCC 14
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y software-properties-common
+          sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+          sudo apt-get install -y g++-14
+          sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-14 100
+          sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-14 100
+          g++ --version
 
       - name: build and install library
         run: |
