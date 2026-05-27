@@ -63,13 +63,14 @@
             </li>
           </ul>
         </nav>
-<p>This module provides a thread pool implementation that enables parallel execution of tasks using a fixed number of worker threads. Tasks are submitted to a queue and executed by available workers.</p><p>Key features:</p><ul><li>Fixed number of worker threads</li><li>Thread-safe task queue</li><li>std::future-based result retrieval</li><li>Automatic thread cleanup on destruction</li></ul><p>Example usage:</p><pre class="m-code"><span class="n">ThreadPool</span><span class="w"> </span><span class="nf">pool</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span><span class="w">  </span><span class="c1">// Create pool with 4 workers</span>
-
-<span class="c1">// Submit a task and get a future</span>
-<span class="k">auto</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pool</span><span class="p">.</span><span class="n">enqueue</span><span class="p">([](</span><span class="kt">int</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="mi">21</span><span class="p">);</span>
-
-<span class="c1">// Wait for result</span>
-<span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">result</span><span class="p">.</span><span class="n">get</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="sc">&#39;\n&#39;</span><span class="p">;</span><span class="w">  </span><span class="c1">// Outputs: 42</span></pre><p>Performance characteristics:</p><ul><li>Task submission: O(1) amortized</li><li>Task execution: Dependent on worker availability</li><li>Memory: O(threads) for worker threads + O(queued tasks)</li></ul>
+<p>This module provides a thread pool implementation that enables parallel execution of tasks using a fixed number of worker threads. Tasks are submitted to a queue and executed by available workers.</p><p>Key features:</p><ul><li>Fixed number of worker threads</li><li>Thread-safe task queue</li><li>std::future-based result retrieval</li><li>Automatic thread cleanup on destruction</li></ul><p>Example usage:</p><pre>* ThreadPool pool(4);  // Create pool with 4 workers
+*
+* // Submit a task and get a future
+* auto result = pool.enqueue([](int x) { return x * 2; }, 21);
+*
+* // Wait for result
+* std::cout &lt;&lt; result.get() &lt;&lt; &#x27;\n&#x27;;  // Outputs: 42
+* </pre><p>Performance characteristics:</p><ul><li>Task submission: O(1) amortized</li><li>Task execution: Dependent on worker availability</li><li>Memory: O(threads) for worker threads + O(queued tasks)</li></ul>
         <section id="nested-classes">
           <h2><a href="#nested-classes">Classes</a></h2>
           <dl class="m-doc">

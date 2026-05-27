@@ -64,16 +64,19 @@
             </li>
           </ul>
         </nav>
-<p>This module provides algorithms for finding the minimum cycle ratio in directed graphs, which is a fundamental problem in graph theory with applications in performance analysis, scheduling, and discrete event systems.</p><p>The cycle ratio of a cycle is defined as: <code class="m-code"><span class="n">ratio</span><span class="p">(</span><span class="n">cycle</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sum</span><span class="p">(</span><span class="n">costs</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">sum</span><span class="p">(</span><span class="n">times</span><span class="p">)</span></code></p><p>Problem formulation:</p><pre class="m-code"><span class="n">min</span><span class="w">  </span><span class="n">ratio</span><span class="p">(</span><span class="n">cycle</span><span class="p">)</span>
-<span class="n">s</span><span class="p">.</span><span class="n">t</span><span class="p">.</span><span class="w"> </span><span class="n">cycle</span><span class="w"> </span><span class="n">is</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">directed</span><span class="w"> </span><span class="n">cycle</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="n">G</span><span class="p">(</span><span class="n">V</span><span class="p">,</span><span class="w"> </span><span class="n">E</span><span class="p">)</span></pre><p>Key applications:</p><ul><li>Performance analysis of digital circuits</li><li>Scheduling and resource allocation</li><li>Network flow optimization</li><li>Timing analysis in real-time systems</li><li>Economic equilibrium problems</li></ul><p>Example cycle ratio calculation:</p><pre class="m-code"><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">---</span><span class="mi">-2</span><span class="o">----&gt;</span><span class="w"> </span><span class="n">b</span>
-<span class="w"> </span><span class="o">|</span><span class="w">           </span><span class="o">|</span>
-<span class="mi">1</span><span class="o">|</span><span class="w">           </span><span class="o">|</span><span class="mi">3</span>
-<span class="w"> </span><span class="o">|</span><span class="w">           </span><span class="o">|</span>
-<span class="w"> </span><span class="n">v</span><span class="w">     </span><span class="mi">4</span><span class="w">     </span><span class="n">v</span>
-<span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">---------&gt;</span><span class="w"> </span><span class="n">d</span>
-
-<span class="w"> </span><span class="n">For</span><span class="w"> </span><span class="n">cycle</span><span class="w"> </span><span class="n">a</span><span class="o">-&gt;</span><span class="n">b</span><span class="o">-&gt;</span><span class="n">d</span><span class="o">-&gt;</span><span class="n">c</span><span class="o">-&gt;</span><span class="n">a</span><span class="w"> </span><span class="n">with</span><span class="w"> </span><span class="n">costs</span><span class="w"> </span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">times</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="o">:</span>
-<span class="w"> </span><span class="n">ratio</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mi">2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2.5</span></pre><p>Algorithm approach:</p><ul><li>Transforms to parametric problem: max r s.t. cost(e) - r * time(e) &gt;= 0</li><li>Uses Howard&#x27;s method for negative cycle detection</li><li>Iteratively adjusts parameter r until convergence</li></ul><p>Performance characteristics:</p><ul><li>Time complexity: O(V * E * log(C)) where C is the ratio range</li><li>Space complexity: O(V + E)</li><li>Efficient for sparse graphs with tight cycles</li></ul>
+<p>This module provides algorithms for finding the minimum cycle ratio in directed graphs, which is a fundamental problem in graph theory with applications in performance analysis, scheduling, and discrete event systems.</p><p>The cycle ratio of a cycle is defined as:</p><pre>* ratio(cycle) = sum(costs) / sum(times)
+* </pre><p>Problem formulation:</p><pre>*  min  ratio(cycle)
+*  s.t. cycle is a directed cycle in G(V, E)
+* </pre><p>Key applications:</p><ul><li>Performance analysis of digital circuits</li><li>Scheduling and resource allocation</li><li>Network flow optimization</li><li>Timing analysis in real-time systems</li><li>Economic equilibrium problems</li></ul><p>Example cycle ratio calculation:</p><pre>*    a ----2----&gt; b
+*    |           |
+*   1|           |3
+*    |           |
+*    v     4     v
+*    c ---------&gt; d
+*
+*    For cycle a-&gt;b-&gt;d-&gt;c-&gt;a with costs [2, 3, 4, 1] and times [1, 1, 1, 1]:
+*    ratio = (2 + 3 + 4 + 1) / (1 + 1 + 1 + 1) = 10 / 4 = 2.5
+* </pre><p>Algorithm approach:</p><ul><li>Transforms to parametric problem: max r s.t. cost(e) - r * time(e) &gt;= 0</li><li>Uses Howard&#x27;s method for negative cycle detection</li><li>Iteratively adjusts parameter r until convergence</li></ul><p>Performance characteristics:</p><ul><li>Time complexity: O(V * E * log(C)) where C is the ratio range</li><li>Space complexity: O(V + E)</li><li>Efficient for sparse graphs with tight cycles</li></ul>
         <section id="nested-classes">
           <h2><a href="#nested-classes">Classes</a></h2>
           <dl class="m-doc">
@@ -89,10 +92,10 @@
           <dl class="m-doc">
             <dt>
               <div class="m-doc-template">template&lt;typename DiGraph, typename Ratio, typename Fn1, typename Fn2, typename Mapping, typename Domain&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#ab1a02b8163de8c6e98befe2073f6fd64" class="m-doc">min_cycle_ratio</a>(</span><span class="m-doc-wrap">const DiGraph&amp; digraph,
+              <span class="m-doc-wrap-bumper">auto <a href="#af054f051928f7b72f3975ee33c743a0f" class="m-doc">min_cycle_ratio</a>(</span><span class="m-doc-wrap">const DiGraph&amp; digraph,
               Ratio&amp; r0,
-              Fn1&amp;&amp; get_cost,
-              Fn2&amp;&amp; get_time,
+              Fn1 get_cost,
+              Fn2 get_time,
               Mapping&amp; dist,
               Domain dummy) -&gt; auto</span>
             </dt>
@@ -101,15 +104,15 @@
         </section>
         <section>
           <h2>Function documentation</h2>
-          <section class="m-doc-details" id="ab1a02b8163de8c6e98befe2073f6fd64"><div>
+          <section class="m-doc-details" id="af054f051928f7b72f3975ee33c743a0f"><div>
             <h3>
               <div class="m-doc-template">
                 template&lt;typename DiGraph, typename Ratio, typename Fn1, typename Fn2, typename Mapping, typename Domain&gt;
               </div>
-              <span class="m-doc-wrap-bumper">auto </span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ab1a02b8163de8c6e98befe2073f6fd64" class="m-doc-self">min_cycle_ratio</a>(</span><span class="m-doc-wrap">const DiGraph&amp; digraph,
+              <span class="m-doc-wrap-bumper">auto </span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#af054f051928f7b72f3975ee33c743a0f" class="m-doc-self">min_cycle_ratio</a>(</span><span class="m-doc-wrap">const DiGraph&amp; digraph,
               Ratio&amp; r0,
-              Fn1&amp;&amp; get_cost,
-              Fn2&amp;&amp; get_time,
+              Fn1 get_cost,
+              Fn2 get_time,
               Mapping&amp; dist,
               Domain dummy)</span></span>
             </h3>
@@ -180,19 +183,21 @@
                 </tr>
               </tfoot>
             </table>
-<p>This function provides a functional interface for solving the minimum cycle ratio problem without requiring explicit class instantiation. It solves the parametric network problem:</p><pre class="m-code"><span class="n">max</span><span class="w">  </span><span class="n">r</span>
-<span class="n">s</span><span class="p">.</span><span class="n">t</span><span class="p">.</span><span class="w"> </span><span class="n">dist</span><span class="p">[</span><span class="n">vtx</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">dist</span><span class="p">[</span><span class="n">utx</span><span class="p">]</span><span class="w"> </span><span class="err">≥</span><span class="w"> </span><span class="n">cost</span><span class="p">(</span><span class="n">utx</span><span class="p">,</span><span class="w"> </span><span class="n">vtx</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">time</span><span class="p">(</span><span class="n">utx</span><span class="p">,</span><span class="w"> </span><span class="n">vtx</span><span class="p">)</span>
-<span class="w">     </span><span class="err">∀</span><span class="w"> </span><span class="n">edge</span><span class="p">(</span><span class="n">utx</span><span class="p">,</span><span class="w"> </span><span class="n">vtx</span><span class="p">)</span><span class="w"> </span><span class="err">∈</span><span class="w"> </span><span class="n">G</span><span class="p">(</span><span class="n">V</span><span class="p">,</span><span class="w"> </span><span class="n">E</span><span class="p">)</span></pre><p>The function uses the same algorithmic approach as <a href="classMinCycleRatioSolver.html" class="m-doc">MinCycleRatioSolver</a> but with a more flexible callback-based interface. This is particularly useful when:</p><ul><li>Edge data is stored in custom formats</li><li>Cost and time extraction requires complex logic</li><li>You prefer functional programming style</li><li>Integration with existing callback-based code</li></ul><p>Algorithm details:</p><ol><li>Transforms MCR to parametric problem</li><li>Uses binary search on parameter r</li><li>Employs Howard&#x27;s method for negative cycle detection</li><li>Iteratively refines the minimum ratio estimate</li></ol><p>Usage example:</p><pre class="m-code"><span class="c1">// Define cost and time extraction functions</span>
-<span class="k">auto</span><span class="w"> </span><span class="n">get_cost</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[](</span><span class="k">const</span><span class="w"> </span><span class="n">Edge</span><span class="o">&amp;</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">e</span><span class="p">[</span><span class="s">&quot;cost&quot;</span><span class="p">];</span><span class="w"> </span><span class="p">};</span>
-<span class="k">auto</span><span class="w"> </span><span class="n">get_time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[](</span><span class="k">const</span><span class="w"> </span><span class="n">Edge</span><span class="o">&amp;</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">e</span><span class="p">[</span><span class="s">&quot;time&quot;</span><span class="p">];</span><span class="w"> </span><span class="p">};</span>
-
-<span class="c1">// Initialize distances</span>
-<span class="n">std</span><span class="o">::</span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="n">Node</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">dist</span><span class="p">;</span>
-<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="p">[</span><span class="n">node</span><span class="p">,</span><span class="w"> </span><span class="n">_</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">graph</span><span class="p">)</span><span class="w"> </span><span class="n">dist</span><span class="p">[</span><span class="n">node</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">;</span>
-
-<span class="c1">// Find minimum cycle ratio</span>
-<span class="kt">double</span><span class="w"> </span><span class="n">ratio</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">;</span><span class="w">  </span><span class="c1">// initial estimate</span>
-<span class="k">auto</span><span class="w"> </span><span class="n">cycle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">min_cycle_ratio</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span><span class="w"> </span><span class="n">ratio</span><span class="p">,</span><span class="w"> </span><span class="n">get_cost</span><span class="p">,</span><span class="w"> </span><span class="n">get_time</span><span class="p">,</span><span class="w"> </span><span class="n">dist</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">);</span></pre>
+<p>This function provides a functional interface for solving the minimum cycle ratio problem without requiring explicit class instantiation. It solves the parametric network problem:</p><pre>*     max  r
+*     s.t. dist[vtx] - dist[utx] ≥ cost(utx, vtx) - r * time(utx, vtx)
+*          ∀ edge(utx, vtx) ∈ G(V, E)
+* </pre><p>The function uses the same algorithmic approach as <a href="classMinCycleRatioSolver.html" class="m-doc">MinCycleRatioSolver</a> but with a more flexible callback-based interface. This is particularly useful when:</p><ul><li>Edge data is stored in custom formats</li><li>Cost and time extraction requires complex logic</li><li>You prefer functional programming style</li><li>Integration with existing callback-based code</li></ul><p>Algorithm details:</p><ol><li>Transforms MCR to parametric problem</li><li>Uses binary search on parameter r</li><li>Employs Howard&#x27;s method for negative cycle detection</li><li>Iteratively refines the minimum ratio estimate</li></ol><p>Usage example:</p><pre>* // Define cost and time extraction functions
+* auto get_cost = [](const Edge&amp; e) { return e[&quot;cost&quot;]; };
+* auto get_time = [](const Edge&amp; e) { return e[&quot;time&quot;]; };
+*
+* // Initialize distances
+* std::unordered_map&lt;Node, double&gt; dist;
+* for (const auto&amp; [node, _] : graph) dist[node] = 0.0;
+*
+* // Find minimum cycle ratio
+* double ratio = 0.0;  // initial estimate
+* auto cycle = min_cycle_ratio(graph, ratio, get_cost, get_time, dist, 0.0);
+* </pre>
           </div></section>
         </section>
       </div>

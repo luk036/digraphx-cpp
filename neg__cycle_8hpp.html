@@ -63,26 +63,27 @@
             </li>
           </ul>
         </nav>
-<p>This module implements Howard&#x27;s method for efficient negative cycle detection in directed graphs. It provides a policy iteration algorithm that maintains candidate cycles and iteratively updates them until convergence.</p><p>Key features:</p><ul><li>Efficient negative cycle detection without requiring a source node</li><li>Policy iteration approach for faster convergence</li><li>Generator-based cycle enumeration for memory efficiency</li><li>Template-based design for various graph representations</li></ul><p>Example usage:</p><pre class="m-code"><span class="c1">// Define a directed graph with weighted edges</span>
-<span class="n">std</span><span class="o">::</span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">graph</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="p">{{</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mf">2.0</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mf">3.0</span><span class="p">}}},</span>
-<span class="w">    </span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="p">{{</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mf">-5.0</span><span class="p">}}},</span><span class="w">  </span><span class="c1">// Creates negative cycle 0-&gt;1-&gt;2-&gt;0</span>
-<span class="w">    </span><span class="p">{</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="p">{{</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p">}}}</span>
-<span class="p">};</span>
-
-<span class="c1">// Create negative cycle finder</span>
-<span class="n">NegCycleFinder</span><span class="w"> </span><span class="nf">finder</span><span class="p">(</span><span class="n">graph</span><span class="p">);</span>
-
-<span class="c1">// Initialize distances (typically all zeros)</span>
-<span class="n">std</span><span class="o">::</span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">dist</span><span class="p">;</span>
-<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="p">[</span><span class="n">node</span><span class="p">,</span><span class="w"> </span><span class="n">_</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">graph</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">dist</span><span class="p">[</span><span class="n">node</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="c1">// Find negative cycles</span>
-<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">cycle</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">finder</span><span class="p">.</span><span class="n">howard</span><span class="p">(</span><span class="n">dist</span><span class="p">,</span><span class="w"> </span><span class="p">[](</span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">edge</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">edge</span><span class="p">;</span><span class="w"> </span><span class="p">}))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Found negative cycle with &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">cycle</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot; edges</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
-<span class="p">}</span></pre><p>Performance characteristics:</p><ul><li>Time complexity: O(V * E * C) where C is the number of policy iterations</li><li>Space complexity: O(V + E) for storing predecessor information</li><li>Typically faster than Bellman-Ford for dense graphs with many cycles</li></ul><aside class="m-note m-default"><h4>See also</h4><p>Howard, R. A. (1960). Dynamic programming and Markov processes.</p></aside>
+<p>This module implements Howard&#x27;s method for efficient negative cycle detection in directed graphs. It provides a policy iteration algorithm that maintains candidate cycles and iteratively updates them until convergence.</p><p>Key features:</p><ul><li>Efficient negative cycle detection without requiring a source node</li><li>Policy iteration approach for faster convergence</li><li>Generator-based cycle enumeration for memory efficiency</li><li>Template-based design for various graph representations</li></ul><p>Example usage:</p><pre>* // Define a directed graph with weighted edges
+* std::unordered_map&lt;int, std::unordered_map&lt;int, double&gt;&gt; graph = {
+*     {0, {{1, 2.0}, {2, 3.0}}},
+*     {1, {{2, -5.0}}},  // Creates negative cycle 0-&gt;1-&gt;2-&gt;0
+*     {2, {{0, 1.0}}}
+* };
+*
+* // Create negative cycle finder
+* NegCycleFinder finder(graph);
+*
+* // Initialize distances (typically all zeros)
+* std::unordered_map&lt;int, double&gt; dist;
+* for (const auto&amp; [node, _] : graph) {
+*     dist[node] = 0.0;
+* }
+*
+* // Find negative cycles
+* for (const auto&amp; cycle : finder.howard(dist, [](const auto&amp; edge) { return edge; })) {
+*     std::cout &lt;&lt; &quot;Found negative cycle with &quot; &lt;&lt; cycle.size() &lt;&lt; &quot; edges\n&quot;;
+* }
+* </pre><p>Performance characteristics:</p><ul><li>Time complexity: O(V * E * C) where C is the number of policy iterations</li><li>Space complexity: O(V + E) for storing predecessor information</li><li>Typically faster than Bellman-Ford for dense graphs with many cycles</li></ul><aside class="m-note m-default"><h4>See also</h4><p>Howard, R. A. (1960). Dynamic programming and Markov processes.</p></aside>
         <section id="nested-classes">
           <h2><a href="#nested-classes">Classes</a></h2>
           <dl class="m-doc">

@@ -92,8 +92,8 @@
           <dl class="m-doc">
             <dt>
               <div class="m-doc-template">template&lt;typename Mapping, typename Callable&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#ada288e0af35ecd1640d430a611a86f19" class="m-doc">howard</a>(</span><span class="m-doc-wrap">Mapping&amp; dist,
-              const Callable&amp; get_weight) -&gt; cppcoro::generator&lt; Cycle &gt; -&gt; auto</span>
+              <span class="m-doc-wrap-bumper">auto <a href="#a3abf186701d345e4bda235acc33f514b" class="m-doc">howard</a>(</span><span class="m-doc-wrap">Mapping&amp; dist,
+              Callable get_weight) -&gt; cppcoro::generator&lt; Cycle &gt; -&gt; auto</span>
             </dt>
             <dd>Execute Howard&#x27;s algorithm to find negative cycles.</dd>
           </dl>
@@ -121,14 +121,14 @@
             </table>
 <p>Creates a new <a href="classNegCycleFinder.html" class="m-doc">NegCycleFinder</a> instance that will operate on the provided directed graph. The graph is stored by reference, so it must remain valid for the lifetime of the <a href="classNegCycleFinder.html" class="m-doc">NegCycleFinder</a> object.</p>
           </div></section>
-          <section class="m-doc-details" id="ada288e0af35ecd1640d430a611a86f19"><div>
+          <section class="m-doc-details" id="a3abf186701d345e4bda235acc33f514b"><div>
             <h3>
               <div class="m-doc-template">
                 template&lt;typename DiGraph&gt;
                 template&lt;typename Mapping, typename Callable&gt;
               </div>
-              <span class="m-doc-wrap-bumper">auto NegCycleFinder&lt;DiGraph&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ada288e0af35ecd1640d430a611a86f19" class="m-doc-self">howard</a>(</span><span class="m-doc-wrap">Mapping&amp; dist,
-              const Callable&amp; get_weight) -&gt; cppcoro::generator&lt; Cycle &gt;</span></span>
+              <span class="m-doc-wrap-bumper">auto NegCycleFinder&lt;DiGraph&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a3abf186701d345e4bda235acc33f514b" class="m-doc-self">howard</a>(</span><span class="m-doc-wrap">Mapping&amp; dist,
+              Callable get_weight) -&gt; cppcoro::generator&lt; Cycle &gt;</span></span>
             </h3>
             <p>Execute Howard&#x27;s algorithm to find negative cycles.</p>
             <table class="m-table m-fullwidth m-flat">

@@ -63,29 +63,30 @@
             </li>
           </ul>
         </nav>
-<p>This module extends the basic negative cycle detection to support constrained optimization problems. It implements both predecessor and successor versions of Howard&#x27;s algorithm, allowing for more flexible cycle detection strategies.</p><p>Key features:</p><ul><li>Support for distance update constraints via callback functions</li><li>Both predecessor-based and successor-based algorithms</li><li>Flexible constraint handling for complex optimization problems</li><li>Generator-based cycle enumeration for memory efficiency</li></ul><p>Constraint types supported:</p><ul><li>Upper bounds on distance updates</li><li>Lower bounds on distance updates</li><li>Custom constraint functions</li><li>Domain-specific validation rules</li></ul><p>Example usage with constraints:</p><pre class="m-code"><span class="c1">// Define a graph</span>
-<span class="n">std</span><span class="o">::</span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">graph</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="p">{{</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mf">2.0</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mf">3.0</span><span class="p">}}},</span>
-<span class="w">    </span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="p">{{</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mf">-5.0</span><span class="p">}}},</span>
-<span class="w">    </span><span class="p">{</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="p">{{</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p">}}}</span>
-<span class="p">};</span>
-
-<span class="c1">// Create constrained cycle finder</span>
-<span class="n">NegCycleFinderQ</span><span class="w"> </span><span class="nf">finder</span><span class="p">(</span><span class="n">graph</span><span class="p">);</span>
-
-<span class="c1">// Define constraint: only allow updates that improve by at least 0.1</span>
-<span class="k">auto</span><span class="w"> </span><span class="n">update_ok</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[](</span><span class="kt">double</span><span class="w"> </span><span class="n">old_val</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">new_val</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">new_val</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">old_val</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">0.1</span><span class="p">;</span>
-<span class="p">};</span>
-
-<span class="c1">// Initialize distances</span>
-<span class="n">std</span><span class="o">::</span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">dist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{{</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">}};</span>
-
-<span class="c1">// Find cycles with predecessor-based algorithm</span>
-<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">cycle</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">finder</span><span class="p">.</span><span class="n">howard_pred</span><span class="p">(</span><span class="n">dist</span><span class="p">,</span>
-<span class="w">        </span><span class="p">[](</span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="o">&amp;</span><span class="w"> </span><span class="n">edge</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">edge</span><span class="p">;</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="n">update_ok</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Found constrained negative cycle</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
-<span class="p">}</span></pre><p>Performance characteristics:</p><ul><li>Time complexity: O(V * E * C) where C is constrained by update_ok</li><li>Space complexity: O(V + E) for predecessor/successor mappings</li><li>Constraints can significantly reduce search space</li></ul><aside class="m-note m-default"><h4>See also</h4><p><a href="neg__cycle_8hpp.html" class="m-doc">neg_<wbr />cycle.hpp</a> for unconstrained version</p></aside>
+<p>This module extends the basic negative cycle detection to support constrained optimization problems. It implements both predecessor and successor versions of Howard&#x27;s algorithm, allowing for more flexible cycle detection strategies.</p><p>Key features:</p><ul><li>Support for distance update constraints via callback functions</li><li>Both predecessor-based and successor-based algorithms</li><li>Flexible constraint handling for complex optimization problems</li><li>Generator-based cycle enumeration for memory efficiency</li></ul><p>Constraint types supported:</p><ul><li>Upper bounds on distance updates</li><li>Lower bounds on distance updates</li><li>Custom constraint functions</li><li>Domain-specific validation rules</li></ul><p>Example usage with constraints:</p><pre>* // Define a graph
+* std::unordered_map&lt;int, std::unordered_map&lt;int, double&gt;&gt; graph = {
+*     {0, {{1, 2.0}, {2, 3.0}}},
+*     {1, {{2, -5.0}}},
+*     {2, {{0, 1.0}}}
+* };
+*
+* // Create constrained cycle finder
+* NegCycleFinderQ finder(graph);
+*
+* // Define constraint: only allow updates that improve by at least 0.1
+* auto update_ok = [](double old_val, double new_val) {
+*     return new_val &lt; old_val - 0.1;
+* };
+*
+* // Initialize distances
+* std::unordered_map&lt;int, double&gt; dist = {{0, 0.0}, {1, 0.0}, {2, 0.0}};
+*
+* // Find cycles with predecessor-based algorithm
+* for (const auto&amp; cycle : finder.howard_pred(dist,
+*         [](const auto&amp; edge) { return edge; }, update_ok)) {
+*     std::cout &lt;&lt; &quot;Found constrained negative cycle\n&quot;;
+* }
+* </pre><p>Performance characteristics:</p><ul><li>Time complexity: O(V * E * C) where C is constrained by update_ok</li><li>Space complexity: O(V + E) for predecessor/successor mappings</li><li>Constraints can significantly reduce search space</li></ul><aside class="m-note m-default"><h4>See also</h4><p><a href="neg__cycle_8hpp.html" class="m-doc">neg_<wbr />cycle.hpp</a> for unconstrained version</p></aside>
         <section id="nested-classes">
           <h2><a href="#nested-classes">Classes</a></h2>
           <dl class="m-doc">
