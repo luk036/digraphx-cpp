@@ -81,9 +81,7 @@
             </li>
           </ul>
         </nav>
-<p>This class extends the basic negative cycle detection to support constrained optimization problems. It implements both predecessor and successor versions of Howard&#x27;s algorithm, providing flexibility in how cycles are detected and how distance updates are constrained.</p><p>Algorithm variants:</p><ol><li>Predecessor-based (howard_pred):<ul><li>Follows traditional Bellman-Ford relaxation</li><li>Updates dist[v] based on dist[u] + weight(u,v)</li><li>Useful when constraints apply to forward updates</li></ul><pre class="m-code"><span class="n">Predecessor</span><span class="w"> </span><span class="n">relaxation</span><span class="o">:</span><span class="w"> </span><span class="n">dist</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">dist</span><span class="p">[</span><span class="n">u</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">w</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="n">v</span><span class="p">)</span>
-<span class="n">a</span><span class="w"> </span><span class="o">-----&gt;</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="n">becomes</span><span class="o">:</span><span class="w"> </span><span class="n">pred</span><span class="p">[</span><span class="n">b</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span></pre></li><li>Successor-based (howard_succ):<ul><li>Uses reverse relaxation logic</li><li>Updates dist[u] based on dist[v] - weight(u,v)</li><li>Useful when constraints apply to backward updates</li></ul><pre class="m-code"><span class="n">Successor</span><span class="w"> </span><span class="n">relaxation</span><span class="o">:</span><span class="w"> </span><span class="n">dist</span><span class="p">[</span><span class="n">u</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">dist</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">w</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="n">v</span><span class="p">)</span>
-<span class="n">a</span><span class="w"> </span><span class="o">-----&gt;</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="n">becomes</span><span class="o">:</span><span class="w"> </span><span class="n">succ</span><span class="p">[</span><span class="n">a</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span></pre></li></ol><p>Constraint handling:</p><ul><li>The UpdateOk callback controls when distance updates are allowed</li><li>This enables domain-specific constraints and optimization strategies</li><li>Can implement bounds, step size limits, or custom validation</li></ul><p>Template requirements:</p><ul><li>DiGraph: Same as basic <a href="classNegCycleFinder.html" class="m-doc">NegCycleFinder</a></li><li>Domain: Numeric type for distance calculations</li></ul>
+<p>This class extends the basic negative cycle detection to support constrained optimization problems. It implements both predecessor and successor versions of Howard&#x27;s algorithm, providing flexibility in how cycles are detected and how distance updates are constrained, via an update_ok callback.</p><p>Algorithm variants:</p><ol><li>Predecessor-based (howard_pred):<ul><li>Traditional Bellman-Ford relaxation</li><li>Updates dist[v] based on dist[u] + weight(u,v)</li></ul></li><li>Successor-based (howard_succ):<ul><li>Reverse relaxation logic</li><li>Updates dist[u] based on dist[v] - weight(u,v)</li></ul></li></ol>
         <section id="typeless-methods">
           <h2><a href="#typeless-methods">Constructors, destructors, conversion operators</a></h2>
           <dl class="m-doc">
@@ -98,18 +96,32 @@
           <dl class="m-doc">
             <dt>
               <div class="m-doc-template">template&lt;typename Mapping, typename GetWeight, typename UpdateOk&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#a4a8c0ae6b9e661ed85c421fc51205774" class="m-doc">howard_pred</a>(</span><span class="m-doc-wrap">Mapping&amp; dist,
+              <span class="m-doc-wrap-bumper">auto <a href="#ae345541758f836b33a8e4f1fdc9ace07" class="m-doc">howard_pred</a>(</span><span class="m-doc-wrap">Mapping&amp; dist,
               GetWeight get_weight,
-              UpdateOk update_ok) -&gt; cppcoro::generator&lt; Cycle &gt; -&gt; auto</span>
+              UpdateOk update_ok) -&gt; py::Generator&lt; Cycle &gt; -&gt; auto</span>
             </dt>
             <dd>Find negative cycles using predecessor-based Howard&#x27;s algorithm.</dd>
             <dt>
               <div class="m-doc-template">template&lt;typename Mapping, typename GetWeight, typename UpdateOk&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#a1497c4144d302d151309ecb70868988d" class="m-doc">howard_succ</a>(</span><span class="m-doc-wrap">Mapping&amp; dist,
+              <span class="m-doc-wrap-bumper">auto <a href="#a3e7e515fb1252a0c617e5d3d225714e0" class="m-doc">howard_succ</a>(</span><span class="m-doc-wrap">Mapping&amp; dist,
               GetWeight get_weight,
-              UpdateOk update_ok) -&gt; cppcoro::generator&lt; Cycle &gt; -&gt; auto</span>
+              UpdateOk update_ok) -&gt; py::Generator&lt; Cycle &gt; -&gt; auto</span>
             </dt>
             <dd>Find negative cycles using successor-based Howard&#x27;s algorithm.</dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename Mapping, typename GetWeight, typename UpdateOk&gt;</div>
+              <span class="m-doc-wrap-bumper">auto <a href="#aecf80999dd114196ab6164b91fd0d0c0" class="m-doc">find_neg_cycle_pred</a>(</span><span class="m-doc-wrap">Mapping&amp; dist,
+              GetWeight&amp;&amp; get_weight,
+              UpdateOk&amp;&amp; update_ok) -&gt; std::vector&lt; std::pair&lt; Node, Node &gt; &gt; -&gt; auto</span>
+            </dt>
+            <dd>Find one negative cycle (predecessor, node-pair weights)</dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename Mapping, typename GetWeight, typename UpdateOk&gt;</div>
+              <span class="m-doc-wrap-bumper">auto <a href="#af74bdd63a27d915cad41ffa5b3620238" class="m-doc">find_neg_cycle_succ</a>(</span><span class="m-doc-wrap">Mapping&amp; dist,
+              GetWeight&amp;&amp; get_weight,
+              UpdateOk&amp;&amp; update_ok) -&gt; std::vector&lt; std::pair&lt; Node, Node &gt; &gt; -&gt; auto</span>
+            </dt>
+            <dd>Find one negative cycle (successor, node-pair weights)</dd>
           </dl>
         </section>
         <section>
@@ -128,21 +140,21 @@
               </thead>
               <tbody>
                 <tr>
-                  <td style="width: 1%">digraph</td>
+                  <td style="width: 1%">digraph&nbsp;<span class="m-label m-flat m-info">in</span></td>
                   <td>A directed graph represented as a nested mapping</td>
                 </tr>
               </tbody>
             </table>
           </div></section>
-          <section class="m-doc-details" id="a4a8c0ae6b9e661ed85c421fc51205774"><div>
+          <section class="m-doc-details" id="ae345541758f836b33a8e4f1fdc9ace07"><div>
             <h3>
               <div class="m-doc-template">
                 template&lt;typename DiGraph, typename Domain&gt;
                 template&lt;typename Mapping, typename GetWeight, typename UpdateOk&gt;
               </div>
-              <span class="m-doc-wrap-bumper">auto NegCycleFinderQ&lt;DiGraph, Domain&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a4a8c0ae6b9e661ed85c421fc51205774" class="m-doc-self">howard_pred</a>(</span><span class="m-doc-wrap">Mapping&amp; dist,
+              <span class="m-doc-wrap-bumper">auto NegCycleFinderQ&lt;DiGraph, Domain&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#ae345541758f836b33a8e4f1fdc9ace07" class="m-doc-self">howard_pred</a>(</span><span class="m-doc-wrap">Mapping&amp; dist,
               GetWeight get_weight,
-              UpdateOk update_ok) -&gt; cppcoro::generator&lt; Cycle &gt;</span></span>
+              UpdateOk update_ok) -&gt; py::Generator&lt; Cycle &gt;</span></span>
             </h3>
             <p>Find negative cycles using predecessor-based Howard&#x27;s algorithm.</p>
             <table class="m-table m-fullwidth m-flat">
@@ -168,35 +180,35 @@
               </thead>
               <tbody>
                 <tr>
-                  <td>dist</td>
+                  <td>dist&nbsp;<span class="m-label m-flat m-danger">in/out</span></td>
                   <td>Initial distance estimates (often zero-initialized)</td>
                 </tr>
                 <tr>
-                  <td>get_weight</td>
+                  <td>get_weight&nbsp;<span class="m-label m-flat m-info">in</span></td>
                   <td>Function to get weight of an edge</td>
                 </tr>
                 <tr>
-                  <td>update_ok</td>
+                  <td>update_ok&nbsp;<span class="m-label m-flat m-info">in</span></td>
                   <td>Function to determine if distance updates are allowed</td>
                 </tr>
               </tbody>
               <tfoot>
                 <tr>
                   <th>Returns</th>
-                  <td>cppcoro::generator&lt;Cycle&gt; Each negative cycle found as a list of edges</td>
+                  <td>py::Generator&lt;Cycle&gt; Each negative cycle found as a list of edges</td>
                 </tr>
               </tfoot>
             </table>
           </div></section>
-          <section class="m-doc-details" id="a1497c4144d302d151309ecb70868988d"><div>
+          <section class="m-doc-details" id="a3e7e515fb1252a0c617e5d3d225714e0"><div>
             <h3>
               <div class="m-doc-template">
                 template&lt;typename DiGraph, typename Domain&gt;
                 template&lt;typename Mapping, typename GetWeight, typename UpdateOk&gt;
               </div>
-              <span class="m-doc-wrap-bumper">auto NegCycleFinderQ&lt;DiGraph, Domain&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a1497c4144d302d151309ecb70868988d" class="m-doc-self">howard_succ</a>(</span><span class="m-doc-wrap">Mapping&amp; dist,
+              <span class="m-doc-wrap-bumper">auto NegCycleFinderQ&lt;DiGraph, Domain&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a3e7e515fb1252a0c617e5d3d225714e0" class="m-doc-self">howard_succ</a>(</span><span class="m-doc-wrap">Mapping&amp; dist,
               GetWeight get_weight,
-              UpdateOk update_ok) -&gt; cppcoro::generator&lt; Cycle &gt;</span></span>
+              UpdateOk update_ok) -&gt; py::Generator&lt; Cycle &gt;</span></span>
             </h3>
             <p>Find negative cycles using successor-based Howard&#x27;s algorithm.</p>
             <table class="m-table m-fullwidth m-flat">
@@ -222,25 +234,135 @@
               </thead>
               <tbody>
                 <tr>
-                  <td>dist</td>
+                  <td>dist&nbsp;<span class="m-label m-flat m-danger">in/out</span></td>
                   <td>Initial distance estimates (often zero-initialized)</td>
                 </tr>
                 <tr>
-                  <td>get_weight</td>
+                  <td>get_weight&nbsp;<span class="m-label m-flat m-info">in</span></td>
                   <td>Function to get weight of an edge</td>
                 </tr>
                 <tr>
-                  <td>update_ok</td>
+                  <td>update_ok&nbsp;<span class="m-label m-flat m-info">in</span></td>
                   <td>Function to determine if distance updates are allowed</td>
                 </tr>
               </tbody>
               <tfoot>
                 <tr>
                   <th>Returns</th>
-                  <td>cppcoro::generator&lt;Cycle&gt; Each negative cycle found as a list of edges</td>
+                  <td>py::Generator&lt;Cycle&gt; Each negative cycle found as a list of edges</td>
                 </tr>
               </tfoot>
             </table>
+          </div></section>
+          <section class="m-doc-details" id="aecf80999dd114196ab6164b91fd0d0c0"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;typename DiGraph, typename Domain&gt;
+                template&lt;typename Mapping, typename GetWeight, typename UpdateOk&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto NegCycleFinderQ&lt;DiGraph, Domain&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#aecf80999dd114196ab6164b91fd0d0c0" class="m-doc-self">find_neg_cycle_pred</a>(</span><span class="m-doc-wrap">Mapping&amp; dist,
+              GetWeight&amp;&amp; get_weight,
+              UpdateOk&amp;&amp; update_ok) -&gt; std::vector&lt; std::pair&lt; Node, Node &gt; &gt;</span></span>
+            </h3>
+            <p>Find one negative cycle (predecessor, node-pair weights)</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Template parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">Mapping</td>
+                  <td>Distance mapping type</td>
+                </tr>
+                <tr>
+                  <td>GetWeight</td>
+                  <td>Callable taking pair&lt;Node,Node&gt; returning weight</td>
+                </tr>
+                <tr>
+                  <td>UpdateOk</td>
+                  <td>Callable (old_dist, new_dist) -&gt; bool</td>
+                </tr>
+              </tbody>
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>dist&nbsp;<span class="m-label m-flat m-danger">in/out</span></td>
+                  <td>Distance estimates</td>
+                </tr>
+                <tr>
+                  <td>get_weight&nbsp;<span class="m-label m-flat m-info">in</span></td>
+                  <td>Weight function</td>
+                </tr>
+                <tr>
+                  <td>update_ok&nbsp;<span class="m-label m-flat m-info">in</span></td>
+                  <td>Update constraint</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>std::vector&lt;std::pair&lt;Node, Node&gt;&gt; Cycle edges or empty</td>
+                </tr>
+              </tfoot>
+            </table>
+<p>Returns a single cycle as vector of (u, v) node pairs, with a weight function taking the edge as a node pair, plus update_ok constraint. Returns empty vector if no negative cycle exists.</p>
+          </div></section>
+          <section class="m-doc-details" id="af74bdd63a27d915cad41ffa5b3620238"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;typename DiGraph, typename Domain&gt;
+                template&lt;typename Mapping, typename GetWeight, typename UpdateOk&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto NegCycleFinderQ&lt;DiGraph, Domain&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#af74bdd63a27d915cad41ffa5b3620238" class="m-doc-self">find_neg_cycle_succ</a>(</span><span class="m-doc-wrap">Mapping&amp; dist,
+              GetWeight&amp;&amp; get_weight,
+              UpdateOk&amp;&amp; update_ok) -&gt; std::vector&lt; std::pair&lt; Node, Node &gt; &gt;</span></span>
+            </h3>
+            <p>Find one negative cycle (successor, node-pair weights)</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Template parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">Mapping</td>
+                  <td>Distance mapping type</td>
+                </tr>
+                <tr>
+                  <td>GetWeight</td>
+                  <td>Callable taking pair&lt;Node,Node&gt; returning weight</td>
+                </tr>
+                <tr>
+                  <td>UpdateOk</td>
+                  <td>Callable (old_dist, new_dist) -&gt; bool</td>
+                </tr>
+              </tbody>
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>dist&nbsp;<span class="m-label m-flat m-danger">in/out</span></td>
+                  <td>Distance estimates</td>
+                </tr>
+                <tr>
+                  <td>get_weight&nbsp;<span class="m-label m-flat m-info">in</span></td>
+                  <td>Weight function</td>
+                </tr>
+                <tr>
+                  <td>update_ok&nbsp;<span class="m-label m-flat m-info">in</span></td>
+                  <td>Update constraint</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>std::vector&lt;std::pair&lt;Node, Node&gt;&gt; Cycle edges or empty</td>
+                </tr>
+              </tfoot>
+            </table>
+<p>Like find_neg_cycle_pred but uses successor-based relaxation. Returns empty vector if no negative cycle exists.</p>
           </div></section>
         </section>
       </div>

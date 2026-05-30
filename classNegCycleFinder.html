@@ -77,7 +77,7 @@
             </li>
           </ul>
         </nav>
-<p>This class implements Howard&#x27;s algorithm for efficient negative cycle detection in directed graphs. Unlike traditional Bellman-Ford approaches, Howard&#x27;s method uses policy iteration to maintain a set of candidate cycles and iteratively improves them until convergence.</p><p>Algorithm overview:</p><ol><li>Initialize a policy (predecessor mapping)</li><li>Perform relaxation steps to improve the policy</li><li>Detect cycles in the current policy graph</li><li>Verify if detected cycles are negative</li><li>Yield negative cycles and continue until no improvements possible</li></ol><p>Advantages over Bellman-Ford:</p><ul><li>No source node required</li><li>Detects negative cycles during iteration, not just at the end</li><li>Reuses previous distance estimates instead of restarting</li><li>Often faster for graphs with many negative cycles</li></ul><p>Template requirements for DiGraph:</p><ul><li>Must be iterable with begin()/end()</li><li>Each element must be a pair: (node, neighbors_mapping)</li><li>neighbors_mapping must be iterable with begin()/end()</li><li>Each neighbor must be a pair: (target_node, edge_data)</li></ul>
+<p>This class implements Howard&#x27;s algorithm for efficient negative cycle detection in directed graphs. Unlike traditional Bellman-Ford approaches, Howard&#x27;s method uses policy iteration to maintain a set of candidate cycles and iteratively improves them until convergence.</p><p>A directed graph is assumed to be a container of containers. Supports unordered_map, list-of-pairs, py::dict, SimpleDiGraphS, and MapAdapter-wrapped containers (see _get_key / _get_val helpers).</p><p>Algorithm overview:</p><ol><li>Initialize a policy (predecessor mapping)</li><li>Perform relaxation steps to improve the policy</li><li>Detect cycles in the current policy graph</li><li>Verify if detected cycles are negative</li><li>Yield negative cycles and continue until no improvements possible</li></ol>
         <section id="typeless-methods">
           <h2><a href="#typeless-methods">Constructors, destructors, conversion operators</a></h2>
           <dl class="m-doc">
@@ -92,10 +92,16 @@
           <dl class="m-doc">
             <dt>
               <div class="m-doc-template">template&lt;typename Mapping, typename Callable&gt;</div>
-              <span class="m-doc-wrap-bumper">auto <a href="#a3abf186701d345e4bda235acc33f514b" class="m-doc">howard</a>(</span><span class="m-doc-wrap">Mapping&amp; dist,
-              Callable get_weight) -&gt; cppcoro::generator&lt; Cycle &gt; -&gt; auto</span>
+              <span class="m-doc-wrap-bumper">auto <a href="#a535c5626fa7d8c326264ffb0729f9703" class="m-doc">howard</a>(</span><span class="m-doc-wrap">Mapping&amp; dist,
+              Callable get_weight) -&gt; py::Generator&lt; Cycle &gt; -&gt; auto</span>
             </dt>
             <dd>Execute Howard&#x27;s algorithm to find negative cycles.</dd>
+            <dt>
+              <div class="m-doc-template">template&lt;typename Mapping, typename Callable&gt;</div>
+              <span class="m-doc-wrap-bumper">auto <a href="#af4bf003fa01d0da05da4b03f506813fe" class="m-doc">find_neg_cycle</a>(</span><span class="m-doc-wrap">Mapping&amp; dist,
+              Callable&amp;&amp; get_weight) -&gt; std::vector&lt; std::pair&lt; Node, Node &gt; &gt; -&gt; auto</span>
+            </dt>
+            <dd>Find one negative cycle (Bellman-Ford style, node-pair weights)</dd>
           </dl>
         </section>
         <section>
@@ -119,16 +125,15 @@
                 </tr>
               </tbody>
             </table>
-<p>Creates a new <a href="classNegCycleFinder.html" class="m-doc">NegCycleFinder</a> instance that will operate on the provided directed graph. The graph is stored by reference, so it must remain valid for the lifetime of the <a href="classNegCycleFinder.html" class="m-doc">NegCycleFinder</a> object.</p>
           </div></section>
-          <section class="m-doc-details" id="a3abf186701d345e4bda235acc33f514b"><div>
+          <section class="m-doc-details" id="a535c5626fa7d8c326264ffb0729f9703"><div>
             <h3>
               <div class="m-doc-template">
                 template&lt;typename DiGraph&gt;
                 template&lt;typename Mapping, typename Callable&gt;
               </div>
-              <span class="m-doc-wrap-bumper">auto NegCycleFinder&lt;DiGraph&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a3abf186701d345e4bda235acc33f514b" class="m-doc-self">howard</a>(</span><span class="m-doc-wrap">Mapping&amp; dist,
-              Callable get_weight) -&gt; cppcoro::generator&lt; Cycle &gt;</span></span>
+              <span class="m-doc-wrap-bumper">auto NegCycleFinder&lt;DiGraph&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#a535c5626fa7d8c326264ffb0729f9703" class="m-doc-self">howard</a>(</span><span class="m-doc-wrap">Mapping&amp; dist,
+              Callable get_weight) -&gt; py::Generator&lt; Cycle &gt;</span></span>
             </h3>
             <p>Execute Howard&#x27;s algorithm to find negative cycles.</p>
             <table class="m-table m-fullwidth m-flat">
@@ -161,11 +166,57 @@
               <tfoot>
                 <tr>
                   <th>Returns</th>
-                  <td>cppcoro::generator&lt;Cycle&gt; Generator yielding negative cycles</td>
+                  <td>py::Generator&lt;Cycle&gt; Generator yielding negative cycles</td>
                 </tr>
               </tfoot>
             </table>
-<p>This is the main method that implements Howard&#x27;s policy iteration algorithm for negative cycle detection. It repeatedly performs relaxation steps and cycle detection until no more negative cycles can be found.</p><p>Algorithm flow:</p><ol><li>Clear predecessor mapping (start fresh)</li><li>While relaxation makes changes and no negative cycles found: a. Perform relaxation step to improve policy b. Search for cycles in current policy graph c. For each cycle found, verify it&#x27;s negative d. Yield all negative cycles found</li></ol><p>The method uses a generator to efficiently return cycles as they are found, avoiding the need to store all cycles simultaneously.</p>
+<p>Repeatedly performs relaxation and cycle detection until no more negative cycles can be found. Yields cycles as they are discovered.</p>
+          </div></section>
+          <section class="m-doc-details" id="af4bf003fa01d0da05da4b03f506813fe"><div>
+            <h3>
+              <div class="m-doc-template">
+                template&lt;typename DiGraph&gt;
+                template&lt;typename Mapping, typename Callable&gt;
+              </div>
+              <span class="m-doc-wrap-bumper">auto NegCycleFinder&lt;DiGraph&gt;::<wbr /></span><span class="m-doc-wrap"><span class="m-doc-wrap-bumper"><a href="#af4bf003fa01d0da05da4b03f506813fe" class="m-doc-self">find_neg_cycle</a>(</span><span class="m-doc-wrap">Mapping&amp; dist,
+              Callable&amp;&amp; get_weight) -&gt; std::vector&lt; std::pair&lt; Node, Node &gt; &gt;</span></span>
+            </h3>
+            <p>Find one negative cycle (Bellman-Ford style, node-pair weights)</p>
+            <table class="m-table m-fullwidth m-flat">
+              <thead>
+                <tr><th colspan="2">Template parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="width: 1%">Mapping</td>
+                  <td>Type of the distance mapping (node -&gt; distance)</td>
+                </tr>
+                <tr>
+                  <td>Callable</td>
+                  <td>Type of the weight function (edge pair -&gt; weight)</td>
+                </tr>
+              </tbody>
+              <thead>
+                <tr><th colspan="2">Parameters</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>dist&nbsp;<span class="m-label m-flat m-danger">in/out</span></td>
+                  <td>Distance estimates (updated during search)</td>
+                </tr>
+                <tr>
+                  <td>get_weight&nbsp;<span class="m-label m-flat m-info">in</span></td>
+                  <td>Weight function taking std::pair&lt;Node,Node&gt;</td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th>Returns</th>
+                  <td>std::vector&lt;std::pair&lt;Node, Node&gt;&gt; Cycle edges or empty</td>
+                </tr>
+              </tfoot>
+            </table>
+<p>Alternative entry point returning a single cycle as vector of (u, v) node pairs. Uses a weight function taking the edge as a node pair. Returns empty vector if no negative cycle exists.</p>
           </div></section>
         </section>
       </div>
