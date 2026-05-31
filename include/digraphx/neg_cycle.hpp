@@ -43,40 +43,38 @@
 
 namespace _digraph_detail {
 
-// Get a pair-iterable view of a container.
-// Uses .items() when available (py::dict), otherwise returns container as-is.
-template <typename T>
-decltype(auto) _view_items(const T& t) {
-    if constexpr (requires { t.items(); }) {
-        return t.items();
-    } else {
-        return t;
+    // Get a pair-iterable view of a container.
+    // Uses .items() when available (py::dict), otherwise returns container as-is.
+    template <typename T> decltype(auto) _view_items(const T& t) {
+        if constexpr (requires { t.items(); }) {
+            return t.items();
+        } else {
+            return t;
+        }
     }
-}
 
-// Get the key from an iteration element:
-// - For pair-like (unordered_map, list<pair>): .first
-// - For direct (py::dict keys, SimpleDiGraphS nodes): the element itself
-template <typename T>
-decltype(auto) _get_key(const T& entry) {
-    if constexpr (requires { entry.first; }) {
-        return entry.first;
-    } else {
-        return entry;
+    // Get the key from an iteration element:
+    // - For pair-like (unordered_map, list<pair>): .first
+    // - For direct (py::dict keys, SimpleDiGraphS nodes): the element itself
+    template <typename T> decltype(auto) _get_key(const T& entry) {
+        if constexpr (requires { entry.first; }) {
+            return entry.first;
+        } else {
+            return entry;
+        }
     }
-}
 
-// Get the value from an iteration element:
-// - For pair-like: .second
-// - For direct: .at(key) on the container
-template <typename T, typename Container>
-decltype(auto) _get_val(const T& entry, const Container& c) {
-    if constexpr (requires { entry.second; }) {
-        return entry.second;
-    } else {
-        return c.at(entry);
+    // Get the value from an iteration element:
+    // - For pair-like: .second
+    // - For direct: .at(key) on the container
+    template <typename T, typename Container>
+    decltype(auto) _get_val(const T& entry, const Container& c) {
+        if constexpr (requires { entry.second; }) {
+            return entry.second;
+        } else {
+            return c.at(entry);
+        }
     }
-}
 
 }  // namespace _digraph_detail
 
@@ -109,14 +107,14 @@ template <typename DiGraph>  //
 class NegCycleFinder {
     using _ItemsT = decltype(_view_items(std::declval<const DiGraph&>()));
     using _Elem = decltype(*std::declval<_ItemsT>().begin());
-    using Node = std::remove_cv_t<std::remove_reference_t<
-        decltype(_get_key(std::declval<_Elem>()))>>;
+    using Node
+        = std::remove_cv_t<std::remove_reference_t<decltype(_get_key(std::declval<_Elem>()))>>;
     using _NbrFunc = decltype(_get_val(std::declval<_Elem>(), std::declval<const DiGraph&>()));
     using Nbrs = std::remove_cv_t<std::remove_reference_t<_NbrFunc>>;
     using _NbrItemsT = decltype(_view_items(std::declval<const Nbrs&>()));
     using _NbrElem = decltype(*std::declval<_NbrItemsT>().begin());
-    using Edge = std::remove_cv_t<std::remove_reference_t<
-        decltype(_get_val(std::declval<_NbrElem>(), std::declval<const Nbrs&>()))>>;
+    using Edge = std::remove_cv_t<std::remove_reference_t<decltype(_get_val(
+        std::declval<_NbrElem>(), std::declval<const Nbrs&>()))>>;
     using Cycle = std::vector<Edge>;
 
     std::unordered_map<Node, std::pair<Node, Edge>> _pred{};
@@ -134,8 +132,8 @@ class NegCycleFinder {
      * @param[in] get_weight Function that extracts weight from an edge
      * @return true if any distances were updated, false if no changes occurred
      */
-    template <typename Mapping, typename Callable>
-    auto _relax(Mapping& dist, Callable&& get_weight) -> bool {
+    template <typename Mapping, typename Callable> auto _relax(Mapping& dist, Callable&& get_weight)
+        -> bool {
         auto changed = false;
         for (const auto& entry : _view_items(this->_digraph)) {
             const auto& utx = _get_key(entry);
@@ -168,12 +166,12 @@ class NegCycleFinder {
      * @return true if the cycle is negative, false otherwise
      */
     template <typename Mapping, typename Callable>
-    auto _is_negative(const Node& handle, const Mapping& dist, Callable&& get_weight) const -> bool {
+    auto _is_negative(const Node& handle, const Mapping& dist, Callable&& get_weight) const
+        -> bool {
         auto vtx = handle;
         while (true) {
             const auto& [utx, edge] = this->_pred.at(vtx);
-            if (dist.at(vtx) > dist.at(utx) + std::forward<Callable>(get_weight)(edge))
-                return true;
+            if (dist.at(vtx) > dist.at(utx) + std::forward<Callable>(get_weight)(edge)) return true;
             vtx = utx;
             if (vtx == handle) break;
         }
@@ -292,8 +290,7 @@ class NegCycleFinder {
      */
     auto _find_cycle() -> py::Generator<Node> {
         auto visited = std::unordered_map<Node, Node>{};
-        if constexpr (requires { this->_digraph.size(); })
-            visited.reserve(this->_digraph.size());
+        if constexpr (requires { this->_digraph.size(); }) visited.reserve(this->_digraph.size());
         for (const auto& entry : _view_items(this->_digraph)) {
             const auto& vtx = _get_key(entry);
             if (visited.contains(vtx)) continue;
@@ -332,8 +329,8 @@ class NegCycleFinder {
      * @param[in] get_weight Function to extract weight from an edge
      * @return py::Generator<Cycle> Generator yielding negative cycles
      */
-    template <typename Mapping, typename Callable>
-    auto howard(Mapping& dist, Callable get_weight) -> py::Generator<Cycle> {
+    template <typename Mapping, typename Callable> auto howard(Mapping& dist, Callable get_weight)
+        -> py::Generator<Cycle> {
         this->_pred.clear();
         if constexpr (requires { this->_digraph.size(); })
             this->_pred.reserve(this->_digraph.size());

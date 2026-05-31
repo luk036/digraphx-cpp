@@ -29,40 +29,38 @@
 
 namespace _digraph_detail {
 
-// Get a pair-iterable view of a container.
-// Uses .items() when available (py::dict), otherwise returns container as-is.
-template <typename T>
-decltype(auto) _view_items(const T& t) {
-    if constexpr (requires { t.items(); }) {
-        return t.items();
-    } else {
-        return t;
+    // Get a pair-iterable view of a container.
+    // Uses .items() when available (py::dict), otherwise returns container as-is.
+    template <typename T> decltype(auto) _view_items(const T& t) {
+        if constexpr (requires { t.items(); }) {
+            return t.items();
+        } else {
+            return t;
+        }
     }
-}
 
-// Get the key from an iteration element:
-// - For pair-like (unordered_map, list<pair>): .first
-// - For direct (py::dict keys, SimpleDiGraphS nodes): the element itself
-template <typename T>
-decltype(auto) _get_key(const T& entry) {
-    if constexpr (requires { entry.first; }) {
-        return entry.first;
-    } else {
-        return entry;
+    // Get the key from an iteration element:
+    // - For pair-like (unordered_map, list<pair>): .first
+    // - For direct (py::dict keys, SimpleDiGraphS nodes): the element itself
+    template <typename T> decltype(auto) _get_key(const T& entry) {
+        if constexpr (requires { entry.first; }) {
+            return entry.first;
+        } else {
+            return entry;
+        }
     }
-}
 
-// Get the value from an iteration element:
-// - For pair-like: .second
-// - For direct: .at(key) on the container
-template <typename T, typename Container>
-decltype(auto) _get_val(const T& entry, const Container& c) {
-    if constexpr (requires { entry.second; }) {
-        return entry.second;
-    } else {
-        return c.at(entry);
+    // Get the value from an iteration element:
+    // - For pair-like: .second
+    // - For direct: .at(key) on the container
+    template <typename T, typename Container>
+    decltype(auto) _get_val(const T& entry, const Container& c) {
+        if constexpr (requires { entry.second; }) {
+            return entry.second;
+        } else {
+            return c.at(entry);
+        }
     }
-}
 
 }  // namespace _digraph_detail
 
@@ -95,14 +93,14 @@ template <typename DiGraph, typename Domain>  //
 class NegCycleFinderQ {
     using _ItemsT = decltype(_view_items(std::declval<const DiGraph&>()));
     using _Elem = decltype(*std::declval<_ItemsT>().begin());
-    using Node = std::remove_cv_t<std::remove_reference_t<
-        decltype(_get_key(std::declval<_Elem>()))>>;
+    using Node
+        = std::remove_cv_t<std::remove_reference_t<decltype(_get_key(std::declval<_Elem>()))>>;
     using _NbrFunc = decltype(_get_val(std::declval<_Elem>(), std::declval<const DiGraph&>()));
     using Nbrs = std::remove_cv_t<std::remove_reference_t<_NbrFunc>>;
     using _NbrItemsT = decltype(_view_items(std::declval<const Nbrs&>()));
     using _NbrElem = decltype(*std::declval<_NbrItemsT>().begin());
-    using Edge = std::remove_cv_t<std::remove_reference_t<
-        decltype(_get_val(std::declval<_NbrElem>(), std::declval<const Nbrs&>()))>>;
+    using Edge = std::remove_cv_t<std::remove_reference_t<decltype(_get_val(
+        std::declval<_NbrElem>(), std::declval<const Nbrs&>()))>>;
     using Cycle = std::vector<Edge>;
 
     std::unordered_map<Node, std::pair<Node, Edge>> _pred{};
@@ -112,8 +110,7 @@ class NegCycleFinderQ {
     auto _find_cycle(const std::unordered_map<Node, std::pair<Node, Edge>>& point_to)
         -> py::Generator<Node> {
         auto visited = std::unordered_map<Node, Node>{};
-        if constexpr (requires { this->_digraph.size(); })
-            visited.reserve(this->_digraph.size());
+        if constexpr (requires { this->_digraph.size(); }) visited.reserve(this->_digraph.size());
         for (const auto& entry : _view_items(this->_digraph)) {
             const auto& vtx = _get_key(entry);
             if (visited.contains(vtx)) continue;
@@ -249,8 +246,7 @@ class NegCycleFinderQ {
     }
 
     auto _cycle_list_node_pairs(
-        const Node& handle,
-        const std::unordered_map<Node, std::pair<Node, Edge>>& point_to) const
+        const Node& handle, const std::unordered_map<Node, std::pair<Node, Edge>>& point_to) const
         -> std::vector<std::pair<Node, Node>> {
         auto vtx = handle;
         auto cycle = std::vector<std::pair<Node, Node>>{};
