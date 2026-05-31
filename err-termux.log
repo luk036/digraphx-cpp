@@ -1,0 +1,27 @@
+./digraphx-cpp
+[ 13%]: <standalone> cache compiling.release standalone/source/main.cpp
+[ 13%]: <DiGraphX> cache compiling.release source/dummy.cpp
+[ 13%]: <DiGraphX> cache compiling.release source/logger.cpp
+[ 13%]: <test_digraphx> cache compiling.release test/source/main.cpp
+[ 13%]: <test_digraphx> cache compiling.release test/source/test_cycle_ratio_raw.cpp
+[ 13%]: <test_digraphx> cache compiling.release test/source/test_min_parametric_q.cpp
+[ 13%]: <test_digraphx> cache compiling.release test/source/test_neg_cycle_q.cpp
+[ 13%]: <test_digraphx> cache compiling.release test/source/test_neg_cycle_raw.cpp
+[ 13%]: <test_digraphx> cache compiling.release test/source/test_parametric.cpp
+[ 13%]: <test_digraphx> cache compiling.release test/source/test_parametric_raw.cpp
+[ 18%]: <test_digraphx> cache compiling.release test/source/test_rapidcheck.cpp
+[ 22%]: <test_digraphx> cache compiling.release test/source/test_spdlogger.cpp
+[ 27%]: <DiGraphX> archiving.release libDiGraphX.a
+[ 36%]: <standalone> linking.release standalone
+error: include/digraphx/neg_cycle.hpp:41:9: error: unknown pragma ignored [-Werror,-Wunknown-pragmas]
+   41 | #pragma warning(push)
+      |         ^
+include/digraphx/neg_cycle.hpp:42:9: error: unknown pragma ignored [-Werror,-Wunknown-pragmas]
+   42 | #pragma warning(disable : 4702)
+      |         ^
+include/digraphx/neg_cycle.hpp:377:9: error: unknown pragma ignored [-Werror,-Wunknown-pragmas]
+  377 | #pragma warning(pop)
+      |         ^
+3 errors generated.
+  > in test/source/test_parametric.cpp
+

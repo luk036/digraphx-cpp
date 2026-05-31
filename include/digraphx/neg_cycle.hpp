@@ -38,8 +38,10 @@
 #include <utility>
 #include <vector>
 
+#ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4702)
+#endif
 
 namespace _digraph_detail {
 
@@ -374,4 +376,6 @@ class NegCycleFinder {
     }
 };
 
+#ifdef _MSC_VER
 #pragma warning(pop)
+#endif
