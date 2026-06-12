@@ -15,9 +15,7 @@ using std::vector;
 
 TEST_CASE("Test NegCycleFinder::find_neg_cycle with no negative cycle") {
     list<pair<size_t, list<pair<size_t, double>>>> digraph{
-        {0, {{1, 7.0}, {2, 5.0}}},
-        {1, {{0, 0.0}, {2, 3.0}}},
-        {2, {{1, 1.0}, {0, 2.0}}}};
+        {0, {{1, 7.0}, {2, 5.0}}}, {1, {{0, 0.0}, {2, 3.0}}}, {2, {{1, 1.0}, {0, 2.0}}}};
 
     auto get_weight = [&digraph](const pair<size_t, size_t>& edge) -> double {
         const auto [u, v] = edge;
@@ -66,12 +64,10 @@ TEST_CASE("Test NegCycleFinder::find_neg_cycle with negative cycle") {
 
 TEST_CASE("Test NegCycleFinder::find_neg_cycle with dict graph") {
     const unordered_map<uint32_t, list<pair<uint32_t, uint32_t>>> digraph{
-        {0, {{1, 0}, {2, 1}}},
-        {1, {{0, 2}, {2, 3}}},
-        {2, {{1, 4}, {0, 5}}}};
+        {0, {{1, 0}, {2, 1}}}, {1, {{0, 2}, {2, 3}}}, {2, {{1, 4}, {0, 5}}}};
 
-    const unordered_map<uint32_t, double> edge_weight{
-        {0, 7.0}, {1, 5.0}, {2, 0.0}, {3, 3.0}, {4, 1.0}, {5, 2.0}};
+    const unordered_map<uint32_t, double> edge_weight{{0, 7.0}, {1, 5.0}, {2, 0.0},
+                                                      {3, 3.0}, {4, 1.0}, {5, 2.0}};
 
     auto get_weight = [&digraph, &edge_weight](const pair<uint32_t, uint32_t>& edge) -> double {
         const auto [u, v] = edge;

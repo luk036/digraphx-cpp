@@ -17,9 +17,7 @@ using std::vector;
 
 TEST_CASE("Test min_parametric free function with list digraph (no neg cycle)") {
     list<pair<size_t, list<pair<size_t, double>>>> digraph{
-        {0, {{1, 7.0}, {2, 5.0}}},
-        {1, {{0, 0.0}, {2, 3.0}}},
-        {2, {{1, 1.0}, {0, 2.0}}}};
+        {0, {{1, 7.0}, {2, 5.0}}}, {1, {{0, 0.0}, {2, 3.0}}}, {2, {{1, 1.0}, {0, 2.0}}}};
 
     auto distance = [](double r, const auto& edge) -> double { return edge - r; };
     auto zero_cancel = [](const auto& cycle) -> double {
@@ -39,12 +37,9 @@ TEST_CASE("Test min_parametric free function with list digraph (no neg cycle)") 
 
 TEST_CASE("Test min_parametric free function with dict digraph (no neg cycle)") {
     unordered_map<string, unordered_map<string, unordered_map<string, double>>> digraph{
-        {"a0",
-         {{"a1", {{"cost", 7.0}, {"time", 1.0}}}, {"a2", {{"cost", 5.0}, {"time", 1.0}}}}},
-        {"a1",
-         {{"a0", {{"cost", 0.0}, {"time", 1.0}}}, {"a2", {{"cost", 3.0}, {"time", 1.0}}}}},
-        {"a2",
-         {{"a1", {{"cost", 1.0}, {"time", 1.0}}}, {"a0", {{"cost", 2.0}, {"time", 1.0}}}}}};
+        {"a0", {{"a1", {{"cost", 7.0}, {"time", 1.0}}}, {"a2", {{"cost", 5.0}, {"time", 1.0}}}}},
+        {"a1", {{"a0", {{"cost", 0.0}, {"time", 1.0}}}, {"a2", {{"cost", 3.0}, {"time", 1.0}}}}},
+        {"a2", {{"a1", {{"cost", 1.0}, {"time", 1.0}}}, {"a0", {{"cost", 2.0}, {"time", 1.0}}}}}};
 
     auto distance = [](double r, const auto& edge) -> double {
         return edge.at("cost") - r * edge.at("time");
@@ -72,9 +67,7 @@ TEST_CASE("Test min_parametric free function with dict digraph (no neg cycle)") 
 
 TEST_CASE("Test min_parametric free function pick_one_only") {
     list<pair<size_t, list<pair<size_t, double>>>> digraph{
-        {0, {{1, 7.0}, {2, 5.0}}},
-        {1, {{0, 0.0}, {2, 3.0}}},
-        {2, {{1, 1.0}, {0, 2.0}}}};
+        {0, {{1, 7.0}, {2, 5.0}}}, {1, {{0, 0.0}, {2, 3.0}}}, {2, {{1, 1.0}, {0, 2.0}}}};
 
     auto distance = [](double r, const auto& edge) -> double { return edge - r; };
     auto zero_cancel = [](const auto& cycle) -> double {
@@ -125,8 +118,8 @@ TEST_CASE("Test MinParametricSolver with pick_one_only on negative cycle") {
 
     class TestAPI : public MinParametricAPI<string, unordered_map<string, double>, double> {
       public:
-        auto distance(const double& ratio,
-                      const unordered_map<string, double>& edge) -> double override {
+        auto distance(const double& ratio, const unordered_map<string, double>& edge)
+            -> double override {
             return edge.at("cost") - ratio * edge.at("time");
         }
         auto zero_cancel(const vector<unordered_map<string, double>>& cycle) -> double override {
@@ -193,8 +186,8 @@ TEST_CASE("Test MinParametricSolver with negative cycle and infinity init") {
 
     class MyAPI : public MinParametricAPI<string, unordered_map<string, double>, double> {
       public:
-        auto distance(const double& ratio,
-                      const unordered_map<string, double>& edge) -> double override {
+        auto distance(const double& ratio, const unordered_map<string, double>& edge)
+            -> double override {
             return edge.at("cost") - ratio * edge.at("time");
         }
         auto zero_cancel(const vector<unordered_map<string, double>>& cycle) -> double override {
@@ -215,9 +208,8 @@ TEST_CASE("Test MinParametricSolver with negative cycle and infinity init") {
 
     auto api = MyAPI{};
     auto solver = MinParametricSolver<decltype(digraph), double, double>{digraph, api};
-    auto update_ok = [](const double& current, const double& new_val) -> bool {
-        return current > new_val;
-    };
+    auto update_ok
+        = [](const double& current, const double& new_val) -> bool { return current > new_val; };
 
     auto [ratio, cycle] = solver.run(dist, 0.0, update_ok);
 
