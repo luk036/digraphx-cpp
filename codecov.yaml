@@ -1,5 +1,6 @@
 ignore:
   - "test"
+  - "SPDLOGGER_EXAMPLE.cpp"
 
 comment:
   require_changes: true
