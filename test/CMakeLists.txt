@@ -64,8 +64,8 @@ if(NOT TEST_INSTALLED_VERSION)
                       -Wno-unknown-pragmas
     )
   elseif(MSVC)
-    target_compile_options(DiGraphX PUBLIC /W4 /WX /wd4459 /wd4819 /wd4996)
-    target_compile_definitions(${PROJECT_NAME} PUBLIC DOCTEST_CONFIG_USE_STD_HEADERS)
+    target_compile_options(DiGraphX PUBLIC /W4 /WX /wd5285 /wd4459 /wd4819 /wd4996)
+    # target_compile_definitions(${PROJECT_NAME} PUBLIC DOCTEST_CONFIG_USE_STD_HEADERS)
   endif()
 endif()
 
