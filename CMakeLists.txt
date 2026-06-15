@@ -58,7 +58,7 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
                     -Wno-unknown-pragmas
   )
 elseif(MSVC)
-  target_compile_options(DiGraphX PUBLIC /utf-8 /W4 /WX /wd5285)
+  target_compile_options(DiGraphX PUBLIC /utf-8 /W4 /WX)
   # target_compile_definitions(${PROJECT_NAME} PUBLIC DOCTEST_CONFIG_USE_STD_HEADERS)
 endif()
 
