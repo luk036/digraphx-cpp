@@ -7,7 +7,7 @@
 
 #include "neg_cycle_q.hpp"  // import NegCycleFinderQ
 
-/*!
+/**
  * @file min_parametric_q.hpp
  * @brief Minimum parametric network problem solver with constraints
  *
@@ -90,7 +90,7 @@ template <typename Node, typename Edge, typename Ratio> class MinParametricAPI {
     virtual auto zero_cancel(const std::vector<Edge>& cycle) -> Ratio = 0;
 };
 
-/*!
+/**
  * @brief Minimum Parametric Solver with constraint support
  *
  * This class implements algorithms for solving constrained parametric network
@@ -251,7 +251,7 @@ template <typename DiGraph, typename Ratio, typename Domain> class MinParametric
     // }
 };
 
-/*!
+/**
  * @brief Free function for constrained minimum parametric problems
  *
  * This function provides a functional interface for solving constrained

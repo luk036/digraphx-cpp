@@ -4,7 +4,7 @@
 
 #include "neg_cycle.hpp"  // import NegCycleFinder
 
-/*!
+/**
  * @file parametric.hpp
  * @brief Maximum parametric network problem solver
  *
@@ -139,7 +139,7 @@ template <typename DiGraph, typename ParametricAPI> class MaxParametricSolver {
     }
 };
 
-/*!
+/**
  * @brief Free function for solving maximum parametric network problems
  *
  * This function provides a functional interface for solving parametric network

@@ -1,7 +1,7 @@
 // -*- coing: utf-8 -*-
 #pragma once
 
-/*!
+/**
  * @file neg_cycle.hpp
  * @brief Negative cycle detection for weighted directed graphs
  *
@@ -84,7 +84,7 @@ using _digraph_detail::_get_key;
 using _digraph_detail::_get_val;
 using _digraph_detail::_view_items;
 
-/*!
+/**
  * @brief Negative Cycle Finder using Howard's policy iteration method
  *
  * This class implements Howard's algorithm for efficient negative cycle detection

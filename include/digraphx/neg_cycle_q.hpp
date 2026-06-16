@@ -1,7 +1,7 @@
 // -*- coding: utf-8 -*-
 #pragma once
 
-/*!
+/**
  * @file neg_cycle_q.hpp
  * @brief Negative cycle detection with constraints using Howard's method
  *
@@ -70,7 +70,7 @@ using _digraph_detail::_get_key;
 using _digraph_detail::_get_val;
 using _digraph_detail::_view_items;
 
-/*!
+/**
  * @brief Negative Cycle Finder with constraints using Howard's method
  *
  * This class extends the basic negative cycle detection to support constrained

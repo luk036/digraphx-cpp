@@ -1,4 +1,8 @@
 // -*- coding: utf-8 -*-
+/**
+ * @file logger.hpp
+ * @brief Logging utilities for the digraphx library
+ */
 #pragma once
 
 #include <string>

@@ -4,7 +4,7 @@
 
 #include "parametric.hpp"  // import max_parametric
 
-/*!
+/**
  * @file min_cycle_ratio.hpp
  * @brief Minimum cycle ratio algorithms for directed graphs
  *
@@ -122,7 +122,7 @@ template <typename DiGraph, typename Ratio> class CycleRatioAPI {
     }
 };
 
-/*!
+/**
  * @brief Minimum Cycle Ratio Solver
  *
  * This class provides algorithms for solving the minimum cycle ratio (MCR) problem
@@ -196,7 +196,7 @@ template <typename DiGraph, typename Ratio> class MinCycleRatioSolver {
     }
 };
 
-/*!
+/**
  * @brief Free function for minimum cost-to-time cycle ratio problem
  *
  * This function provides a functional interface for solving the minimum cycle
