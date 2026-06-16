@@ -49,12 +49,12 @@ target_compile_options(${PROJECT_NAME} PUBLIC "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   target_compile_options(
-    DiGraphX PUBLIC -Wall -Wpedantic -Wextra -Werror -Wno-deprecated-literal-operator
+    DiGraphX PUBLIC -Wall -Wpedantic -Wextra -Werror
                     -Wno-unknown-pragmas
   )
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
   target_compile_options(
-    DiGraphX PUBLIC -Wall -Wpedantic -Wextra -Werror -Wno-deprecated-literal-operator
+    DiGraphX PUBLIC -Wall -Wpedantic -Wextra -Werror
                     -Wno-unknown-pragmas
   )
 elseif(MSVC)
