@@ -126,22 +126,8 @@ class ThreadPool {
     bool stop;
 };
 
-// the constructor just launches some amount of workers
 /*!
- * @brief Constructor implementation - spawns worker threads
- *
- * Creates the specified number of worker threads. Each worker runs an
- * infinite loop, waiting for tasks to become available. Workers are
- * spawned immediately and begin waiting for work.
- *
- * @param threads Number of worker threads to create
- *
- * Thread lifecycle:
- * 1. Worker thread starts
- * 2. Acquires lock on queue_mutex
- * 3. Waits on condition variable for work or stop signal
- * 4. When awakened, either exits (if stopped) or processes task
- * 5. Repeats from step 2
+ * @overload ThreadPool::ThreadPool(size_t)
  */
 inline ThreadPool::ThreadPool(size_t threads) : stop(false) {
     for (size_t i = 0; i < threads; ++i)
@@ -164,20 +150,11 @@ inline ThreadPool::ThreadPool(size_t threads) : stop(false) {
 }
 
 /*!
+ * @overload
  * @brief Enqueue a new task to the pool
- *
- * Creates a packaged_task from the provided callable and arguments,
- * then adds it to the task queue. The task will be executed by an
- * available worker thread.
- *
- * Thread safety:
- * - Acquires queue_mutex to safely add task to queue
- * - Notifies one waiting worker via condition variable
  *
  * @tparam F Callable type
  * @tparam Args Argument types
- * @param f Callable to execute
- * @param args Arguments to pass to callable
  * @return std::future containing the result once task completes
  * @throw std::runtime_error if pool has been stopped
  */

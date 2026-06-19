@@ -245,7 +245,7 @@ template <typename DiGraph, typename Ratio> class MinCycleRatioSolver {
  * @tparam Mapping Type of distance mapping (node -> distance)
  * @tparam Domain Type of the domain for distance calculations
  * @param[in] digraph The directed graph to analyze
- * @param[in,out] ratio Initial and final minimum ratio estimate
+ * @param[in,out] r0 Initial and final minimum ratio estimate
  * @param[in] get_cost Function to extract cost from an edge
  * @param[in] get_time Function to extract time from an edge
  * @param[in,out] dist Distance mapping updated during execution
