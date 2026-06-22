@@ -12,16 +12,37 @@
  * directed graphs, which is a fundamental problem in graph theory with
  * applications in performance analysis, scheduling, and discrete event systems.
  *
- * The cycle ratio of a cycle is defined as:
- * @verbatim
- * ratio(cycle) = sum(costs) / sum(times)
- * @endverbatim
+ * The cycle ratio of a cycle \f$C\f$ is defined as:
+ * @f[
+ *     r(C) = \frac{\sum_{e \in C} c(e)}{\sum_{e \in C} t(e)}
+ * @f]
+ * where \f$c(e)\f$ is the cost and \f$t(e)\f$ is the time of edge \f$e\f$.
+ *
+ * @dot
+ *   digraph mcr_example {
+ *     bgcolor="transparent";
+ *     rankdir=LR;
+ *     node [shape=circle, style=filled, fillcolor="#d4e6f1"];
+ *     edge [fontsize=10];
+ *     a [label="A"];
+ *     b [label="B"];
+ *     c [label="C"];
+ *     d [label="D"];
+ *     a -> b [label="c=2, t=1", color="#e74c3c"];
+ *     b -> c [label="c=3, t=1", color="#e74c3c"];
+ *     c -> d [label="c=4, t=2", color="#e74c3c"];
+ *     d -> a [label="c=1, t=1", color="#e74c3c"];
+ *     { rank=same; a; b; c; d; }
+ *     edge [style=dashed, color="#888", constraint=false];
+ *     note [shape=note, fillcolor="#fcf3cf", label="Cycle A→B→C→D→A\nr = (2+3+4+1)/(1+1+2+1)\n  = 10/5 = 2.0"];
+ *     d -> note;
+ *   }
+ * @enddot
  *
  * Problem formulation:
- * @verbatim
- *  min  ratio(cycle)
- *  s.t. cycle is a directed cycle in G(V, E)
- * @endverbatim
+ * @f[
+ *     \min_{C \subseteq G} \; r(C)
+ * @f]
  *
  * Key applications:
  * - Performance analysis of digital circuits
@@ -85,10 +106,13 @@ template <typename DiGraph, typename Ratio> class CycleRatioAPI {
     explicit CycleRatioAPI(const DiGraph& digraph) : digraph(digraph) {}
 
     /**
-     * @brief distance between two end points of an edge
+     * @brief Distance between two end points of an edge
      *
-     * The `distance` function calculates the distance between two vertices in a graph based on the
-     * cost and time values associated with the edge connecting them.
+     * The parametric edge weight for a given ratio \f$r\f$:
+     * @f[
+     *     d_r(e) = c(e) - r \cdot t(e)
+     * @f]
+     * where \f$c(e)\f$ is the cost and \f$t(e)\f$ is the time of edge \f$e\f$.
      *
      * @param[in] ratio A reference to a `Ratio` object named `ratio`.
      * @param[in] edge The `edge` parameter is a constant reference to an `Edge` object. It
@@ -103,6 +127,11 @@ template <typename DiGraph, typename Ratio> class CycleRatioAPI {
     /**
      * The `zero_cancel` function calculates the ratio of the total cost to the total time for a
      * given cycle.
+     *
+     * The cycle ratio (the value of \f$r\f$ that makes the cycle weight zero):
+     * @f[
+     *     r(C) = \frac{\sum_{e \in C} c(e)}{\sum_{e \in C} t(e)}
+     * @f]
      *
      * @param[in] cycle The `cycle` parameter is of type `Cycle`, which is likely a container or
      * data structure that represents a cycle in a graph. It is used to calculate the ratio of the
@@ -131,21 +160,19 @@ template <typename DiGraph, typename Ratio> class CycleRatioAPI {
  * characteristics of discrete event systems.
  *
  * Problem definition:
- * @verbatim
- *  min  (sum(costs) / sum(times))
- *  s.t. cycle is a directed cycle in G(V, E)
- * @endverbatim
+ * @f[
+ *     \min_{C \subseteq G} \; \frac{\sum_{e \in C} c(e)}{\sum_{e \in C} t(e)}
+ * @f]
  *
  * Algorithm approach:
  * The solver transforms the MCR problem into a parametric problem:
- * @verbatim
- *  max  r
- *  s.t. dist[v] - dist[u] >= cost(u,v) - r * time(u,v)
- *       for all edges (u,v) in G
- * @endverbatim
+ * @f[
+ *     \max \; r \quad \text{s.t.} \quad
+ *     d_v - d_u \ge c(u,v) - r \cdot t(u,v), \; \forall (u,v) \in E
+ * @f]
  *
  * Key insights:
- * - A cycle has ratio ≤ r iff cost - r*time has negative cycle
+ * - A cycle has ratio \f$\le r\f$ iff \f$c - r \cdot t\f$ has a negative cycle
  * - Binary search on r with negative cycle detection
  * - Uses Howard's method for efficient cycle detection
  * - Converges to optimal minimum cycle ratio
@@ -203,11 +230,10 @@ template <typename DiGraph, typename Ratio> class MinCycleRatioSolver {
  * ratio problem without requiring explicit class instantiation. It solves the
  * parametric network problem:
  *
- * @verbatim
- *     max  r
- *     s.t. dist[vtx] - dist[utx] ≥ cost(utx, vtx) - r * time(utx, vtx)
- *          ∀ edge(utx, vtx) ∈ G(V, E)
- * @endverbatim
+ * @f[
+ *     \max \; r \quad \text{s.t.} \quad
+ *     d_v - d_u \ge c(u,v) - r \cdot t(u,v), \; \forall (u,v) \in E
+ * @f]
  *
  * The function uses the same algorithmic approach as MinCycleRatioSolver but
  * with a more flexible callback-based interface. This is particularly useful

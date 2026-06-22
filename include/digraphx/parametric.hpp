@@ -14,11 +14,11 @@
  * remains feasible.
  *
  * Problem formulation:
- * \code
- *  max  r
- *  s.t. dist[v] - dist[u] <= distance(e, r)
- *       for all edges e(u, v) in G(V, E)
- * \endcode
+ * @f[
+ *     \max \; r \quad \text{s.t.} \quad
+ *     d_v - d_u \le w_r(u,v), \; \forall (u,v) \in E
+ * @f]
+ * where \f$w_r(u,v)\f$ is the edge weight as a function of parameter \f$r\f$.
  *
  * Key applications:
  * - Maximum cycle ratio problems
@@ -148,11 +148,10 @@ template <typename DiGraph, typename ParametricAPI> class MaxParametricSolver {
  * approach.
  *
  * Problem formulation:
- * \code
- *  max  r
- *  s.t. dist[v] - dist[u] <= distance(e, r)
- *       for all edges e(u, v) in G(V, E)
- * \endcode
+ * @f[
+ *     \max \; r \quad \text{s.t.} \quad
+ *     d_v - d_u \le w_r(u,v), \; \forall (u,v) \in E
+ * @f]
  *
  * This approach is useful when:
  * - You prefer functional programming style

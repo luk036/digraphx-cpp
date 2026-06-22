@@ -9,6 +9,25 @@
  * in directed graphs. It provides a policy iteration algorithm that maintains
  * candidate cycles and iteratively updates them until convergence.
  *
+ * @dot
+ *   digraph neg_cycle {
+ *     bgcolor="transparent";
+ *     rankdir=LR;
+ *     node [shape=circle, style=filled, fillcolor="#d4e6f1"];
+ *     edge [fontsize=10];
+ *     x [label="X"];
+ *     y [label="Y"];
+ *     z [label="Z"];
+ *     x -> y [label="w=2", color="#27ae60"];
+ *     y -> z [label="w=3", color="#27ae60"];
+ *     z -> x [label="w=-6", color="#e74c3c", fontcolor="#e74c3c"];
+ *     note [shape=note, fillcolor="#fadbd8", label="Negative cycle!\n2 + 3 + (-6) = -1 < 0"];
+ *     z -> note [style=dashed, color="#888", constraint=false];
+ *     { rank=same; x; y; z; }
+ *   }
+ * @enddot
+ */
+ *
  * Key features:
  * - Efficient negative cycle detection without requiring a source node
  * - Policy iteration approach for faster convergence
