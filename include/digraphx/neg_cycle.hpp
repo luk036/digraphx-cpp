@@ -27,29 +27,6 @@
  *   }
  * @enddot
  */
- *
- * Key features:
- * - Efficient negative cycle detection without requiring a source node
- * - Policy iteration approach for faster convergence
- * - Generator-based cycle enumeration for memory efficiency
- * - Template-based design for various graph representations
- *
- * Example usage:
- * @verbatim
- * std::unordered_map<int, std::unordered_map<int, double>> graph = {
- *     {0, {{1, 2.0}, {2, 3.0}}},
- *     {1, {{2, -5.0}}},
- *     {2, {{0, 1.0}}}
- * };
- * NegCycleFinder finder(graph);
- * std::unordered_map<int, double> dist;
- * for (const auto& [node, _] : graph) dist[node] = 0.0;
- * for (const auto& cycle : finder.howard(dist, [](const auto& e) { return e; }))
- *     std::cout << "Found negative cycle with " << cycle.size() << " edges\n";
- * @endverbatim
- *
- * @see Howard, R. A. (1960). Dynamic programming and Markov processes.
- */
 #include <cassert>
 #include <py2cpp/gen.hpp>
 #include <type_traits>
