@@ -1,0 +1,15 @@
+<map id="digraphx/neg_cycle_q.hpp" name="digraphx/neg_cycle_q.hpp">
+<area shape="rect" id="Node000001" title="Negative cycle detection with constraints using Howard&#39;s method." alt="" coords="286,5,434,45"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,93,75,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="286,47,89,96,88,90,285,42"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="99,93,224,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="313,48,204,91,202,86,311,43"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="249,93,341,119"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="346,47,315,84,311,81,342,44"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="365,93,489,119"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="378,44,410,81,406,84,374,47"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="513,93,573,119"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="405,43,504,85,502,90,403,48"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="597,93,659,119"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="425,43,584,89,582,94,423,48"/>
+</map>

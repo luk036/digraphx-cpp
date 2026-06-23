@@ -1,0 +1,9 @@
+var searchData=
+[
+  ['parametric_2ehpp_0',['parametric.hpp',['../parametric_8hpp.html',1,'']]],
+  ['pointer_1',['pointer',['../classcppcoro_1_1detail_1_1generator__iterator.html#a22186e353e027a6f1dedf3bf703d2152',1,'cppcoro::detail::generator_iterator::pointer'],['../classcppcoro_1_1recursive__generator_1_1iterator.html#a1bd2154ed4284cce645c1c0156b093e6',1,'cppcoro::recursive_generator::iterator::pointer']]],
+  ['pointer_5ftype_2',['pointer_type',['../classcppcoro_1_1detail_1_1generator__promise.html#ad02a64e92cd1ee35d0a6549d81e147ed',1,'cppcoro::detail::generator_promise']]],
+  ['projects_20and_20alternatives_3',['Related projects and alternatives',['../index.html#autotoc_md14',1,'']]],
+  ['promise_5ftype_4',['promise_type',['../classcppcoro_1_1recursive__generator_1_1promise__type.html',1,'cppcoro::recursive_generator&lt; T &gt;::promise_type'],['../classcppcoro_1_1generator.html#acb32a62be62c620fbff7dae25fa4b710',1,'cppcoro::generator::promise_type'],['../classcppcoro_1_1recursive__generator.html#a57917bb91eca1c2111788d14137e75d0',1,'cppcoro::recursive_generator::promise_type'],['../classcppcoro_1_1recursive__generator_1_1promise__type.html#acd7dd9d48e0bb01f01f25ce3e9031933',1,'cppcoro::recursive_generator::promise_type::promise_type() noexcept'],['../classcppcoro_1_1recursive__generator_1_1promise__type.html#a4a21ea86b73027529949c8b554bbe473',1,'cppcoro::recursive_generator::promise_type::promise_type(const promise_type &amp;)=delete'],['../classcppcoro_1_1recursive__generator_1_1promise__type.html#a3ab3df91d06549737cf4f6ef8ae7a48a',1,'cppcoro::recursive_generator::promise_type::promise_type(promise_type &amp;&amp;)=delete']]],
+  ['pull_5',['pull',['../classcppcoro_1_1recursive__generator_1_1promise__type.html#a3dcd4f155fc469223a4b88fa47f3ef13',1,'cppcoro::recursive_generator::promise_type']]]
+];

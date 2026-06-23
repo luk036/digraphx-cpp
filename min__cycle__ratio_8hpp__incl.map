@@ -1,0 +1,22 @@
+<map id="digraphx/min_cycle_ratio.hpp" name="digraphx/min_cycle_ratio.hpp">
+<area shape="rect" id="Node000001" title="Minimum cycle ratio algorithms for directed graphs." alt="" coords="37,5,187,45"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,93,91,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,47,68,84,64,81,94,44"/>
+<area shape="rect" id="Node000003" href="$parametric_8hpp.html" title="Maximum parametric network problem solver." alt="" coords="115,93,237,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="130,44,160,81,156,84,125,47"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="10,240,73,265"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="167,121,63,232,59,228,163,117"/>
+<area shape="rect" id="Node000005" href="$neg__cycle_8hpp.html" title="Negative cycle detection for weighted directed graphs." alt="" coords="196,167,311,192"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="190,117,232,155,229,159,187,121"/>
+<area shape="poly" id="edge10_Node000005_Node000004" title=" " alt="" coords="220,195,86,239,85,234,218,189"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="97,240,167,265"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="235,194,165,235,162,231,232,190"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="191,240,316,265"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="256,192,256,226,251,226,251,192"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="341,240,433,265"/>
+<area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="276,190,354,231,352,236,274,194"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="457,240,581,265"/>
+<area shape="poly" id="edge8_Node000005_Node000009" title=" " alt="" coords="297,189,463,234,462,239,295,195"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="605,240,665,265"/>
+<area shape="poly" id="edge9_Node000005_Node000010" title=" " alt="" coords="311,186,436,207,591,237,590,242,435,212,310,192"/>
+</map>
