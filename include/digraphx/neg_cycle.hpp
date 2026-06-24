@@ -39,21 +39,11 @@
 #    pragma warning(disable : 4702)
 #endif
 
-namespace _digraph_detail {
-
-    // Get a pair-iterable view of a container.
-    // Uses .items() when available (py::dict), otherwise returns container as-is.
-    template <typename T> decltype(auto) _view_items(const T& t) {
-        if constexpr (requires { t.items(); }) {
-            return t.items();
-        } else {
-            return t;
-        }
-    }
+namespace digraph_detail {
 
     // Get the key from an iteration element:
     // - For pair-like (unordered_map, list<pair>): .first
-    // - For direct (py::dict keys, SimpleDiGraphS nodes): the element itself
+    // - For direct (SimpleDiGraphS nodes): the element itself
     template <typename T> decltype(auto) _get_key(const T& entry) {
         if constexpr (requires { entry.first; }) {
             return entry.first;
@@ -74,12 +64,10 @@ namespace _digraph_detail {
         }
     }
 
-}  // namespace _digraph_detail
+}  // namespace digraph_detail
 
-using _digraph_detail::_get_key;
-using _digraph_detail::_get_val;
-using _digraph_detail::_view_items;
-
+using digraph_detail::_get_key;
+using digraph_detail::_get_val;
 /**
  * @brief Negative Cycle Finder using Howard's policy iteration method
  *
@@ -89,7 +77,7 @@ using _digraph_detail::_view_items;
  * improves them until convergence.
  *
  * A directed graph is assumed to be a container of containers.
- * Supports unordered_map, list-of-pairs, py::dict, SimpleDiGraphS, and
+ * Supports unordered_map, list-of-pairs, SimpleDiGraphS, and
  * MapAdapter-wrapped containers (see _get_key / _get_val helpers).
  *
  * Algorithm overview:
@@ -103,16 +91,16 @@ using _digraph_detail::_view_items;
  */
 template <typename DiGraph>  //
 class NegCycleFinder {
-    using _ItemsT = decltype(_view_items(std::declval<const DiGraph&>()));
-    using _Elem = decltype(*std::declval<_ItemsT>().begin());
+    using ItemsT = decltype(std::declval<const DiGraph&>());
+    using Elem = decltype(*std::declval<ItemsT>().begin());
     using Node
-        = std::remove_cv_t<std::remove_reference_t<decltype(_get_key(std::declval<_Elem>()))>>;
-    using _NbrFunc = decltype(_get_val(std::declval<_Elem>(), std::declval<const DiGraph&>()));
-    using Nbrs = std::remove_cv_t<std::remove_reference_t<_NbrFunc>>;
-    using _NbrItemsT = decltype(_view_items(std::declval<const Nbrs&>()));
-    using _NbrElem = decltype(*std::declval<_NbrItemsT>().begin());
+        = std::remove_cv_t<std::remove_reference_t<decltype(_get_key(std::declval<Elem>()))>>;
+    using NbrFunc = decltype(_get_val(std::declval<Elem>(), std::declval<const DiGraph&>()));
+    using Nbrs = std::remove_cv_t<std::remove_reference_t<NbrFunc>>;
+    using NbrItemsT = decltype(std::declval<const Nbrs&>());
+    using NbrElem = decltype(*std::declval<NbrItemsT>().begin());
     using Edge = std::remove_cv_t<std::remove_reference_t<decltype(_get_val(
-        std::declval<_NbrElem>(), std::declval<const Nbrs&>()))>>;
+        std::declval<NbrElem>(), std::declval<const Nbrs&>()))>>;
     using Cycle = std::vector<Edge>;
 
     std::unordered_map<Node, std::pair<Node, Edge>> _pred{};
@@ -133,10 +121,10 @@ class NegCycleFinder {
     template <typename Mapping, typename Callable> auto _relax(Mapping& dist, Callable&& get_weight)
         -> bool {
         auto changed = false;
-        for (const auto& entry : _view_items(this->_digraph)) {
+        for (const auto& entry : this->_digraph) {
             const auto& utx = _get_key(entry);
             const auto& nbrs = _get_val(entry, this->_digraph);
-            for (const auto& nbr_entry : _view_items(nbrs)) {
+            for (const auto& nbr_entry : nbrs) {
                 const auto& vtx = _get_key(nbr_entry);
                 const auto& edge = _get_val(nbr_entry, nbrs);
                 auto distance = dist[utx] + std::forward<Callable>(get_weight)(edge);
@@ -233,10 +221,10 @@ class NegCycleFinder {
     template <typename Mapping, typename Callable>
     auto _relax_node_pairs(Mapping& dist, Callable&& get_weight) -> bool {
         auto changed = false;
-        for (const auto& entry : _view_items(this->_digraph)) {
+        for (const auto& entry : this->_digraph) {
             const auto& utx = _get_key(entry);
             const auto& nbrs = _get_val(entry, this->_digraph);
-            for (const auto& nbr_entry : _view_items(nbrs)) {
+            for (const auto& nbr_entry : nbrs) {
                 const auto& vtx = _get_key(nbr_entry);
                 const auto& edge = _get_val(nbr_entry, nbrs);
                 auto weight = get_weight(std::pair<Node, Node>{utx, vtx});
@@ -289,7 +277,7 @@ class NegCycleFinder {
     auto _find_cycle() -> py::Generator<Node> {
         auto visited = std::unordered_map<Node, Node>{};
         if constexpr (requires { this->_digraph.size(); }) visited.reserve(this->_digraph.size());
-        for (const auto& entry : _view_items(this->_digraph)) {
+        for (const auto& entry : this->_digraph) {
             const auto& vtx = _get_key(entry);
             if (visited.contains(vtx)) continue;
             auto utx = vtx;
