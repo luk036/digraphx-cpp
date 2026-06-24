@@ -25,7 +25,7 @@ if is_plat("linux") then
         add_sysincludedirs(termux_prefix .. "/include", {public = true})
     end
 elseif is_plat("windows") then
-    add_cxflags("/EHsc /utf-8 /W4 /WX", {force = true})
+    add_cxflags("/EHsc /utf-8 /W4 /WX /wd4702", {force = true})
 end
 
 target("DiGraphX")
