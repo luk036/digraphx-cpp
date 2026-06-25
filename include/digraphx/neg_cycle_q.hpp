@@ -141,29 +141,6 @@ class NegCycleFinderQ {
     }
 
     template <typename Mapping, typename GetWeight, typename UpdateOk>
-    auto _relax_node_pairs_pred(Mapping& dist, GetWeight&& get_weight, UpdateOk&& update_ok)
-        -> bool {
-        auto changed = false;
-        for (const auto& entry : this->_digraph) {
-            const auto& utx = _get_key(entry);
-            const auto& nbrs = _get_val(entry, this->_digraph);
-            for (const auto& nbr_entry : nbrs) {
-                const auto& vtx = _get_key(nbr_entry);
-                const auto& edge = _get_val(nbr_entry, nbrs);
-                auto weight = get_weight(std::pair<Node, Node>{utx, vtx});
-                auto distance = dist[utx] + weight;
-                if (dist[vtx] > distance
-                    && std::forward<UpdateOk>(update_ok)(dist[vtx], distance)) {
-                    dist[vtx] = distance;
-                    this->_pred.insert_or_assign(vtx, std::pair(utx, edge));
-                    changed = true;
-                }
-            }
-        }
-        return changed;
-    }
-
-    template <typename Mapping, typename GetWeight, typename UpdateOk>
     auto _relax_succ(Mapping& dist, GetWeight&& get_weight, UpdateOk&& update_ok) -> bool {
         auto changed = false;
         for (const auto& entry : this->_digraph) {
@@ -173,29 +150,6 @@ class NegCycleFinderQ {
                 const auto& vtx = _get_key(nbr_entry);
                 const auto& edge = _get_val(nbr_entry, nbrs);
                 auto distance = dist[vtx] - std::forward<GetWeight>(get_weight)(edge);
-                if (dist[utx] < distance
-                    && std::forward<UpdateOk>(update_ok)(dist[utx], distance)) {
-                    dist[utx] = distance;
-                    this->_succ.insert_or_assign(utx, std::pair(vtx, edge));
-                    changed = true;
-                }
-            }
-        }
-        return changed;
-    }
-
-    template <typename Mapping, typename GetWeight, typename UpdateOk>
-    auto _relax_node_pairs_succ(Mapping& dist, GetWeight&& get_weight, UpdateOk&& update_ok)
-        -> bool {
-        auto changed = false;
-        for (const auto& entry : this->_digraph) {
-            const auto& utx = _get_key(entry);
-            const auto& nbrs = _get_val(entry, this->_digraph);
-            for (const auto& nbr_entry : nbrs) {
-                const auto& vtx = _get_key(nbr_entry);
-                const auto& edge = _get_val(nbr_entry, nbrs);
-                auto weight = get_weight(std::pair<Node, Node>{utx, vtx});
-                auto distance = dist[vtx] - weight;
                 if (dist[utx] < distance
                     && std::forward<UpdateOk>(update_ok)(dist[utx], distance)) {
                     dist[utx] = distance;
@@ -229,34 +183,6 @@ class NegCycleFinderQ {
             const auto& [utx, edge] = this->_pred.at(vtx);
             if (dist.at(vtx) > dist.at(utx) + std::forward<GetWeight>(get_weight)(edge))
                 return true;
-            vtx = utx;
-            if (vtx == handle) break;
-        }
-        return false;
-    }
-
-    auto _cycle_list_node_pairs(
-        const Node& handle, const std::unordered_map<Node, std::pair<Node, Edge>>& point_to) const
-        -> std::vector<std::pair<Node, Node>> {
-        auto vtx = handle;
-        auto cycle = std::vector<std::pair<Node, Node>>{};
-        while (true) {
-            const auto& [utx, edge] = point_to.at(vtx);
-            cycle.emplace_back(utx, vtx);
-            vtx = utx;
-            if (vtx == handle) break;
-        }
-        return cycle;
-    }
-
-    template <typename Mapping, typename GetWeight>
-    auto _is_negative_node_pairs(const Node& handle, const Mapping& dist,
-                                 GetWeight&& get_weight) const -> bool {
-        auto vtx = handle;
-        while (true) {
-            const auto& [utx, edge] = this->_pred.at(vtx);
-            auto weight = get_weight(std::pair<Node, Node>{utx, vtx});
-            if (dist.at(vtx) > dist.at(utx) + weight) return true;
             vtx = utx;
             if (vtx == handle) break;
         }
@@ -326,63 +252,6 @@ class NegCycleFinderQ {
         co_return;
     }
 
-    /**
-     * @brief Find one negative cycle (predecessor, node-pair weights)
-     *
-     * Returns a single cycle as vector of (u, v) node pairs, with a weight
-     * function taking the edge as a node pair, plus update_ok constraint.
-     * Returns empty vector if no negative cycle exists.
-     *
-     * @tparam Mapping Distance mapping type
-     * @tparam GetWeight Callable taking pair<Node,Node> returning weight
-     * @tparam UpdateOk Callable (old_dist, new_dist) -> bool
-     * @param[in,out] dist Distance estimates
-     * @param[in] get_weight Weight function
-     * @param[in] update_ok Update constraint
-     * @return std::vector<std::pair<Node, Node>> Cycle edges or empty
-     */
-    template <typename Mapping, typename GetWeight, typename UpdateOk>
-    auto find_neg_cycle_pred(Mapping& dist, GetWeight&& get_weight, UpdateOk&& update_ok)
-        -> std::vector<std::pair<Node, Node>> {
-        this->_pred.clear();
-        if constexpr (requires { this->_digraph.size(); })
-            this->_pred.reserve(this->_digraph.size());
-        while (this->_relax_node_pairs_pred(dist, get_weight, update_ok)) {
-            for (const auto vtx : this->_find_cycle(this->_pred)) {
-                assert(this->_is_negative_node_pairs(vtx, dist, get_weight));
-                return this->_cycle_list_node_pairs(vtx, this->_pred);
-            }
-        }
-        return {};
-    }
-
-    /**
-     * @brief Find one negative cycle (successor, node-pair weights)
-     *
-     * Like find_neg_cycle_pred but uses successor-based relaxation.
-     * Returns empty vector if no negative cycle exists.
-     *
-     * @tparam Mapping Distance mapping type
-     * @tparam GetWeight Callable taking pair<Node,Node> returning weight
-     * @tparam UpdateOk Callable (old_dist, new_dist) -> bool
-     * @param[in,out] dist Distance estimates
-     * @param[in] get_weight Weight function
-     * @param[in] update_ok Update constraint
-     * @return std::vector<std::pair<Node, Node>> Cycle edges or empty
-     */
-    template <typename Mapping, typename GetWeight, typename UpdateOk>
-    auto find_neg_cycle_succ(Mapping& dist, GetWeight&& get_weight, UpdateOk&& update_ok)
-        -> std::vector<std::pair<Node, Node>> {
-        this->_succ.clear();
-        if constexpr (requires { this->_digraph.size(); })
-            this->_succ.reserve(this->_digraph.size());
-        while (this->_relax_node_pairs_succ(dist, get_weight, update_ok)) {
-            for (const auto vtx : this->_find_cycle(this->_succ)) {
-                return this->_cycle_list_node_pairs(vtx, this->_succ);
-            }
-        }
-        return {};
-    }
 };
 
 #ifdef _MSC_VER

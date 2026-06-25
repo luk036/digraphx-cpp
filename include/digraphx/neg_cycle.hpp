@@ -186,87 +186,6 @@ class NegCycleFinder {
     }
 
     /**
-     * @brief Extract cycle as node pairs (for find_neg_cycle compatibility)
-     *
-     * Reconstructs a cycle as a sequence of (u, v) node pairs by following
-     * the predecessor mapping, instead of collecting edge data values.
-     *
-     * @param[in] handle Starting node of the cycle
-     * @return std::vector<std::pair<Node, Node>> Cycle as node-pair edges
-     */
-    auto _cycle_list_node_pairs(const Node& handle) const -> std::vector<std::pair<Node, Node>> {
-        auto vtx = handle;
-        auto cycle = std::vector<std::pair<Node, Node>>{};
-        while (true) {
-            const auto& [utx, edge] = this->_pred.at(vtx);
-            cycle.emplace_back(utx, vtx);
-            vtx = utx;
-            if (vtx == handle) break;
-        }
-        return cycle;
-    }
-
-    /**
-     * @brief Relaxation using node-pair weight function (for find_neg_cycle)
-     *
-     * Like _relax but calls get_weight(pair{utx, vtx}) instead of
-     * get_weight(edge_data), for compatibility with network_oracle.hpp.
-     *
-     * @tparam Mapping Type of the distance mapping
-     * @tparam Callable Type of the weight function taking pair<Node,Node>
-     * @param[in,out] dist Distance estimates
-     * @param[in] get_weight Weight function taking pair<Node,Node>
-     * @return true if any distances were updated
-     */
-    template <typename Mapping, typename Callable>
-    auto _relax_node_pairs(Mapping& dist, Callable&& get_weight) -> bool {
-        auto changed = false;
-        for (const auto& entry : this->_digraph) {
-            const auto& utx = _get_key(entry);
-            const auto& nbrs = _get_val(entry, this->_digraph);
-            for (const auto& nbr_entry : nbrs) {
-                const auto& vtx = _get_key(nbr_entry);
-                const auto& edge = _get_val(nbr_entry, nbrs);
-                auto weight = get_weight(std::pair<Node, Node>{utx, vtx});
-                auto distance = dist[utx] + weight;
-                if (dist[vtx] > distance) {
-                    dist[vtx] = distance;
-                    this->_pred.insert_or_assign(vtx, std::pair(utx, edge));
-                    changed = true;
-                }
-            }
-        }
-        return changed;
-    }
-
-    /**
-     * @brief Verify negative cycle using node-pair weight function
-     *
-     * Like _is_negative but calls get_weight(pair{utx, vtx}) instead of
-     * get_weight(edge_data).
-     *
-     * @tparam Mapping Type of the distance mapping
-     * @tparam Callable Type of the weight function taking pair<Node,Node>
-     * @param[in] handle Node in the cycle to verify
-     * @param[in] dist Current distance estimates
-     * @param[in] get_weight Weight function taking pair<Node,Node>
-     * @return true if the cycle is negative
-     */
-    template <typename Mapping, typename Callable>
-    auto _is_negative_node_pairs(const Node& handle, const Mapping& dist,
-                                 Callable&& get_weight) const -> bool {
-        auto vtx = handle;
-        while (true) {
-            const auto& [utx, edge] = this->_pred.at(vtx);
-            auto weight = get_weight(std::pair<Node, Node>{utx, vtx});
-            if (dist.at(vtx) > dist.at(utx) + weight) return true;
-            vtx = utx;
-            if (vtx == handle) break;
-        }
-        return false;
-    }
-
-    /**
      * @brief Find all cycles in the current predecessor policy graph
      *
      * Searches the predecessor graph for cycles using visited tracking.
@@ -331,33 +250,6 @@ class NegCycleFinder {
         co_return;
     }
 
-    /**
-     * @brief Find one negative cycle (Bellman-Ford style, node-pair weights)
-     *
-     * Alternative entry point returning a single cycle as vector of (u, v)
-     * node pairs. Uses a weight function taking the edge as a node pair.
-     * Returns empty vector if no negative cycle exists.
-     *
-     * @tparam Mapping Type of the distance mapping (node -> distance)
-     * @tparam Callable Type of the weight function (edge pair -> weight)
-     * @param[in,out] dist Distance estimates (updated during search)
-     * @param[in] get_weight Weight function taking std::pair<Node,Node>
-     * @return std::vector<std::pair<Node, Node>> Cycle edges or empty
-     */
-    template <typename Mapping, typename Callable>
-    auto find_neg_cycle(Mapping& dist, Callable&& get_weight)
-        -> std::vector<std::pair<Node, Node>> {
-        this->_pred.clear();
-        if constexpr (requires { this->_digraph.size(); })
-            this->_pred.reserve(this->_digraph.size());
-        while (this->_relax_node_pairs(dist, get_weight)) {
-            for (const auto vtx : this->_find_cycle()) {
-                assert(this->_is_negative_node_pairs(vtx, dist, get_weight));
-                return this->_cycle_list_node_pairs(vtx);
-            }
-        }
-        return {};
-    }
 };
 
 #ifdef _MSC_VER
