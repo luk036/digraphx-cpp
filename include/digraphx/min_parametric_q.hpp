@@ -75,6 +75,10 @@ template <typename Node, typename Edge, typename Ratio> class MinParametricAPI {
     /**
      * @brief Calculate the distance for a given ratio and edge
      *
+     * @f[
+     *     d_r(e) = c(e) - r \cdot t(e)
+     * @f]
+     *
      * @param ratio The ratio parameter that affects the distance calculation
      * @param edge The edge in the graph
      * @return Ratio The calculated distance based on the given ratio and edge
@@ -83,6 +87,10 @@ template <typename Node, typename Edge, typename Ratio> class MinParametricAPI {
 
     /**
      * @brief Calculate the ratio that would make the cycle's total distance zero
+     *
+     * @f[
+     *     r(C) = \frac{\sum_{e\in C} c(e)}{\sum_{e\in C} t(e)}
+     * @f]
      *
      * @param cycle The cycle in the graph that needs to be evaluated
      * @return Ratio The ratio that would make the cycle's total distance zero
@@ -172,6 +180,10 @@ template <typename DiGraph, typename Ratio, typename Domain> class MinParametric
 
     /**
      * @brief Execute the parametric solver algorithm to find the minimum ratio
+     *
+     * @f[
+     *     r^* = \max \{ r \mid \text{no negative cycle in } G_r \text{ with constraints} \}
+     * @f]
      *
      * @param dist A mutable mapping of node distances that will be updated
      *        during the algorithm
@@ -301,6 +313,10 @@ template <typename DiGraph, typename Ratio, typename Domain> class MinParametric
  * Return value:
  * - First element: Optimal parameter value found
  * - Second element: Critical cycle achieving this value (empty if none)
+ *
+ * @f[
+ *     r^* = \max \{ r \mid \text{no negative cycle in } G_r \text{ with constraints} \}
+ * @f]
  *
  * @tparam DiGraph Type of the directed graph representation
  * @tparam Ratio Type representing the parameter value

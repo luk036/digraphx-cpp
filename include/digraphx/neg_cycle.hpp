@@ -112,6 +112,24 @@ class NegCycleFinder {
      * For each edge (u,v), checks if dist[v] > dist[u] + weight(u,v)
      * and updates the distance and predecessor if true.
      *
+     * @f[
+     *     d_v \gets \min(d_v,\; d_u + w(u,v)), \quad \forall (u,v) \in E
+     * @f]
+     *
+     * @dot
+     *   digraph relax_step {
+     *     bgcolor="transparent"; rankdir=LR;
+     *     node [shape=circle, style=filled, fillcolor="#d4e6f1", fontsize=10];
+     *     u [label="u", fillcolor="#a9cce3"];
+     *     v [label="v", fillcolor="#a9cce3"];
+     *     uv [label="", shape=plaintext];
+     *     u -> v [label="d[u]+w(u,v)", color="#e74c3c"];
+     *     u -> uv [style=invis];
+     *     note [shape=note, fillcolor="#fcf3cf", label="if d[v] > d[u] + w(u,v)\nthen d[v] = d[u] + w(u,v)"];
+     *     uv -> note [style=dashed, color="#888", constraint=false];
+     *   }
+     * @enddot
+     *
      * @tparam Mapping Type of the distance mapping (node -> distance)
      * @tparam Callable Type of the weight extraction function
      * @param[in,out] dist Current distance estimates for each node
@@ -143,6 +161,22 @@ class NegCycleFinder {
      *
      * Traverses the cycle in the predecessor map and checks if any edge
      * violates the triangle inequality: dist[v] > dist[u] + weight(u,v).
+     *
+     * @f[
+     *     d_v > d_u + w(u,v)
+     * @f]
+     *
+     * @dot
+     *   digraph inequality_check {
+     *     bgcolor="transparent"; rankdir=LR;
+     *     node [shape=circle, style=filled, fillcolor="#d4e6f1", fontsize=10];
+     *     u [label="u", fillcolor="#a9cce3"];
+     *     v [label="v", fillcolor="#a9cce3"];
+     *     u -> v [label="d[u] + w(u,v)", color="#e74c3c"];
+     *     note [shape=note, fillcolor="#fcf3cf", label="if d[v] > d[u] + w(u,v)\nreturn true (negative)"];
+     *     v -> note [style=dashed, color="#888", constraint=false];
+     *   }
+     * @enddot
      *
      * @tparam Mapping Type of the distance mapping
      * @tparam Callable Type of the weight extraction function
@@ -227,6 +261,26 @@ class NegCycleFinder {
      *
      * Repeatedly performs relaxation and cycle detection until no more
      * negative cycles can be found. Yields cycles as they are discovered.
+     *
+     * @f[
+     *     \text{Howard's policy iteration: relax } \to \text{ find cycles } \to \text{ verify negativity}
+     * @f]
+     *
+     * @dot
+     *   digraph howard_iter {
+     *     rankdir=TB; bgcolor="transparent";
+     *     node [shape=box, style=filled, fillcolor="#d4e6f1"];
+     *     relax [label="1. Relaxation\n(Bellman-Ford)", fillcolor="#a9cce3"];
+     *     cycle [label="2. Find cycles in\npredecessor graph"];
+     *     check_neg [label="3. Check if\nnegative?", shape=diamond, fillcolor="#f9e79f"];
+     *     yield [label="Yield\nnegative cycle", fillcolor="#7fb3d8"];
+     *     update [label="4. Update\ndistances"];
+     *     relax -> cycle -> check_neg;
+     *     check_neg -> yield [label="Yes", color="#e74c3c"];
+     *     check_neg -> update [label="No", color="#27ae60"];
+     *     update -> relax;
+     *   }
+     * @enddot
      *
      * @tparam Mapping Type of the distance mapping (node -> distance)
      * @tparam Callable Type of the weight extraction function

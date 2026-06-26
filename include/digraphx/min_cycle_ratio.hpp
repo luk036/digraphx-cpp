@@ -208,6 +208,25 @@ template <typename DiGraph, typename Ratio> class MinCycleRatioSolver {
     /**
      * @brief run
      *
+     * @f[
+     *     \lambda^* = \min_{\text{cycle } C \subseteq G} \frac{\sum_{e\in C} \mathrm{cost}(e)}{\sum_{e\in C} \mathrm{time}(e)}
+     * @f]
+     *
+     * @dot
+     *   digraph mcr_flow {
+     *     rankdir=LR; bgcolor="transparent";
+     *     node [shape=box, style=filled, fillcolor="#d4e6f1"];
+     *     input [label="Graph G\ncost/times", fillcolor="#a9cce3"];
+     *     param [label="Solve max r\nvia parametric"];
+     *     detect [label="Negative cycle\ndetection"];
+     *     update [label="Update\nr = min(r, r_i)"];
+     *     opt [label="Optimal\nMCR found!", fillcolor="#7fb3d8"];
+     *     input -> param -> detect -> update;
+     *     update -> detect [label="repeat", style=dashed, color="#e74c3c"];
+     *     update -> opt [label="no more", color="#27ae60"];
+     *   }
+     * @enddot
+     *
      * @tparam Mapping
      * @param[in] r0 Initial and final minimum ratio estimate
      * @param[in] dist Distance mapping that gets updated during execution

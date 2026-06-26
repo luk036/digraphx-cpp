@@ -97,6 +97,26 @@ template <typename DiGraph, typename ParametricAPI> class MaxParametricSolver {
      * The method returns the cycle that determines the final optimal parameter
      * value, which is useful for sensitivity analysis and debugging.
      *
+     * @f[
+     *     r^{(k+1)} \gets \min\{ \mathrm{zero\_cancel}(C) \mid C \text{ is a negative cycle in } G_{r^{(k)}} \}
+     * @f]
+     *
+     * @dot
+     *   digraph parametric_iter {
+     *     rankdir=LR; bgcolor="transparent";
+     *     node [shape=box, style=filled, fillcolor="#d4e6f1"];
+     *     init [label="Initialize\nr = r_opt", fillcolor="#a9cce3"];
+     *     find [label="Find negative\ncycles at current r"];
+     *     compute [label="Compute\nzero_cancel(C)"];
+     *     update [label="Update r_opt\n= min(r_opt, r_i)"];
+     *     check [label="Converged?", shape=diamond, fillcolor="#f9e79f"];
+     *     done [label="Done!\nReturn r_opt", fillcolor="#7fb3d8"];
+     *     init -> find -> compute -> update -> check;
+     *     check -> find [label="No", style=dashed, color="#e74c3c"];
+     *     check -> done [label="Yes", color="#27ae60"];
+     *   }
+     * @enddot
+     *
      * @tparam Ratio Type representing the parameter value
      * @tparam Mapping Type of the distance mapping (node -> distance)
      * @tparam Domain Type of the domain for distance calculations
@@ -148,10 +168,27 @@ template <typename DiGraph, typename ParametricAPI> class MaxParametricSolver {
  * approach.
  *
  * Problem formulation:
+ *
  * @f[
  *     \max \; r \quad \text{s.t.} \quad
  *     d_v - d_u \le w_r(u,v), \; \forall (u,v) \in E
  * @f]
+ *
+ * @dot
+ *   digraph parametric_iter {
+ *     rankdir=LR; bgcolor="transparent";
+ *     node [shape=box, style=filled, fillcolor="#d4e6f1"];
+ *     init [label="Initialize\nr = r_opt", fillcolor="#a9cce3"];
+ *     find [label="Find negative\ncycles at current r"];
+ *     compute [label="Compute\nzero_cancel(C)"];
+ *     update [label="Update r_opt\n= min(r_opt, r_i)"];
+ *     check [label="Converged?", shape=diamond, fillcolor="#f9e79f"];
+ *     done [label="Done!\nReturn r_opt", fillcolor="#7fb3d8"];
+ *     init -> find -> compute -> update -> check;
+ *     check -> find [label="No", style=dashed, color="#e74c3c"];
+ *     check -> done [label="Yes", color="#27ae60"];
+ *   }
+ * @enddot
  *
  * This approach is useful when:
  * - You prefer functional programming style
