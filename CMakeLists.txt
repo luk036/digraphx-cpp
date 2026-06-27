@@ -48,13 +48,9 @@ set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 20)
 target_compile_options(${PROJECT_NAME} PUBLIC "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/permissive->")
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  target_compile_options(
-    DiGraphX PUBLIC -Wall -Wpedantic -Wextra -Werror
-  )
+  target_compile_options(DiGraphX PUBLIC -Wall -Wpedantic -Wextra -Werror)
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-  target_compile_options(
-    DiGraphX PUBLIC -Wall -Wpedantic -Wextra -Werror
-  )
+  target_compile_options(DiGraphX PUBLIC -Wall -Wpedantic -Wextra -Werror)
 elseif(MSVC)
   target_compile_options(DiGraphX PUBLIC /utf-8 /W4 /WX)
   # target_compile_definitions(${PROJECT_NAME} PUBLIC DOCTEST_CONFIG_USE_STD_HEADERS)
