@@ -3,7 +3,6 @@
 #include <digraphx/logger.hpp>
 #include <digraphx/min_cycle_ratio.hpp>
 #include <digraphx/parametric.hpp>
-
 #include <list>
 #include <string>
 #include <unordered_map>
@@ -19,10 +18,9 @@ TEST_CASE("CycleRatioAPI distance and zero_cancel") {
     using Edge = unordered_map<string, double>;
     using DiGraph = unordered_map<string, unordered_map<string, Edge>>;
 
-    DiGraph digraph{
-        {"a", {{"b", {{"cost", 5.0}, {"time", 2.0}}}}},
-        {"b", {{"c", {{"cost", 3.0}, {"time", 1.0}}}}},
-        {"c", {{"a", {{"cost", 2.0}, {"time", 1.0}}}}}};
+    DiGraph digraph{{"a", {{"b", {{"cost", 5.0}, {"time", 2.0}}}}},
+                    {"b", {{"c", {{"cost", 3.0}, {"time", 1.0}}}}},
+                    {"c", {{"a", {{"cost", 2.0}, {"time", 1.0}}}}}};
 
     CycleRatioAPI<DiGraph, double> api(digraph);
 
@@ -55,7 +53,7 @@ TEST_CASE("CycleRatioAPI distance and zero_cancel") {
 
     SUBCASE("zero_cancel with negative cost") {
         DiGraph ng{{"p", {{"q", {{"cost", -4.0}, {"time", 2.0}}}}},
-            {"q", {{"p", {{"cost", 1.0}, {"time", 1.0}}}}}};
+                   {"q", {{"p", {{"cost", 1.0}, {"time", 1.0}}}}}};
         CycleRatioAPI<decltype(ng), double> api3(ng);
         vector<Edge> cycle;
         cycle.push_back(ng.at("p").at("q"));
@@ -68,10 +66,9 @@ TEST_CASE("MaxParametricSolver no negative cycle") {
     using Edge = unordered_map<string, double>;
     using DiGraph = unordered_map<string, unordered_map<string, Edge>>;
 
-    DiGraph digraph{
-        {"a", {{"b", {{"cost", 1.0}, {"time", 1.0}}}}},
-        {"b", {{"c", {{"cost", 1.0}, {"time", 1.0}}}}},
-        {"c", {{"d", {{"cost", 1.0}, {"time", 1.0}}}}}};
+    DiGraph digraph{{"a", {{"b", {{"cost", 1.0}, {"time", 1.0}}}}},
+                    {"b", {{"c", {{"cost", 1.0}, {"time", 1.0}}}}},
+                    {"c", {{"d", {{"cost", 1.0}, {"time", 1.0}}}}}};
 
     auto omega = CycleRatioAPI<DiGraph, double>(digraph);
     auto solver = MaxParametricSolver(digraph, omega);
@@ -146,9 +143,7 @@ TEST_CASE("NegCycleFinder howard empty graph") {
 
 TEST_CASE("NegCycleFinder howard non-zero initial distances") {
     list<pair<size_t, list<pair<size_t, double>>>> digraph{
-        {0, {{1, 1.0}, {2, 5.0}}},
-        {1, {{2, 3.0}}},
-        {2, {{0, -2.0}}}};
+        {0, {{1, 1.0}, {2, 5.0}}}, {1, {{2, 3.0}}}, {2, {{0, -2.0}}}};
 
     NegCycleFinder ncf(digraph);
     auto get_weight = [](const auto& edge) -> double { return edge; };
@@ -175,8 +170,7 @@ TEST_CASE("NegCycleFinder howard non-zero initial distances") {
 
 TEST_CASE("NegCycleFinder howard disconnected components") {
     list<pair<size_t, list<pair<size_t, double>>>> digraph{
-        {0, {{1, 1.0}}}, {1, {{0, -3.0}}},
-        {2, {{3, 1.0}}}, {3, {{2, 1.0}}}};
+        {0, {{1, 1.0}}}, {1, {{0, -3.0}}}, {2, {{3, 1.0}}}, {3, {{2, 1.0}}}};
 
     NegCycleFinder ncf(digraph);
     auto get_weight = [](const auto& edge) -> double { return edge; };
@@ -207,8 +201,7 @@ TEST_CASE("NegCycleFinder howard zero-weight edges") {
 
 TEST_CASE("NegCycleFinder howard multiple cycles only one negative") {
     list<pair<size_t, list<pair<size_t, double>>>> digraph{
-        {0, {{1, 1.0}}}, {1, {{0, -2.0}}},
-        {2, {{3, 5.0}}}, {3, {{2, 3.0}}}};
+        {0, {{1, 1.0}}}, {1, {{0, -2.0}}}, {2, {{3, 5.0}}}, {3, {{2, 3.0}}}};
 
     NegCycleFinder ncf(digraph);
     auto get_weight = [](const auto& edge) -> double { return edge; };
@@ -240,9 +233,7 @@ TEST_CASE("NegCycleFinder howard negative cycle with int weights") {
 
 TEST_CASE("min_cycle_ratio with negative-cost cycle") {
     list<pair<size_t, list<pair<size_t, int>>>> digraph{
-        {0, {{1, 1}}},
-        {1, {{2, 1}}},
-        {2, {{0, -3}}}};
+        {0, {{1, 1}}}, {1, {{2, 1}}}, {2, {{0, -3}}}};
 
     auto get_cost = [](const auto& edge) -> int { return edge; };
     auto get_time = [](const auto&) { return 1; };
@@ -257,9 +248,7 @@ TEST_CASE("min_cycle_ratio with negative-cost cycle") {
 
 TEST_CASE("min_cycle_ratio with non-zero initial distance") {
     list<pair<size_t, list<pair<size_t, int>>>> digraph{
-        {0, {{1, 5}, {2, 1}}},
-        {1, {{0, 1}, {2, 1}}},
-        {2, {{1, 1}, {0, 1}}}};
+        {0, {{1, 5}, {2, 1}}}, {1, {{0, 1}, {2, 1}}}, {2, {{1, 1}, {0, 1}}}};
 
     auto get_cost = [](const auto& edge) -> int { return edge; };
     auto get_time = [](const auto&) { return 1; };
@@ -274,9 +263,7 @@ TEST_CASE("min_cycle_ratio with non-zero initial distance") {
 
 TEST_CASE("NegCycleFinder integer weights no negative cycle") {
     list<pair<size_t, list<pair<size_t, int>>>> digraph{
-        {0, {{1, 10}}},
-        {1, {{2, 20}}},
-        {2, {{0, 30}}}};
+        {0, {{1, 10}}}, {1, {{2, 20}}}, {2, {{0, 30}}}};
 
     NegCycleFinder ncf(digraph);
     auto get_weight = [](const auto& edge) -> int { return edge; };
@@ -291,9 +278,7 @@ TEST_CASE("NegCycleFinder integer weights no negative cycle") {
 
 TEST_CASE("NegCycleFinder dict graph with negative cycle") {
     unordered_map<string, unordered_map<string, double>> digraph{
-        {"x", {{"y", 1.0}}},
-        {"y", {{"z", 1.0}}},
-        {"z", {{"x", -3.0}}}};
+        {"x", {{"y", 1.0}}}, {"y", {{"z", 1.0}}}, {"z", {{"x", -3.0}}}};
 
     NegCycleFinder ncf(digraph);
     auto get_weight = [](const auto& edge) -> double { return edge; };

@@ -1,11 +1,9 @@
 #include <doctest/doctest.h>
 
 #include <digraphx/min_parametric_q.hpp>
-
-#include <mywheel/map_adapter.hpp>
-
 #include <limits>
 #include <list>
+#include <mywheel/map_adapter.hpp>
 #include <string>
 #include <unordered_map>
 #include <vector>
@@ -17,8 +15,7 @@ using std::unordered_map;
 using std::vector;
 
 TEST_CASE("NegCycleFinderQ howard_pred restrictive update_ok") {
-    vector<vector<pair<size_t, double>>> digraph_data{
-        {{1, 1.0}}, {{2, 1.0}}, {{0, -3.0}}};
+    vector<vector<pair<size_t, double>>> digraph_data{{{1, 1.0}}, {{2, 1.0}}, {{0, -3.0}}};
 
     auto ga = MapAdapter{digraph_data};
     NegCycleFinderQ<decltype(ga), double> finder(ga);
@@ -30,7 +27,8 @@ TEST_CASE("NegCycleFinderQ howard_pred restrictive update_ok") {
         auto never_ok = [](const double&, const double&) { return false; };
         size_t count = 0;
         for (auto&& ci : finder.howard_pred(dist, get_weight, never_ok)) {
-            ++count; (void)ci;
+            ++count;
+            (void)ci;
         }
         CHECK_EQ(count, 0);
     }
@@ -39,7 +37,8 @@ TEST_CASE("NegCycleFinderQ howard_pred restrictive update_ok") {
         auto picky = [](const double& old_v, const double&) { return old_v > 100.0; };
         size_t count = 0;
         for (auto&& ci : finder.howard_pred(dist, get_weight, picky)) {
-            ++count; (void)ci;
+            ++count;
+            (void)ci;
         }
         CHECK_EQ(count, 0);
     }
@@ -56,8 +55,7 @@ TEST_CASE("NegCycleFinderQ howard_pred restrictive update_ok") {
 }
 
 TEST_CASE("NegCycleFinderQ howard_succ restrictive update_ok") {
-    vector<vector<pair<size_t, double>>> digraph_data{
-        {{1, -2.0}}, {{0, 1.0}}};
+    vector<vector<pair<size_t, double>>> digraph_data{{{1, -2.0}}, {{0, 1.0}}};
 
     auto ga = MapAdapter{digraph_data};
     NegCycleFinderQ<decltype(ga), double> finder(ga);
@@ -69,7 +67,8 @@ TEST_CASE("NegCycleFinderQ howard_succ restrictive update_ok") {
         auto never_ok = [](const double&, const double&) { return false; };
         size_t count = 0;
         for (auto&& ci : finder.howard_succ(dist, get_weight, never_ok)) {
-            ++count; (void)ci;
+            ++count;
+            (void)ci;
         }
         CHECK_EQ(count, 0);
     }
@@ -132,13 +131,15 @@ TEST_CASE("NegCycleFinderQ empty graph") {
 
     size_t count = 0;
     for (auto&& ci : finder.howard_pred(dist, get_weight, always_ok)) {
-        ++count; (void)ci;
+        ++count;
+        (void)ci;
     }
     CHECK_EQ(count, 0);
 
     count = 0;
     for (auto&& ci : finder.howard_succ(dist, get_weight, always_ok)) {
-        ++count; (void)ci;
+        ++count;
+        (void)ci;
     }
     CHECK_EQ(count, 0);
 }
@@ -154,20 +155,21 @@ TEST_CASE("NegCycleFinderQ single node no edges") {
 
     size_t count = 0;
     for (auto&& ci : finder.howard_pred(dist, get_weight, always_ok)) {
-        ++count; (void)ci;
+        ++count;
+        (void)ci;
     }
     CHECK_EQ(count, 0);
 
     count = 0;
     for (auto&& ci : finder.howard_succ(dist, get_weight, always_ok)) {
-        ++count; (void)ci;
+        ++count;
+        (void)ci;
     }
     CHECK_EQ(count, 0);
 }
 
 TEST_CASE("NegCycleFinderQ non-zero initial distances") {
-    vector<vector<pair<size_t, double>>> digraph_data{
-        {{1, 1.0}}, {{2, 1.0}}, {{0, -3.0}}};
+    vector<vector<pair<size_t, double>>> digraph_data{{{1, 1.0}}, {{2, 1.0}}, {{0, -3.0}}};
 
     auto ga = MapAdapter{digraph_data};
     NegCycleFinderQ<decltype(ga), double> finder(ga);
@@ -208,7 +210,7 @@ TEST_CASE("MinParametricSolver with MapAdapter graph") {
     auto ga = MapAdapter{graph_data};
 
     class MyAPI2 : public MinParametricAPI<size_t, EdgeData, double> {
-    public:
+      public:
         auto distance(const double& ratio, const EdgeData& edge) -> double override {
             return edge.at("cost") - ratio * edge.at("time");
         }
@@ -241,7 +243,7 @@ TEST_CASE("MinParametricSolver with positive-signed cycle") {
         {"c", {{"a", {{"cost", 2.0}, {"time", 1.0}}}}}};
 
     class MyAPI : public MinParametricAPI<string, EdgeData, double> {
-    public:
+      public:
         auto distance(const double& ratio, const EdgeData& edge) -> double override {
             return edge.at("cost") - ratio * edge.at("time");
         }
@@ -276,7 +278,7 @@ TEST_CASE("MinParametricSolver with pick_one_only finds improving cycle") {
         {"c", {{"a", {{"cost", 2.0}, {"time", 1.0}}}}}};
 
     class MyAPI : public MinParametricAPI<string, Edge, double> {
-    public:
+      public:
         auto distance(const double& ratio, const Edge& edge) -> double override {
             return edge.at("cost") - ratio * edge.at("time");
         }
@@ -312,7 +314,7 @@ TEST_CASE("MinParametricSolver with pick_one_only finds improving cycle") {
         {"c", {{"a", {{"cost", 2.0}, {"time", 1.0}}}}}};
 
     class MyAPI : public MinParametricAPI<string, Edge, double> {
-    public:
+      public:
         auto distance(const double& ratio, const Edge& edge) -> double override {
             return edge.at("cost") - ratio * edge.at("time");
         }
@@ -347,7 +349,7 @@ TEST_CASE("MinParametricSolver with pick_one_only finds improving cycle") {
         {"c", {{"a", {{"cost", 2.0}, {"time", 1.0}}}}}};
 
     class MyAPI : public MinParametricAPI<string, Edge, double> {
-    public:
+      public:
         auto distance(const double& ratio, const Edge& edge) -> double override {
             return edge.at("cost") - ratio * edge.at("time");
         }
@@ -383,7 +385,7 @@ TEST_CASE("MinParametricSolver with negative cycle and infinity init") {
         {"c", {{"a", {{"cost", -4.0}, {"time", 1.0}}}}}};
 
     class MyAPI : public MinParametricAPI<string, Edge, double> {
-    public:
+      public:
         auto distance(const double& ratio, const Edge& edge) -> double override {
             return edge.at("cost") - ratio * edge.at("time");
         }
@@ -413,10 +415,7 @@ TEST_CASE("MinParametricSolver with negative cycle and infinity init") {
 }
 
 TEST_CASE("NegCycleFinderQ howard_pred with MapConstAdapter") {
-    vector<list<pair<size_t, double>>> digraph{
-        {{1, 1.0}},
-        {{2, 1.0}},
-        {{0, -3.0}}};
+    vector<list<pair<size_t, double>>> digraph{{{1, 1.0}}, {{2, 1.0}}, {{0, -3.0}}};
 
     auto ga = MapConstAdapter{digraph};
     NegCycleFinderQ<decltype(ga), double> finder(ga);
@@ -434,10 +433,7 @@ TEST_CASE("NegCycleFinderQ howard_pred with MapConstAdapter") {
 }
 
 TEST_CASE("NegCycleFinderQ howard_succ with MapConstAdapter") {
-    vector<list<pair<size_t, double>>> digraph{
-        {{1, 1.0}},
-        {{2, 1.0}},
-        {{0, -3.0}}};
+    vector<list<pair<size_t, double>>> digraph{{{1, 1.0}}, {{2, 1.0}}, {{0, -3.0}}};
 
     auto ga = MapConstAdapter{digraph};
     NegCycleFinderQ<decltype(ga), double> finder(ga);

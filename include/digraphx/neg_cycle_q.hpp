@@ -201,7 +201,8 @@ class NegCycleFinderQ {
      * @brief Find negative cycles using predecessor-based Howard's algorithm
      *
      * @f[
-     *     d_v \gets \min(d_v,\; d_u + w(u,v)) \quad \text{s.t.} \quad \text{update\_ok}(d_v^{\text{old}}, d_v^{\text{new}})
+     *     d_v \gets \min(d_v,\; d_u + w(u,v)) \quad \text{s.t.} \quad
+     * \text{update\_ok}(d_v^{\text{old}}, d_v^{\text{new}})
      * @f]
      *
      * @tparam Mapping Distance mapping type
@@ -233,7 +234,8 @@ class NegCycleFinderQ {
      * @brief Find negative cycles using successor-based Howard's algorithm
      *
      * @f[
-     *     d_u \gets \max(d_u,\; d_v - w(u,v)) \quad \text{s.t.} \quad \text{update\_ok}(d_u^{\text{old}}, d_u^{\text{new}})
+     *     d_u \gets \max(d_u,\; d_v - w(u,v)) \quad \text{s.t.} \quad
+     * \text{update\_ok}(d_u^{\text{old}}, d_u^{\text{new}})
      * @f]
      *
      * @tparam Mapping Distance mapping type
@@ -259,7 +261,6 @@ class NegCycleFinderQ {
         }
         co_return;
     }
-
 };
 
 #ifdef _MSC_VER

@@ -34,8 +34,8 @@
  *     d -> a [label="c=1, t=1", color="#e74c3c"];
  *     { rank=same; a; b; c; d; }
  *     edge [style=dashed, color="#888", constraint=false];
- *     note [shape=note, fillcolor="#fcf3cf", label="Cycle A→B→C→D→A\nr = (2+3+4+1)/(1+1+2+1)\n  = 10/5 = 2.0"];
- *     d -> note;
+ *     note [shape=note, fillcolor="#fcf3cf", label="Cycle A→B→C→D→A\nr = (2+3+4+1)/(1+1+2+1)\n  =
+ * 10/5 = 2.0"]; d -> note;
  *   }
  * @enddot
  *
@@ -209,7 +209,8 @@ template <typename DiGraph, typename Ratio> class MinCycleRatioSolver {
      * @brief run
      *
      * @f[
-     *     \lambda^* = \min_{\text{cycle } C \subseteq G} \frac{\sum_{e\in C} \mathrm{cost}(e)}{\sum_{e\in C} \mathrm{time}(e)}
+     *     \lambda^* = \min_{\text{cycle } C \subseteq G} \frac{\sum_{e\in C}
+     * \mathrm{cost}(e)}{\sum_{e\in C} \mathrm{time}(e)}
      * @f]
      *
      * @dot

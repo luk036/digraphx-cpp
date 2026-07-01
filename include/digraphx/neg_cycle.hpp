@@ -125,8 +125,8 @@ class NegCycleFinder {
      *     uv [label="", shape=plaintext];
      *     u -> v [label="d[u]+w(u,v)", color="#e74c3c"];
      *     u -> uv [style=invis];
-     *     note [shape=note, fillcolor="#fcf3cf", label="if d[v] > d[u] + w(u,v)\nthen d[v] = d[u] + w(u,v)"];
-     *     uv -> note [style=dashed, color="#888", constraint=false];
+     *     note [shape=note, fillcolor="#fcf3cf", label="if d[v] > d[u] + w(u,v)\nthen d[v] = d[u] +
+     * w(u,v)"]; uv -> note [style=dashed, color="#888", constraint=false];
      *   }
      * @enddot
      *
@@ -173,8 +173,8 @@ class NegCycleFinder {
      *     u [label="u", fillcolor="#a9cce3"];
      *     v [label="v", fillcolor="#a9cce3"];
      *     u -> v [label="d[u] + w(u,v)", color="#e74c3c"];
-     *     note [shape=note, fillcolor="#fcf3cf", label="if d[v] > d[u] + w(u,v)\nreturn true (negative)"];
-     *     v -> note [style=dashed, color="#888", constraint=false];
+     *     note [shape=note, fillcolor="#fcf3cf", label="if d[v] > d[u] + w(u,v)\nreturn true
+     * (negative)"]; v -> note [style=dashed, color="#888", constraint=false];
      *   }
      * @enddot
      *
@@ -263,7 +263,8 @@ class NegCycleFinder {
      * negative cycles can be found. Yields cycles as they are discovered.
      *
      * @f[
-     *     \text{Howard's policy iteration: relax } \to \text{ find cycles } \to \text{ verify negativity}
+     *     \text{Howard's policy iteration: relax } \to \text{ find cycles } \to \text{ verify
+     * negativity}
      * @f]
      *
      * @dot
@@ -303,7 +304,6 @@ class NegCycleFinder {
         }
         co_return;
     }
-
 };
 
 #ifdef _MSC_VER

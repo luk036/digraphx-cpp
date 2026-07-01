@@ -174,4 +174,3 @@ TEST_CASE("Test MapConstAdapter digraph") {
     CHECK_FALSE(has_negative_cycle_pred(ga, dist, get_weight));
     CHECK_FALSE(has_negative_cycle_succ(ga, dist, get_weight));
 }
-

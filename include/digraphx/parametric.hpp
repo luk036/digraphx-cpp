@@ -98,7 +98,8 @@ template <typename DiGraph, typename ParametricAPI> class MaxParametricSolver {
      * value, which is useful for sensitivity analysis and debugging.
      *
      * @f[
-     *     r^{(k+1)} \gets \min\{ \mathrm{zero\_cancel}(C) \mid C \text{ is a negative cycle in } G_{r^{(k)}} \}
+     *     r^{(k+1)} \gets \min\{ \mathrm{zero\_cancel}(C) \mid C \text{ is a negative cycle in }
+     * G_{r^{(k)}} \}
      * @f]
      *
      * @dot
