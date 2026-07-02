@@ -16,12 +16,10 @@
  * constraint handling and both predecessor/successor-based algorithms.
  *
  * Problem formulation:
- * \code
- *  min  r
- *  s.t. dist[v] - dist[u] <= distance(e, r)
- *       forall e(u, v) in G(V, E)
- *       subject to update constraints
- * \endcode
+ * @f[
+ *     \min r \quad \text{s.t.} \quad d_v - d_u \le w_r(e) \; \forall (u,v) \in E
+ * @f]
+ * where @f$ w_r(e) @f$ is the distance function parameterized by @f$ r @f$.
  *
  * Key features:
  * - Support for distance update constraints
