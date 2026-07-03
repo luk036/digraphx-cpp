@@ -166,6 +166,7 @@ class NegCycleFinderQ {
         -> Cycle {
         auto vtx = handle;
         auto cycle = Cycle{};
+        cycle.reserve(point_to.size());
         while (true) {
             const auto& [utx, edge] = point_to.at(vtx);
             cycle.emplace_back(edge);

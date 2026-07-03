@@ -210,6 +210,7 @@ class NegCycleFinder {
     auto _cycle_list(const Node& handle) const -> Cycle {
         auto vtx = handle;
         auto cycle = Cycle{};
+        cycle.reserve(this->_pred.size());
         while (true) {
             const auto& [utx, edge] = this->_pred.at(vtx);
             cycle.emplace_back(edge);
