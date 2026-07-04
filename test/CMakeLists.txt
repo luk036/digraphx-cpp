@@ -51,6 +51,12 @@ if(rapidcheck_ADDED)
 endif()
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 20)
 
+# Suppress warnings from Abseil headers (propagated via DiGraphX's PUBLIC -Werror flags)
+target_compile_options(${PROJECT_NAME} PRIVATE
+  "$<$<COMPILE_LANG_AND_ID:CXX,Clang>:-Wno-nullability-extension>"
+  "$<$<COMPILE_LANG_AND_ID:CXX,GNU>:-Wno-pedantic;-Wno-overflow>"
+)
+
 # enable compiler warnings
 if(NOT TEST_INSTALLED_VERSION)
   if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
