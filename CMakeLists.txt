@@ -54,8 +54,12 @@ target_compile_options(${PROJECT_NAME} PRIVATE "$<$<COMPILE_LANG_AND_ID:CXX,MSVC
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   target_compile_options(DiGraphX PUBLIC -Wall -Wpedantic -Wextra -Werror)
+  # Suppress warnings from Abseil headers (nullability extension is a Clang extension)
+  target_compile_options(DiGraphX PRIVATE -Wno-nullability-extension)
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
   target_compile_options(DiGraphX PUBLIC -Wall -Wpedantic -Wextra -Werror)
+  # Suppress warnings from Abseil headers (__int128 is a GCC extension, char overflow in SSE)
+  target_compile_options(DiGraphX PRIVATE -Wno-pedantic -Wno-overflow)
 elseif(MSVC)
   target_compile_options(DiGraphX PUBLIC /utf-8 /W4 /WX /wd4702 /wd4100)
   # target_compile_definitions(${PROJECT_NAME} PUBLIC DOCTEST_CONFIG_USE_STD_HEADERS)
