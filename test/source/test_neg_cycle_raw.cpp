@@ -5,12 +5,12 @@
 #include <digraphx/neg_cycle.hpp>  // for NegCycleFinder
 #include <list>
 #include <mywheel/map_adapter.hpp>
-#include <unordered_map>
+#include <absl/container/flat_hash_map.h>
 #include <vector>
 
 using std::list;
 using std::pair;
-using std::unordered_map;
+using absl::flat_hash_map;
 using std::unordered_multimap;
 using std::vector;
 
@@ -30,10 +30,10 @@ TEST_CASE("Test Negative Cycle (list of lists)") {
 }
 
 TEST_CASE("Test Negative Cycle (dict of list's)") {
-    const unordered_map<uint32_t, list<pair<uint32_t, uint32_t>>> digraph{
+    const flat_hash_map<uint32_t, list<pair<uint32_t, uint32_t>>> digraph{
         {0, {{1, 0}, {2, 1}}}, {1, {{0, 2}, {2, 3}}}, {2, {{1, 4}, {0, 5}, {0, 6}}}};
 
-    const unordered_map<uint32_t, double> edge_weight{{0, 7.0}, {1, 5.0}, {2, 0.0}, {3, 3.0},
+    const flat_hash_map<uint32_t, double> edge_weight{{0, 7.0}, {1, 5.0}, {2, 0.0}, {3, 3.0},
                                                       {4, 1.0}, {5, 2.0}, {6, 1.0}};
     auto get_weight = [&edge_weight](const auto& edge) -> double { return edge_weight.at(edge); };
 

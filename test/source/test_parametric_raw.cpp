@@ -3,12 +3,11 @@
 #include <cstdint>  // for uint32_t
 #include <digraphx/parametric.hpp>
 #include <list>
-#include <unordered_map>
 #include <vector>
 
 using std::list;
 using std::pair;
-using std::unordered_map;
+using absl::flat_hash_map;
 using std::vector;
 
 TEST_CASE("Test Parametric Search (list of lists)") {
@@ -32,7 +31,7 @@ TEST_CASE("Test Parametric Search (list of lists)") {
 }
 
 TEST_CASE("Test Parametric Search (dict of list's)") {
-    const unordered_map<uint32_t, list<pair<uint32_t, uint32_t>>> digraph{
+    const flat_hash_map<uint32_t, list<pair<uint32_t, uint32_t>>> digraph{
         {0, {{1, 0}, {2, 1}}}, {1, {{0, 2}, {2, 3}}}, {2, {{1, 4}, {0, 5}}}};
     const vector<int> edge_cost{5, 1, 1, 1, 1, 1};
 

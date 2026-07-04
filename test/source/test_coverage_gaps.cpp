@@ -5,18 +5,17 @@
 #include <digraphx/parametric.hpp>
 #include <list>
 #include <string>
-#include <unordered_map>
 #include <vector>
 
-using std::list;
-using std::pair;
 using std::string;
-using std::unordered_map;
+using std::pair;
+using std::list;
+using absl::flat_hash_map;
 using std::vector;
 
 TEST_CASE("CycleRatioAPI distance and zero_cancel") {
-    using Edge = unordered_map<string, double>;
-    using DiGraph = unordered_map<string, unordered_map<string, Edge>>;
+    using Edge = flat_hash_map<string, double>;
+    using DiGraph = flat_hash_map<string, flat_hash_map<string, Edge>>;
 
     DiGraph digraph{{"a", {{"b", {{"cost", 5.0}, {"time", 2.0}}}}},
                     {"b", {{"c", {{"cost", 3.0}, {"time", 1.0}}}}},
@@ -63,8 +62,8 @@ TEST_CASE("CycleRatioAPI distance and zero_cancel") {
 }
 
 TEST_CASE("MaxParametricSolver no negative cycle") {
-    using Edge = unordered_map<string, double>;
-    using DiGraph = unordered_map<string, unordered_map<string, Edge>>;
+    using Edge = flat_hash_map<string, double>;
+    using DiGraph = flat_hash_map<string, flat_hash_map<string, Edge>>;
 
     DiGraph digraph{{"a", {{"b", {{"cost", 1.0}, {"time", 1.0}}}}},
                     {"b", {{"c", {{"cost", 1.0}, {"time", 1.0}}}}},
@@ -73,7 +72,7 @@ TEST_CASE("MaxParametricSolver no negative cycle") {
     auto omega = CycleRatioAPI<DiGraph, double>(digraph);
     auto solver = MaxParametricSolver(digraph, omega);
 
-    unordered_map<string, double> dist;
+    flat_hash_map<string, double> dist;
     for (const auto& [v, _] : digraph) {
         dist[v] = 0.0;
     }
@@ -277,12 +276,12 @@ TEST_CASE("NegCycleFinder integer weights no negative cycle") {
 }
 
 TEST_CASE("NegCycleFinder dict graph with negative cycle") {
-    unordered_map<string, unordered_map<string, double>> digraph{
+    flat_hash_map<string, flat_hash_map<string, double>> digraph{
         {"x", {{"y", 1.0}}}, {"y", {{"z", 1.0}}}, {"z", {{"x", -3.0}}}};
 
     NegCycleFinder ncf(digraph);
     auto get_weight = [](const auto& edge) -> double { return edge; };
-    unordered_map<string, double> dist;
+    flat_hash_map<string, double> dist;
     for (const auto& [v, _] : digraph) {
         dist[v] = 0.0;
     }

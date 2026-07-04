@@ -5,13 +5,12 @@
 #include <list>
 #include <mywheel/map_adapter.hpp>
 #include <string>
-#include <unordered_map>
 #include <vector>
 
-using std::list;
-using std::pair;
 using std::string;
-using std::unordered_map;
+using std::pair;
+using std::list;
+using absl::flat_hash_map;
 using std::vector;
 
 TEST_CASE("NegCycleFinderQ howard_pred restrictive update_ok") {
@@ -199,7 +198,7 @@ TEST_CASE("NegCycleFinderQ non-zero initial distances") {
 }
 
 TEST_CASE("MinParametricSolver with MapAdapter graph") {
-    using EdgeData = unordered_map<string, double>;
+    using EdgeData = flat_hash_map<string, double>;
     using NodeList = vector<pair<size_t, EdgeData>>;
     NodeList row0, row1, row2;
     row0.emplace_back(1, EdgeData{{"cost", 7.0}, {"time", 1.0}});
@@ -236,8 +235,8 @@ TEST_CASE("MinParametricSolver with MapAdapter graph") {
 }
 
 TEST_CASE("MinParametricSolver with positive-signed cycle") {
-    using EdgeData = unordered_map<string, double>;
-    unordered_map<string, unordered_map<string, EdgeData>> digraph{
+    using EdgeData = flat_hash_map<string, double>;
+    flat_hash_map<string, flat_hash_map<string, EdgeData>> digraph{
         {"a", {{"b", {{"cost", -5.0}, {"time", 1.0}}}}},
         {"b", {{"c", {{"cost", 1.0}, {"time", 1.0}}}}},
         {"c", {{"a", {{"cost", 2.0}, {"time", 1.0}}}}}};
@@ -257,7 +256,7 @@ TEST_CASE("MinParametricSolver with positive-signed cycle") {
         }
     };
 
-    unordered_map<string, double> dist;
+    flat_hash_map<string, double> dist;
     for (const auto& [v, _] : digraph) {
         dist[v] = 0.0;
     }
@@ -271,8 +270,8 @@ TEST_CASE("MinParametricSolver with positive-signed cycle") {
 }
 
 TEST_CASE("MinParametricSolver with pick_one_only finds improving cycle") {
-    using Edge = unordered_map<string, double>;
-    unordered_map<string, unordered_map<string, Edge>> digraph{
+    using Edge = flat_hash_map<string, double>;
+    flat_hash_map<string, flat_hash_map<string, Edge>> digraph{
         {"a", {{"b", {{"cost", -5.0}, {"time", 1.0}}}}},
         {"b", {{"c", {{"cost", 1.0}, {"time", 1.0}}}}},
         {"c", {{"a", {{"cost", 2.0}, {"time", 1.0}}}}}};
@@ -292,7 +291,7 @@ TEST_CASE("MinParametricSolver with pick_one_only finds improving cycle") {
         }
     };
 
-    unordered_map<string, double> dist;
+    flat_hash_map<string, double> dist;
     for (const auto& [v, _] : digraph) {
         dist[v] = 0.0;
     }
@@ -307,8 +306,8 @@ TEST_CASE("MinParametricSolver with pick_one_only finds improving cycle") {
 }
 
 TEST_CASE("MinParametricSolver with pick_one_only finds improving cycle") {
-    using Edge = unordered_map<string, double>;
-    unordered_map<string, unordered_map<string, Edge>> digraph{
+    using Edge = flat_hash_map<string, double>;
+    flat_hash_map<string, flat_hash_map<string, Edge>> digraph{
         {"a", {{"b", {{"cost", -5.0}, {"time", 1.0}}}}},
         {"b", {{"c", {{"cost", 1.0}, {"time", 1.0}}}}},
         {"c", {{"a", {{"cost", 2.0}, {"time", 1.0}}}}}};
@@ -328,7 +327,7 @@ TEST_CASE("MinParametricSolver with pick_one_only finds improving cycle") {
         }
     };
 
-    unordered_map<string, double> dist;
+    flat_hash_map<string, double> dist;
     for (const auto& [v, _] : digraph) {
         dist[v] = 0.0;
     }
@@ -342,8 +341,8 @@ TEST_CASE("MinParametricSolver with pick_one_only finds improving cycle") {
 }
 
 TEST_CASE("MinParametricSolver with pick_one_only finds improving cycle") {
-    using Edge = unordered_map<string, double>;
-    unordered_map<string, unordered_map<string, Edge>> digraph{
+    using Edge = flat_hash_map<string, double>;
+    flat_hash_map<string, flat_hash_map<string, Edge>> digraph{
         {"a", {{"b", {{"cost", -5.0}, {"time", 1.0}}}}},
         {"b", {{"c", {{"cost", 1.0}, {"time", 1.0}}}}},
         {"c", {{"a", {{"cost", 2.0}, {"time", 1.0}}}}}};
@@ -363,7 +362,7 @@ TEST_CASE("MinParametricSolver with pick_one_only finds improving cycle") {
         }
     };
 
-    unordered_map<string, double> dist;
+    flat_hash_map<string, double> dist;
     for (const auto& [v, _] : digraph) {
         dist[v] = 0.0;
     }
@@ -378,8 +377,8 @@ TEST_CASE("MinParametricSolver with pick_one_only finds improving cycle") {
 }
 
 TEST_CASE("MinParametricSolver with negative cycle and infinity init") {
-    using Edge = unordered_map<string, double>;
-    unordered_map<string, unordered_map<string, Edge>> digraph{
+    using Edge = flat_hash_map<string, double>;
+    flat_hash_map<string, flat_hash_map<string, Edge>> digraph{
         {"a", {{"b", {{"cost", 1.0}, {"time", 1.0}}}}},
         {"b", {{"c", {{"cost", 1.0}, {"time", 1.0}}}}},
         {"c", {{"a", {{"cost", -4.0}, {"time", 1.0}}}}}};
@@ -399,7 +398,7 @@ TEST_CASE("MinParametricSolver with negative cycle and infinity init") {
         }
     };
 
-    unordered_map<string, double> dist;
+    flat_hash_map<string, double> dist;
     for (const auto& [v, _] : digraph) {
         dist[v] = std::numeric_limits<double>::infinity();
     }

@@ -35,7 +35,7 @@ endif()
 
 file(GLOB sources CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp)
 add_executable(${PROJECT_NAME} ${sources})
-target_link_libraries(${PROJECT_NAME} doctest::doctest DiGraphX::DiGraphX ${SPECIFIC_LIBS})
+target_link_libraries(${PROJECT_NAME} doctest::doctest DiGraphX::DiGraphX ${SPECIFIC_LIBS} ${SPECIFIC_ABSEIL_LIBS})
 
 # Add RapidCheck support if available
 if(rapidcheck_ADDED)

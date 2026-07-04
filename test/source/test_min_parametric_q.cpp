@@ -4,22 +4,21 @@
 #include <limits>
 #include <mywheel/map_adapter.hpp>
 #include <string>
-#include <unordered_map>
 #include <vector>
 
 using std::string;
-using std::unordered_map;
+using absl::flat_hash_map;
 using std::vector;
 
 /**
  * @brief Concrete implementation of MinParametricAPI for testing
  */
-class MyAPI : public MinParametricAPI<string, unordered_map<string, double>, double> {
+class MyAPI : public MinParametricAPI<string, flat_hash_map<string, double>, double> {
   public:
     /**
      * @brief Calculate distance: cost - ratio * time
      */
-    auto distance(const double& ratio, const unordered_map<string, double>& edge)
+    auto distance(const double& ratio, const flat_hash_map<string, double>& edge)
         -> double override {
         return edge.at("cost") - ratio * edge.at("time");
     }
@@ -27,7 +26,7 @@ class MyAPI : public MinParametricAPI<string, unordered_map<string, double>, dou
     /**
      * @brief Calculate zero cancellation ratio: total_cost / total_time
      */
-    auto zero_cancel(const vector<unordered_map<string, double>>& cycle) -> double override {
+    auto zero_cancel(const vector<flat_hash_map<string, double>>& cycle) -> double override {
         double total_cost = 0.0;
         double total_time = 0.0;
         for (const auto& edge : cycle) {
@@ -40,13 +39,13 @@ class MyAPI : public MinParametricAPI<string, unordered_map<string, double>, dou
 
 TEST_CASE("Test Min Parametric Q") {
     // Create the test graph with structured edges
-    unordered_map<string, unordered_map<string, unordered_map<string, double>>> digraph{
+    flat_hash_map<string, flat_hash_map<string, flat_hash_map<string, double>>> digraph{
         {"a0", {{"a1", {{"cost", 7.0}, {"time", 1.0}}}, {"a2", {{"cost", 5.0}, {"time", 1.0}}}}},
         {"a1", {{"a0", {{"cost", 0.0}, {"time", 1.0}}}, {"a2", {{"cost", 3.0}, {"time", 1.0}}}}},
         {"a2", {{"a1", {{"cost", 1.0}, {"time", 1.0}}}, {"a0", {{"cost", 2.0}, {"time", 1.0}}}}}};
 
     // Initialize distances with infinity
-    unordered_map<string, double> dist;
+    flat_hash_map<string, double> dist;
     for (const auto& [vtx, _] : digraph) {
         dist[vtx] = std::numeric_limits<double>::infinity();
     }
@@ -69,7 +68,7 @@ TEST_CASE("Test Min Parametric Q") {
 
 // TEST_CASE("Test Min Parametric Q with List of Lists") {
 //     // Alternative representation using vector of vectors
-//     using EdgeData = unordered_map<string, double>;
+//     using EdgeData = flat_hash_map<string, double>;
 //     using NodeList = vector<std::pair<size_t, EdgeData>>;
 //     vector<NodeList> graph_data {
 //         {   // Node 0
@@ -108,13 +107,13 @@ TEST_CASE("Test Min Parametric Q") {
 
 TEST_CASE("Test Min Parametric Q with Negative Cycle") {
     // Create a graph that should have a negative cycle for testing
-    unordered_map<string, unordered_map<string, unordered_map<string, double>>> digraph{
+    flat_hash_map<string, flat_hash_map<string, flat_hash_map<string, double>>> digraph{
         {"a0", {{"a1", {{"cost", 1.0}, {"time", 1.0}}}}},
         {"a1", {{"a2", {{"cost", 1.0}, {"time", 1.0}}}}},
         {"a2", {{"a0", {{"cost", -4.0}, {"time", 1.0}}}}}};
 
     // Initialize distances
-    unordered_map<string, double> dist;
+    flat_hash_map<string, double> dist;
     for (const auto& [vtx, _] : digraph) {
         dist[vtx] = 0.0;  // Start with zero distances
     }
@@ -136,12 +135,12 @@ TEST_CASE("Test Min Parametric Q with Negative Cycle") {
 
 TEST_CASE("Test Min Parametric Q Pick One Only") {
     // Test the pick_one_only functionality
-    unordered_map<string, unordered_map<string, unordered_map<string, double>>> digraph{
+    flat_hash_map<string, flat_hash_map<string, flat_hash_map<string, double>>> digraph{
         {"a0", {{"a1", {{"cost", 7.0}, {"time", 1.0}}}, {"a2", {{"cost", 5.0}, {"time", 1.0}}}}},
         {"a1", {{"a0", {{"cost", 0.0}, {"time", 1.0}}}, {"a2", {{"cost", 3.0}, {"time", 1.0}}}}},
         {"a2", {{"a1", {{"cost", 1.0}, {"time", 1.0}}}, {"a0", {{"cost", 2.0}, {"time", 1.0}}}}}};
 
-    unordered_map<string, double> dist;
+    flat_hash_map<string, double> dist;
     for (const auto& [vtx, _] : digraph) {
         dist[vtx] = std::numeric_limits<double>::infinity();
     }
@@ -166,12 +165,12 @@ TEST_CASE("Test Min Parametric Q Pick One Only") {
  * @brief Concrete implementation of MinParametricAPI for testing
  * Matches the MapAdapter<vector<NodeList>> graph structure
  */
-class MyAPI2 : public MinParametricAPI<size_t, unordered_map<string, double>, double> {
+class MyAPI2 : public MinParametricAPI<size_t, flat_hash_map<string, double>, double> {
   public:
     /**
      * @brief Calculate distance: cost - ratio * time
      */
-    auto distance(const double& ratio, const unordered_map<string, double>& edge)
+    auto distance(const double& ratio, const flat_hash_map<string, double>& edge)
         -> double override {
         return edge.at("cost") - ratio * edge.at("time");
     }
@@ -179,7 +178,7 @@ class MyAPI2 : public MinParametricAPI<size_t, unordered_map<string, double>, do
     /**
      * @brief Calculate zero cancellation ratio: total_cost / total_time
      */
-    auto zero_cancel(const vector<unordered_map<string, double>>& cycle) -> double override {
+    auto zero_cancel(const vector<flat_hash_map<string, double>>& cycle) -> double override {
         double total_cost = 0.0;
         double total_time = 0.0;
         for (const auto& edge : cycle) {
@@ -192,7 +191,7 @@ class MyAPI2 : public MinParametricAPI<size_t, unordered_map<string, double>, do
 
 TEST_CASE("Test Min Parametric Q with List of Lists") {
     // Alternative representation using vector of vectors
-    using EdgeData = unordered_map<string, double>;
+    using EdgeData = flat_hash_map<string, double>;
     using NodeList = vector<std::pair<size_t, EdgeData>>;
     vector<NodeList> graph_data{{// Node 0
                                  {1, {{"cost", 7.0}, {"time", 1.0}}},

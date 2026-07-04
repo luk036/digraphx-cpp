@@ -19,8 +19,8 @@
  */
 #include <cassert>
 #include <py2cpp/gen.hpp>
+#include <absl/container/flat_hash_map.h>
 #include <type_traits>
-#include <unordered_map>
 #include <utility>
 #include <vector>
 
@@ -93,13 +93,13 @@ class NegCycleFinderQ {
         std::declval<NbrElem>(), std::declval<const Nbrs&>()))>>;
     using Cycle = std::vector<Edge>;
 
-    std::unordered_map<Node, std::pair<Node, Edge>> _pred{};
-    std::unordered_map<Node, std::pair<Node, Edge>> _succ{};
+    absl::flat_hash_map<Node, std::pair<Node, Edge>> _pred{};
+    absl::flat_hash_map<Node, std::pair<Node, Edge>> _succ{};
     const DiGraph& _digraph;
 
-    auto _find_cycle(const std::unordered_map<Node, std::pair<Node, Edge>>& point_to)
+    auto _find_cycle(const absl::flat_hash_map<Node, std::pair<Node, Edge>>& point_to)
         -> py::Generator<Node> {
-        auto visited = std::unordered_map<Node, Node>{};
+        auto visited = absl::flat_hash_map<Node, Node>{};
         if constexpr (requires { this->_digraph.size(); }) visited.reserve(this->_digraph.size());
         for (const auto& entry : this->_digraph) {
             const auto& vtx = _get_key(entry);
@@ -162,7 +162,7 @@ class NegCycleFinderQ {
     }
 
     auto _cycle_list(const Node& handle,
-                     const std::unordered_map<Node, std::pair<Node, Edge>>& point_to) const
+                     const absl::flat_hash_map<Node, std::pair<Node, Edge>>& point_to) const
         -> Cycle {
         auto vtx = handle;
         auto cycle = Cycle{};

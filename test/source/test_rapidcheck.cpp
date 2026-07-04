@@ -7,12 +7,12 @@
 #    include <digraphx/neg_cycle.hpp>
 #    include <list>
 #    include <mywheel/map_adapter.hpp>
-#    include <unordered_map>
+#    include <absl/container/flat_hash_map.h>
 #    include <vector>
 
 using std::list;
 using std::pair;
-using std::unordered_map;
+using absl::flat_hash_map;
 using std::vector;
 
 // Helper function to create a random digraph with positive weights only

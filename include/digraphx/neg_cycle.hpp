@@ -29,8 +29,8 @@
  */
 #include <cassert>
 #include <py2cpp/gen.hpp>
+#include <absl/container/flat_hash_map.h>
 #include <type_traits>
-#include <unordered_map>
 #include <utility>
 #include <vector>
 
@@ -103,7 +103,7 @@ class NegCycleFinder {
         std::declval<NbrElem>(), std::declval<const Nbrs&>()))>>;
     using Cycle = std::vector<Edge>;
 
-    std::unordered_map<Node, std::pair<Node, Edge>> _pred{};
+    absl::flat_hash_map<Node, std::pair<Node, Edge>> _pred{};
     const DiGraph& _digraph;
 
     /**
@@ -229,7 +229,7 @@ class NegCycleFinder {
      * @return py::Generator<Node> Generator yielding nodes that start cycles
      */
     auto _find_cycle() -> py::Generator<Node> {
-        auto visited = std::unordered_map<Node, Node>{};
+        auto visited = absl::flat_hash_map<Node, Node>{};
         if constexpr (requires { this->_digraph.size(); }) visited.reserve(this->_digraph.size());
         for (const auto& entry : this->_digraph) {
             const auto& vtx = _get_key(entry);
