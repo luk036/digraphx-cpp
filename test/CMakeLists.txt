@@ -51,12 +51,6 @@ if(rapidcheck_ADDED)
 endif()
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 20)
 
-# Suppress warnings from Abseil headers (propagated via DiGraphX's PUBLIC -Werror flags)
-target_compile_options(${PROJECT_NAME} PRIVATE
-  "$<$<COMPILE_LANG_AND_ID:CXX,Clang>:-Wno-nullability-extension>"
-  "$<$<COMPILE_LANG_AND_ID:CXX,GNU>:-Wno-pedantic;-Wno-overflow>"
-)
-
 # enable compiler warnings
 if(NOT TEST_INSTALLED_VERSION)
   if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -68,6 +62,12 @@ if(NOT TEST_INSTALLED_VERSION)
   elseif(MSVC)
     target_compile_options(DiGraphX PUBLIC /utf-8 /W4 /WX)
     # target_compile_definitions(${PROJECT_NAME} PUBLIC DOCTEST_CONFIG_USE_STD_HEADERS)
+  endif()
+  # Suppress warnings from Abseil headers (propagated via DiGraphX's PUBLIC -Werror)
+  if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    target_compile_options(${PROJECT_NAME} PRIVATE -Wno-nullability-extension)
+  elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    target_compile_options(${PROJECT_NAME} PRIVATE -Wno-pedantic -Wno-overflow)
   endif()
 endif()
 
