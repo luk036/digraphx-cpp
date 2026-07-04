@@ -57,7 +57,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
   target_compile_options(DiGraphX PRIVATE -Wall -Wpedantic -Wextra -Werror)
 elseif(MSVC)
-  target_compile_options(DiGraphX PRIVATE /utf-8 /W4 /WX)
+  target_compile_options(DiGraphX PRIVATE /utf-8 /W4 /WX /wd4702 /wd4100)
 endif()
 
 # Link dependencies
