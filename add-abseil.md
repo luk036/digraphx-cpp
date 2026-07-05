@@ -1,27 +1,27 @@
-# Adding Abseil (absl::flat_hash_map) to lds-gen-cpp
+# Adding Abseil (absl::flat_hash_map) to digraphx-cpp
 
 This document explains how to configure both build systems (xmake and CMake)
 to use Google Abseil's `absl::flat_hash_map`, including the pitfalls
 encountered and their solutions.
 
-## Source Change
+## Source Changes
 
-In `source/sphere_n.cpp`:
+Unlike lds-gen-cpp where `std::unordered_map` was used only in a `.cpp` file,
+digraphx-cpp uses it in **public headers**, so the Abseil types become part of
+the public API.
 
-```cpp
-// Before:
-#include <unordered_map>
-// ...
-static std::unordered_map<unsigned int, std::vector<double>> tp_cache;
+### Headers
 
-// After:
-#include <absl/container/flat_hash_map.h>
-// ...
-static absl::flat_hash_map<unsigned int, std::vector<double>> tp_cache;
-```
+| File | Changes |
+|---|---|
+| `include/digraphx/neg_cycle.hpp` | `#include <unordered_map>` → `#include <absl/container/flat_hash_map.h>` |
+| | `std::unordered_map<Node, ...>` → `absl::flat_hash_map<Node, ...>` (2 occurrences) |
+| `include/digraphx/neg_cycle_q.hpp` | Same include + type replacements (5 occurrences) |
 
-The header `sphere_n.hpp` does **not** expose any Abseil types, so the
-include stays in the `.cpp` only.
+### Test files (10 files)
+
+Each had `using std::unordered_map;` changed to `using absl::flat_hash_map;`,
+and all bare `unordered_map` references replaced throughout.
 
 ---
 
@@ -35,28 +35,23 @@ include stays in the `.cpp` only.
 add_requires("abseil", {alias = "abseil"})
 ```
 
-**2. Use the package** on the `LdsGen` target:
+**2. Use the package** on every target that includes the changed headers
+(since abseil types are in public headers, ANY target including
+`neg_cycle.hpp` or `neg_cycle_q.hpp` needs the package):
 
 ```lua
-target("LdsGen")
+target("DiGraphX")
     -- ...
     add_packages("fmt", "spdlog", "abseil")
+
+target("test_digraphx")
+    -- ...
+    add_packages("doctest", "fmt", "spdlog", "abseil")
+
+target("standalone")
+    -- ...
+    add_packages("fmt", "spdlog", "cxxopts", "abseil")
 ```
-
-**3. Suppress MSVC warnings** from Abseil headers (Windows only):
-
-```lua
-    if is_plat("windows") then
-        add_cxflags("/wd4702", {force = true})
-    end
-```
-
-### Why `/wd4702`?
-
-The project compiles with `/WX` (warnings-as-errors) on MSVC.  Abseil's own
-headers (`container_memory.h`, `raw_hash_set.h`) emit **C4702 (unreachable
-code)**.  Without suppressing this, the build breaks.  The flag is scoped to
-the `LdsGen` target so it does not affect other targets.
 
 ### Build & Test
 
@@ -71,13 +66,13 @@ xmake test             # run tests
 
 ### Overview
 
-Four files were touched:
+Six files were touched:
 
 | File | Role |
 |---|---|
 | `cmake/specific.cmake` | Fetch abseil-cpp via CPM, set up variables |
-| `CMakeLists.txt` (root) | Add include dir + MSVC suppressions to LdsGen |
-| `test/CMakeLists.txt` | Link abseil targets to test executable |
+| `CMakeLists.txt` (root) | Add include dir + MSVC suppressions |
+| `test/CMakeLists.txt` | Link abseil targets + warning suppressions |
 | `standalone/CMakeLists.txt` | Link abseil targets to standalone executable |
 
 ### 1. `cmake/specific.cmake` — Dependency Declaration
@@ -101,8 +96,8 @@ list(APPEND SPECIFIC_INCLUDES "${abseil-cpp_SOURCE_DIR}")
 # Abseil CMake targets to link to *executables* (not the library).
 set(SPECIFIC_ABSEIL_LIBS absl::flat_hash_map)
 
-# Regular libs (fmt, spdlog) — NOT abseil, to avoid export-set conflicts.
-set(SPECIFIC_LIBS fmt::fmt spdlog::spdlog)
+# Regular libs — NOT abseil, to avoid export-set conflicts.
+set(SPECIFIC_LIBS Threads::Threads MyWheel::MyWheel Py2Cpp::Py2Cpp fmt::fmt spdlog::spdlog)
 ```
 
 ### 2. Root `CMakeLists.txt` — Library Target
@@ -110,16 +105,20 @@ set(SPECIFIC_LIBS fmt::fmt spdlog::spdlog)
 ```cmake
 # After the target is created and linked:
 
-# Link regular libs (fmt, spdlog) — no abseil here.
+# Link regular libs — no abseil here.
 target_link_libraries(${PROJECT_NAME} PRIVATE ${SPECIFIC_LIBS})
 
-# Add abseil include dir PRIVATE — the library sources can #include
-# <absl/...> but dependents don't need it.
+# Add abseil include dir PRIVATE.
 target_include_directories(${PROJECT_NAME} PRIVATE ${SPECIFIC_INCLUDES})
 
-# Suppress MSVC warnings from Abseil headers
-target_compile_options(${PROJECT_NAME} PRIVATE
-  "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/wd4702;/wd4100>")
+# Strict compiler warnings (PRIVATE — does NOT propagate).
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  target_compile_options(DiGraphX PRIVATE -Wall -Wpedantic -Wextra -Werror)
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+  target_compile_options(DiGraphX PRIVATE -Wall -Wpedantic -Wextra -Werror)
+elseif(MSVC)
+  target_compile_options(DiGraphX PRIVATE /utf-8 /W4 /WX /wd4702 /wd4100)
+endif()
 ```
 
 ### 3. `test/CMakeLists.txt` — Test Executable
@@ -127,17 +126,29 @@ target_compile_options(${PROJECT_NAME} PRIVATE
 ```cmake
 target_link_libraries(${PROJECT_NAME}
   doctest::doctest
-  LdsGen::LdsGen
+  DiGraphX::DiGraphX
   ${SPECIFIC_LIBS}
   ${SPECIFIC_ABSEIL_LIBS}     # <-- abseil linked HERE
 )
+
+# Strict flags + Abseil warning suppressions on the test target.
+# Order matters: strict first, then suppress (last flag wins on GCC/Clang).
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wpedantic -Wextra -Werror)
+  target_compile_options(${PROJECT_NAME} PRIVATE -Wno-nullability-extension -Wno-gcc-compat)
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+  target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wpedantic -Wextra -Werror)
+  target_compile_options(${PROJECT_NAME} PRIVATE -Wno-pedantic -Wno-overflow)
+elseif(MSVC)
+  target_compile_options(${PROJECT_NAME} PRIVATE /utf-8 /W4 /WX /wd4702 /wd4100)
+endif()
 ```
 
 ### 4. `standalone/CMakeLists.txt` — Standalone Executable
 
 ```cmake
 target_link_libraries(${PROJECT_NAME}
-  LdsGen::LdsGen
+  DiGraphX::DiGraphX
   cxxopts::cxxopts
   ${SPECIFIC_LIBS}
   ${SPECIFIC_ABSEIL_LIBS}     # <-- abseil linked HERE
@@ -182,21 +193,21 @@ instantiation pulls in non-inline symbols from compiled abseil libraries:
 - `absl::container_internal::AllocateBackingArray`
 - etc.
 
-These live in `.lib` files (`absl_raw_hash_set`, `absl_hash`, `absl_base`,
-etc.).  Simply adding the include directory is not enough — the final
-executable must **link** against `absl::flat_hash_map` (which transitively
-pulls in all required abseil static libraries).
+These live in `.lib`/`.a` files (`absl_raw_hash_set`, `absl_hash`,
+`absl_base`, etc.).  Simply adding the include directory is not enough — the
+final executable must **link** against `absl::flat_hash_map` (which
+transitively pulls in all required abseil static libraries).
 
-### Pitfall 3: Cannot link abseil targets to the LdsGen *library* target
+### Pitfall 3: Cannot link abseil targets to the library target (export set)
 
 The root `CMakeLists.txt` uses `packageProject()` from
-PackageProject.cmake, which sets up a CMake install/export set.  If LdsGen
-declares a `target_link_libraries(... absl::flat_hash_map)`, CMake's
-`install(EXPORT)` tries to include `absl_flat_hash_map` in the export set.
-Since abseil-cpp is not installed alongside LdsGen, this fails:
+PackageProject.cmake, which sets up a CMake install/export set.  If the
+library target declares a `target_link_libraries(... absl::flat_hash_map)`,
+CMake's `install(EXPORT)` tries to include `absl_flat_hash_map` in the export
+set.  Since abseil-cpp is not installed alongside the project, this fails:
 
 ```
-install(EXPORT "LdsGenTargets" ...) includes target "LdsGen" which
+install(EXPORT "DiGraphXTargets" ...) includes target "DiGraphX" which
 requires target "absl_flat_hash_map" that is not in any export set.
 ```
 
@@ -204,34 +215,69 @@ requires target "absl_flat_hash_map" that is not in any export set.
 Instead:
 
 - Add the abseil **include directory** to the library target PRIVATE
-  (so `sphere_n.cpp` can `#include <absl/container/flat_hash_map.h>`).
+  (so source files can `#include <absl/container/flat_hash_map.h>`).
 - Link `absl::flat_hash_map` only to the **executable** targets
   (test runner, standalone binary) where the symbols need to be resolved.
 
 This is safe because:
-- The LdsGen library is a **static library** — it does not resolve symbols
+- The library is a **static library** — it does not resolve symbols
   at build time; only the final executable does.
 - The abseil headers are still available for compilation via the PRIVATE
   include directory.
-- The export set remains clean — LdsGen's installed target has no abseil
+- The export set remains clean — the installed target has no abseil
   dependency recorded.
 
-### Pitfall 4: MSVC warns-as-errors from Abseil headers
+### Pitfall 4: MSVC warnings-as-errors from Abseil headers
 
-Abseil's own headers emit C4702 (unreachable code) and C4100 (unreferenced
-formal parameter) on MSVC.  Since the project enforces `/WX` (all warnings
-as errors), these must be suppressed:
+Abseil's own headers emit **C4702** (unreachable code) and **C4100**
+(unreferenced formal parameter) on MSVC.  Since the project enforces `/WX`
+(all warnings as errors), these must be suppressed:
 
 ```cmake
-# Root CMakeLists.txt (PRIVATE to the LdsGen target)
-target_compile_options(${PROJECT_NAME} PRIVATE
-  "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/wd4702;/wd4100>")
+# On the DiGraphX library target (root CMakeLists.txt)
+elseif(MSVC)
+  target_compile_options(DiGraphX PRIVATE /utf-8 /W4 /WX /wd4702 /wd4100)
 
-# xmake.lua (on the LdsGen target)
-add_cxflags("/wd4702", {force = true})
+# On the test target (test/CMakeLists.txt)
+elseif(MSVC)
+  target_compile_options(${PROJECT_NAME} PRIVATE /utf-8 /W4 /WX /wd4702 /wd4100)
 ```
 
-### Pitfall 5: Instable network / CPM downloads
+### Pitfall 5: GCC/Clang warnings-as-errors from Abseil headers (flag ordering)
+
+Abseil's own headers emit:
+
+| Platform | Warning | Cause |
+|---|---|---|
+| GCC (Ubuntu) | `-Wpedantic` | `__int128` is a GCC extension |
+| GCC (Ubuntu) | `-Woverflow` | `_mm_set1_epi8(0x80)` char overflow |
+| Clang (macOS) | `-Wnullability-extension` | `_Nonnull` is a Clang extension |
+| Clang (macOS) | `-Wgcc-compat` | `enable_if` is a Clang extension |
+
+The project enforces `-Wall -Wpedantic -Wextra -Werror` for code quality.
+These flags must be set on the **test executable target** (not propagated
+PUBLIC from the library) because of a **flag ordering** requirement.
+
+**Critical**: `-Wno-pedantic` must appear **after** `-Wpedantic` on the
+compiler command line.  If `-Wpedantic` comes from PUBLIC propagation, it is
+appended AFTER the target's own PRIVATE flags, re-enabling the warning.
+
+```cmake
+# WRONG: PUBLIC propagation puts -Wpedantic AFTER -Wno-pedantic
+target_compile_options(DiGraphX PUBLIC -Wall -Wpedantic -Wextra -Werror)
+target_compile_options(DiGraphXTests PRIVATE -Wno-pedantic)
+# Result: ... -Wno-pedantic ... -Wall -Wpedantic ... ← pedantic re-enabled!
+
+# CORRECT: Set both on the same target, suppressions last
+target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wpedantic -Wextra -Werror)
+target_compile_options(${PROJECT_NAME} PRIVATE -Wno-pedantic -Wno-overflow)
+# Result: ... -Wall -Wpedantic ... -Wno-pedantic -Wno-overflow ← pedantic suppressed!
+```
+
+The same pattern applies for MSVC suppressions (`/wd` flags are order-
+independent, but keeping them together is cleaner).
+
+### Pitfall 6: Instable network / CPM downloads
 
 GitHub clones can fail with `RPC failed; curl 56 schannel` or
 `early EOF`.  Mitigations:
