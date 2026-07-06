@@ -27,9 +27,10 @@
  *   }
  * @enddot
  */
+#include <absl/container/flat_hash_map.h>
+
 #include <cassert>
 #include <py2cpp/gen.hpp>
-#include <absl/container/flat_hash_map.h>
 #include <type_traits>
 #include <utility>
 #include <vector>

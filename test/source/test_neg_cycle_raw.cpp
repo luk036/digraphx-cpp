@@ -1,16 +1,16 @@
 // -*- coding: utf-8 -*-
+#include <absl/container/flat_hash_map.h>
 #include <doctest/doctest.h>  // for ResultBuilder, TestCase
 
 #include <cstdint>                 // for uint32_t
 #include <digraphx/neg_cycle.hpp>  // for NegCycleFinder
 #include <list>
 #include <mywheel/map_adapter.hpp>
-#include <absl/container/flat_hash_map.h>
 #include <vector>
 
+using absl::flat_hash_map;
 using std::list;
 using std::pair;
-using absl::flat_hash_map;
 using std::unordered_multimap;
 using std::vector;
 

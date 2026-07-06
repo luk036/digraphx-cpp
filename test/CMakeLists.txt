@@ -35,7 +35,9 @@ endif()
 
 file(GLOB sources CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp)
 add_executable(${PROJECT_NAME} ${sources})
-target_link_libraries(${PROJECT_NAME} doctest::doctest DiGraphX::DiGraphX ${SPECIFIC_LIBS} ${SPECIFIC_ABSEIL_LIBS})
+target_link_libraries(
+  ${PROJECT_NAME} doctest::doctest DiGraphX::DiGraphX ${SPECIFIC_LIBS} ${SPECIFIC_ABSEIL_LIBS}
+)
 
 # Add RapidCheck support if available
 if(rapidcheck_ADDED)
@@ -60,8 +62,8 @@ if(NOT TEST_INSTALLED_VERSION)
   elseif(MSVC)
     target_compile_options(DiGraphX PRIVATE /utf-8 /W4 /WX)
   endif()
-  # Apply strict flags + Abseil warning suppressions on the test target
-  # Order: strict first, then suppress (last flag wins on GCC/Clang)
+  # Apply strict flags + Abseil warning suppressions on the test target Order: strict first, then
+  # suppress (last flag wins on GCC/Clang)
   if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wpedantic -Wextra -Werror)
     target_compile_options(${PROJECT_NAME} PRIVATE -Wno-nullability-extension -Wno-gcc-compat)

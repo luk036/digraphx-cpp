@@ -2,17 +2,17 @@
 #include <doctest/doctest.h>
 
 #ifdef RAPIDCHECK_H
+#    include <absl/container/flat_hash_map.h>
 #    include <rapidcheck.h>
 
 #    include <digraphx/neg_cycle.hpp>
 #    include <list>
 #    include <mywheel/map_adapter.hpp>
-#    include <absl/container/flat_hash_map.h>
 #    include <vector>
 
+using absl::flat_hash_map;
 using std::list;
 using std::pair;
-using absl::flat_hash_map;
 using std::vector;
 
 // Helper function to create a random digraph with positive weights only

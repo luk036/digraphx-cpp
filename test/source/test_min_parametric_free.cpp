@@ -8,10 +8,10 @@
 #include <string>
 #include <vector>
 
+using absl::flat_hash_map;
 using std::list;
 using std::pair;
 using std::string;
-using absl::flat_hash_map;
 using std::vector;
 
 TEST_CASE("Test min_parametric free function with list digraph (no neg cycle)") {

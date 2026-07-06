@@ -5,9 +5,9 @@
 #include <list>
 #include <vector>
 
+using absl::flat_hash_map;
 using std::list;
 using std::pair;
-using absl::flat_hash_map;
 using std::vector;
 
 TEST_CASE("Test Parametric Search (list of lists)") {

@@ -27,4 +27,6 @@ add_executable(${PROJECT_NAME} ${sources})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 20 OUTPUT_NAME "DiGraphX")
 
-target_link_libraries(${PROJECT_NAME} DiGraphX::DiGraphX cxxopts::cxxopts ${SPECIFIC_LIBS} ${SPECIFIC_ABSEIL_LIBS})
+target_link_libraries(
+  ${PROJECT_NAME} DiGraphX::DiGraphX cxxopts::cxxopts ${SPECIFIC_LIBS} ${SPECIFIC_ABSEIL_LIBS}
+)

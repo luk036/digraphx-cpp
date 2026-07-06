@@ -7,10 +7,10 @@
 #include <string>
 #include <vector>
 
-using std::string;
-using std::pair;
-using std::list;
 using absl::flat_hash_map;
+using std::list;
+using std::pair;
+using std::string;
 using std::vector;
 
 TEST_CASE("CycleRatioAPI distance and zero_cancel") {
