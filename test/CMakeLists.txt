@@ -71,7 +71,7 @@ if(NOT TEST_INSTALLED_VERSION)
     target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wpedantic -Wextra -Werror)
     target_compile_options(${PROJECT_NAME} PRIVATE -Wno-pedantic -Wno-overflow)
   elseif(MSVC)
-    target_compile_options(${PROJECT_NAME} PRIVATE /utf-8 /W4 /WX /wd4702 /wd4100)
+    target_compile_options(${PROJECT_NAME} PRIVATE /utf-8 /W4 /WX /wd4702 /wd4100 /wd4324)
   endif()
 endif()
 
