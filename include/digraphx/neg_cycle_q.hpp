@@ -17,10 +17,11 @@
  *
  * @see neg_cycle.hpp for unconstrained version
  */
+#include <absl/container/flat_hash_map.h>
+
 #include <cassert>
 #include <py2cpp/gen.hpp>
 #include <type_traits>
-#include <unordered_map>
 #include <utility>
 #include <vector>
 
@@ -93,13 +94,13 @@ class NegCycleFinderQ {
         std::declval<NbrElem>(), std::declval<const Nbrs&>()))>>;
     using Cycle = std::vector<Edge>;
 
-    std::unordered_map<Node, std::pair<Node, Edge>> _pred{};
-    std::unordered_map<Node, std::pair<Node, Edge>> _succ{};
+    absl::flat_hash_map<Node, std::pair<Node, Edge>> _pred{};
+    absl::flat_hash_map<Node, std::pair<Node, Edge>> _succ{};
     const DiGraph& _digraph;
 
-    auto _find_cycle(const std::unordered_map<Node, std::pair<Node, Edge>>& point_to)
+    auto _find_cycle(const absl::flat_hash_map<Node, std::pair<Node, Edge>>& point_to)
         -> py::Generator<Node> {
-        auto visited = std::unordered_map<Node, Node>{};
+        auto visited = absl::flat_hash_map<Node, Node>{};
         if constexpr (requires { this->_digraph.size(); }) visited.reserve(this->_digraph.size());
         for (const auto& entry : this->_digraph) {
             const auto& vtx = _get_key(entry);
@@ -162,10 +163,11 @@ class NegCycleFinderQ {
     }
 
     auto _cycle_list(const Node& handle,
-                     const std::unordered_map<Node, std::pair<Node, Edge>>& point_to) const
+                     const absl::flat_hash_map<Node, std::pair<Node, Edge>>& point_to) const
         -> Cycle {
         auto vtx = handle;
         auto cycle = Cycle{};
+        cycle.reserve(point_to.size());
         while (true) {
             const auto& [utx, edge] = point_to.at(vtx);
             cycle.emplace_back(edge);
@@ -201,7 +203,8 @@ class NegCycleFinderQ {
      * @brief Find negative cycles using predecessor-based Howard's algorithm
      *
      * @f[
-     *     d_v \gets \min(d_v,\; d_u + w(u,v)) \quad \text{s.t.} \quad \text{update\_ok}(d_v^{\text{old}}, d_v^{\text{new}})
+     *     d_v \gets \min(d_v,\; d_u + w(u,v)) \quad \text{s.t.} \quad
+     * \text{update\_ok}(d_v^{\text{old}}, d_v^{\text{new}})
      * @f]
      *
      * @tparam Mapping Distance mapping type
@@ -233,7 +236,8 @@ class NegCycleFinderQ {
      * @brief Find negative cycles using successor-based Howard's algorithm
      *
      * @f[
-     *     d_u \gets \max(d_u,\; d_v - w(u,v)) \quad \text{s.t.} \quad \text{update\_ok}(d_u^{\text{old}}, d_u^{\text{new}})
+     *     d_u \gets \max(d_u,\; d_v - w(u,v)) \quad \text{s.t.} \quad
+     * \text{update\_ok}(d_u^{\text{old}}, d_u^{\text{new}})
      * @f]
      *
      * @tparam Mapping Distance mapping type
@@ -259,7 +263,6 @@ class NegCycleFinderQ {
         }
         co_return;
     }
-
 };
 
 #ifdef _MSC_VER

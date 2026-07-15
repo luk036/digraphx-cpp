@@ -35,7 +35,9 @@ endif()
 
 file(GLOB sources CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp)
 add_executable(${PROJECT_NAME} ${sources})
-target_link_libraries(${PROJECT_NAME} doctest::doctest DiGraphX::DiGraphX ${SPECIFIC_LIBS})
+target_link_libraries(
+  ${PROJECT_NAME} doctest::doctest DiGraphX::DiGraphX ${SPECIFIC_LIBS} ${SPECIFIC_ABSEIL_LIBS}
+)
 
 # Add RapidCheck support if available
 if(rapidcheck_ADDED)
@@ -51,15 +53,25 @@ if(rapidcheck_ADDED)
 endif()
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 20)
 
-# enable compiler warnings
+# enable compiler warnings (PRIVATE on DiGraphX, so they don't propagate)
 if(NOT TEST_INSTALLED_VERSION)
   if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    target_compile_options(DiGraphX PUBLIC -Wall -Wpedantic -Wextra -Werror)
+    target_compile_options(DiGraphX PRIVATE -Wall -Wpedantic -Wextra -Werror)
   elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-    target_compile_options(DiGraphX PUBLIC -Wall -Wpedantic -Wextra -Werror)
+    target_compile_options(DiGraphX PRIVATE -Wall -Wpedantic -Wextra -Werror)
   elseif(MSVC)
-    target_compile_options(DiGraphX PUBLIC /utf-8 /W4 /WX)
-    # target_compile_definitions(${PROJECT_NAME} PUBLIC DOCTEST_CONFIG_USE_STD_HEADERS)
+    target_compile_options(DiGraphX PRIVATE /utf-8 /W4 /WX)
+  endif()
+  # Apply strict flags + Abseil warning suppressions on the test target Order: strict first, then
+  # suppress (last flag wins on GCC/Clang)
+  if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wpedantic -Wextra -Werror)
+    target_compile_options(${PROJECT_NAME} PRIVATE -Wno-nullability-extension -Wno-gcc-compat)
+  elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wpedantic -Wextra -Werror)
+    target_compile_options(${PROJECT_NAME} PRIVATE -Wno-pedantic -Wno-overflow)
+  elseif(MSVC)
+    target_compile_options(${PROJECT_NAME} PRIVATE /utf-8 /W4 /WX /wd4702 /wd4100 /wd4324)
   endif()
 endif()
 

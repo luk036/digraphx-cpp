@@ -3,7 +3,6 @@
 #include <cstdint>  // for uint32_t
 #include <digraphx/parametric.hpp>
 #include <list>
-#include <unordered_map>
 #include <vector>
 
 template <typename DiGraph> void run_parametric_test(const DiGraph& digraph) {
@@ -31,7 +30,7 @@ TEST_CASE("Test Parametric Search") {
     }
 
     SUBCASE("dict of list's") {
-        const std::unordered_map<uint32_t, std::list<std::pair<uint32_t, uint32_t>>> digraph{
+        const absl::flat_hash_map<uint32_t, std::list<std::pair<uint32_t, uint32_t>>> digraph{
             {0, {{1, 0}, {2, 1}}}, {1, {{0, 2}, {2, 3}}}, {2, {{1, 4}, {0, 5}}}};
         run_parametric_test(digraph);
     }

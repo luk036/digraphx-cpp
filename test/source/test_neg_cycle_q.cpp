@@ -5,12 +5,11 @@
 #include <list>
 #include <mywheel/map_adapter.hpp>
 #include <string>
-#include <unordered_map>
 #include <vector>
 
+using absl::flat_hash_map;
 using std::list;
 using std::pair;
-using std::unordered_map;
 using std::vector;
 
 /**
@@ -78,12 +77,12 @@ TEST_CASE("Test raw digraph by MapAdapter") {
 TEST_CASE("Test raw digraph by dict") {
     // Create digraph: {"a0": {"a1": 7, "a2": 5}, "a1": {"a0": 0, "a2": 3}, "a2": {"a1": 1, "a0":
     // 2}}
-    unordered_map<std::string, unordered_map<std::string, double>> digraph{
+    flat_hash_map<std::string, flat_hash_map<std::string, double>> digraph{
         {std::string("a0"), {{std::string("a1"), 7.0}, {std::string("a2"), 5.0}}},
         {std::string("a1"), {{std::string("a0"), 0.0}, {std::string("a2"), 3.0}}},
         {std::string("a2"), {{std::string("a1"), 1.0}, {std::string("a0"), 2.0}}}};
 
-    unordered_map<std::string, double> dist;
+    flat_hash_map<std::string, double> dist;
     for (const auto& [vtx, _] : digraph) {
         dist[vtx] = 0.0;
     }
@@ -145,15 +144,15 @@ TEST_CASE("Test list of lists digraph") {
 }
 
 TEST_CASE("Test dict of lists digraph") {
-    const unordered_map<uint32_t, list<pair<uint32_t, uint32_t>>> digraph{
+    const flat_hash_map<uint32_t, list<pair<uint32_t, uint32_t>>> digraph{
         {0, {{1, 0}, {2, 1}}}, {1, {{0, 2}, {2, 3}}}, {2, {{1, 4}, {0, 5}, {0, 6}}}};
 
-    const unordered_map<uint32_t, double> edge_weight{{0, 7.0}, {1, 5.0}, {2, 0.0}, {3, 3.0},
+    const flat_hash_map<uint32_t, double> edge_weight{{0, 7.0}, {1, 5.0}, {2, 0.0}, {3, 3.0},
                                                       {4, 1.0}, {5, 2.0}, {6, 1.0}};
 
     auto get_weight = [&edge_weight](const auto& edge) -> double { return edge_weight.at(edge); };
 
-    auto dist = unordered_map<uint32_t, double>{};
+    auto dist = flat_hash_map<uint32_t, double>{};
     for (const auto& [vtx, _] : digraph) {
         dist[vtx] = 0.0;
     }
@@ -174,4 +173,3 @@ TEST_CASE("Test MapConstAdapter digraph") {
     CHECK_FALSE(has_negative_cycle_pred(ga, dist, get_weight));
     CHECK_FALSE(has_negative_cycle_succ(ga, dist, get_weight));
 }
-

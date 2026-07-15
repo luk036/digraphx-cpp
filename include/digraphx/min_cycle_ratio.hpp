@@ -209,7 +209,8 @@ template <typename DiGraph, typename Ratio> class MinCycleRatioSolver {
      * @brief run
      *
      * @f[
-     *     \lambda^* = \min_{\text{cycle } C \subseteq G} \frac{\sum_{e\in C} \mathrm{cost}(e)}{\sum_{e\in C} \mathrm{time}(e)}
+     *     \lambda^* = \min_{\text{cycle } C \subseteq G} \frac{\sum_{e\in C}
+     * \mathrm{cost}(e)}{\sum_{e\in C} \mathrm{time}(e)}
      * @f]
      *
      * @dot

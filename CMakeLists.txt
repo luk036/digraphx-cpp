@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.14...3.22)
 # Note: update this to your new project's name and version
 project(
   DiGraphX
-  VERSION 1.1.5
+  VERSION 1.1.6
   LANGUAGES CXX
 )
 
@@ -45,22 +45,24 @@ add_library(${PROJECT_NAME} ${headers} ${sources})
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 20)
 
 # being a cross-platform target, we enforce standards conformance on MSVC
-target_compile_options(${PROJECT_NAME} PUBLIC
-    "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/permissive->"
-    "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/wd4702>"
+target_compile_options(
+  ${PROJECT_NAME} PUBLIC "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/permissive->"
+                         "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/wd4702>"
 )
+# Suppress MSVC warnings from Abseil headers (C4100: unreferenced parameter)
+target_compile_options(${PROJECT_NAME} PRIVATE "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/wd4100>")
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  target_compile_options(DiGraphX PUBLIC -Wall -Wpedantic -Wextra -Werror)
+  target_compile_options(DiGraphX PRIVATE -Wall -Wpedantic -Wextra -Werror)
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-  target_compile_options(DiGraphX PUBLIC -Wall -Wpedantic -Wextra -Werror)
+  target_compile_options(DiGraphX PRIVATE -Wall -Wpedantic -Wextra -Werror)
 elseif(MSVC)
-  target_compile_options(DiGraphX PUBLIC /utf-8 /W4 /WX /wd4702)
-  # target_compile_definitions(${PROJECT_NAME} PUBLIC DOCTEST_CONFIG_USE_STD_HEADERS)
+  target_compile_options(DiGraphX PRIVATE /utf-8 /W4 /WX /wd4702 /wd4100)
 endif()
 
 # Link dependencies
 target_link_libraries(${PROJECT_NAME} PRIVATE ${SPECIFIC_LIBS})
+target_include_directories(${PROJECT_NAME} PRIVATE ${SPECIFIC_INCLUDES})
 
 target_include_directories(
   ${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>

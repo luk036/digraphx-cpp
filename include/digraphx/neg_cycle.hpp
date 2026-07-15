@@ -27,10 +27,11 @@
  *   }
  * @enddot
  */
+#include <absl/container/flat_hash_map.h>
+
 #include <cassert>
 #include <py2cpp/gen.hpp>
 #include <type_traits>
-#include <unordered_map>
 #include <utility>
 #include <vector>
 
@@ -103,7 +104,7 @@ class NegCycleFinder {
         std::declval<NbrElem>(), std::declval<const Nbrs&>()))>>;
     using Cycle = std::vector<Edge>;
 
-    std::unordered_map<Node, std::pair<Node, Edge>> _pred{};
+    absl::flat_hash_map<Node, std::pair<Node, Edge>> _pred{};
     const DiGraph& _digraph;
 
     /**
@@ -125,8 +126,8 @@ class NegCycleFinder {
      *     uv [label="", shape=plaintext];
      *     u -> v [label="d[u]+w(u,v)", color="#e74c3c"];
      *     u -> uv [style=invis];
-     *     note [shape=note, fillcolor="#fcf3cf", label="if d[v] > d[u] + w(u,v)\nthen d[v] = d[u] + w(u,v)"];
-     *     uv -> note [style=dashed, color="#888", constraint=false];
+     *     note [shape=note, fillcolor="#fcf3cf", label="if d[v] > d[u] + w(u,v)\nthen d[v] = d[u] +
+     * w(u,v)"]; uv -> note [style=dashed, color="#888", constraint=false];
      *   }
      * @enddot
      *
@@ -173,8 +174,8 @@ class NegCycleFinder {
      *     u [label="u", fillcolor="#a9cce3"];
      *     v [label="v", fillcolor="#a9cce3"];
      *     u -> v [label="d[u] + w(u,v)", color="#e74c3c"];
-     *     note [shape=note, fillcolor="#fcf3cf", label="if d[v] > d[u] + w(u,v)\nreturn true (negative)"];
-     *     v -> note [style=dashed, color="#888", constraint=false];
+     *     note [shape=note, fillcolor="#fcf3cf", label="if d[v] > d[u] + w(u,v)\nreturn true
+     * (negative)"]; v -> note [style=dashed, color="#888", constraint=false];
      *   }
      * @enddot
      *
@@ -210,6 +211,7 @@ class NegCycleFinder {
     auto _cycle_list(const Node& handle) const -> Cycle {
         auto vtx = handle;
         auto cycle = Cycle{};
+        cycle.reserve(this->_pred.size());
         while (true) {
             const auto& [utx, edge] = this->_pred.at(vtx);
             cycle.emplace_back(edge);
@@ -228,7 +230,7 @@ class NegCycleFinder {
      * @return py::Generator<Node> Generator yielding nodes that start cycles
      */
     auto _find_cycle() -> py::Generator<Node> {
-        auto visited = std::unordered_map<Node, Node>{};
+        auto visited = absl::flat_hash_map<Node, Node>{};
         if constexpr (requires { this->_digraph.size(); }) visited.reserve(this->_digraph.size());
         for (const auto& entry : this->_digraph) {
             const auto& vtx = _get_key(entry);
@@ -263,7 +265,8 @@ class NegCycleFinder {
      * negative cycles can be found. Yields cycles as they are discovered.
      *
      * @f[
-     *     \text{Howard's policy iteration: relax } \to \text{ find cycles } \to \text{ verify negativity}
+     *     \text{Howard's policy iteration: relax } \to \text{ find cycles } \to \text{ verify
+     * negativity}
      * @f]
      *
      * @dot
@@ -295,7 +298,7 @@ class NegCycleFinder {
             this->_pred.reserve(this->_digraph.size());
         auto found = false;
         while (!found && this->_relax(dist, get_weight)) {
-            for (const auto vtx : this->_find_cycle()) {
+            for (const auto& vtx : this->_find_cycle()) {
                 assert(this->_is_negative(vtx, dist, get_weight));
                 co_yield this->_cycle_list(vtx);
                 found = true;
@@ -303,7 +306,6 @@ class NegCycleFinder {
         }
         co_return;
     }
-
 };
 
 #ifdef _MSC_VER

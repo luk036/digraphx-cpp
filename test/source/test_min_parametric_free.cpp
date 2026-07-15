@@ -6,13 +6,12 @@
 #include <limits>
 #include <list>
 #include <string>
-#include <unordered_map>
 #include <vector>
 
+using absl::flat_hash_map;
 using std::list;
 using std::pair;
 using std::string;
-using std::unordered_map;
 using std::vector;
 
 TEST_CASE("Test min_parametric free function with list digraph (no neg cycle)") {
@@ -36,7 +35,7 @@ TEST_CASE("Test min_parametric free function with list digraph (no neg cycle)") 
 }
 
 TEST_CASE("Test min_parametric free function with dict digraph (no neg cycle)") {
-    unordered_map<string, unordered_map<string, unordered_map<string, double>>> digraph{
+    flat_hash_map<string, flat_hash_map<string, flat_hash_map<string, double>>> digraph{
         {"a0", {{"a1", {{"cost", 7.0}, {"time", 1.0}}}, {"a2", {{"cost", 5.0}, {"time", 1.0}}}}},
         {"a1", {{"a0", {{"cost", 0.0}, {"time", 1.0}}}, {"a2", {{"cost", 3.0}, {"time", 1.0}}}}},
         {"a2", {{"a1", {{"cost", 1.0}, {"time", 1.0}}}, {"a0", {{"cost", 2.0}, {"time", 1.0}}}}}};
@@ -54,7 +53,7 @@ TEST_CASE("Test min_parametric free function with dict digraph (no neg cycle)") 
         return total_cost / total_time;
     };
 
-    unordered_map<string, double> dist;
+    flat_hash_map<string, double> dist;
     for (const auto& [vtx, _] : digraph) {
         dist[vtx] = 0.0;
     }
@@ -111,18 +110,18 @@ TEST_CASE("Test min_parametric free function with negative cycle") {
 }
 
 TEST_CASE("Test MinParametricSolver with pick_one_only on negative cycle") {
-    unordered_map<string, unordered_map<string, unordered_map<string, double>>> digraph{
+    flat_hash_map<string, flat_hash_map<string, flat_hash_map<string, double>>> digraph{
         {"a0", {{"a1", {{"cost", 1.0}, {"time", 1.0}}}}},
         {"a1", {{"a2", {{"cost", 1.0}, {"time", 1.0}}}}},
         {"a2", {{"a0", {{"cost", -4.0}, {"time", 1.0}}}}}};
 
-    class TestAPI : public MinParametricAPI<string, unordered_map<string, double>, double> {
+    class TestAPI : public MinParametricAPI<string, flat_hash_map<string, double>, double> {
       public:
-        auto distance(const double& ratio, const unordered_map<string, double>& edge)
+        auto distance(const double& ratio, const flat_hash_map<string, double>& edge)
             -> double override {
             return edge.at("cost") - ratio * edge.at("time");
         }
-        auto zero_cancel(const vector<unordered_map<string, double>>& cycle) -> double override {
+        auto zero_cancel(const vector<flat_hash_map<string, double>>& cycle) -> double override {
             double total_cost = 0.0;
             double total_time = 0.0;
             for (const auto& edge : cycle) {
@@ -133,7 +132,7 @@ TEST_CASE("Test MinParametricSolver with pick_one_only on negative cycle") {
         }
     };
 
-    unordered_map<string, double> dist;
+    flat_hash_map<string, double> dist;
     for (const auto& [vtx, _] : digraph) {
         dist[vtx] = 0.0;
     }
@@ -179,18 +178,18 @@ TEST_CASE("Test MinParametricSolver with restrictive update_ok blocks detection"
 }
 
 TEST_CASE("Test MinParametricSolver with negative cycle and infinity init") {
-    unordered_map<string, unordered_map<string, unordered_map<string, double>>> digraph{
+    flat_hash_map<string, flat_hash_map<string, flat_hash_map<string, double>>> digraph{
         {"a0", {{"a1", {{"cost", 1.0}, {"time", 1.0}}}}},
         {"a1", {{"a2", {{"cost", 1.0}, {"time", 1.0}}}}},
         {"a2", {{"a0", {{"cost", -4.0}, {"time", 1.0}}}}}};
 
-    class MyAPI : public MinParametricAPI<string, unordered_map<string, double>, double> {
+    class MyAPI : public MinParametricAPI<string, flat_hash_map<string, double>, double> {
       public:
-        auto distance(const double& ratio, const unordered_map<string, double>& edge)
+        auto distance(const double& ratio, const flat_hash_map<string, double>& edge)
             -> double override {
             return edge.at("cost") - ratio * edge.at("time");
         }
-        auto zero_cancel(const vector<unordered_map<string, double>>& cycle) -> double override {
+        auto zero_cancel(const vector<flat_hash_map<string, double>>& cycle) -> double override {
             double total_cost = 0.0;
             double total_time = 0.0;
             for (const auto& edge : cycle) {
@@ -201,7 +200,7 @@ TEST_CASE("Test MinParametricSolver with negative cycle and infinity init") {
         }
     };
 
-    unordered_map<string, double> dist;
+    flat_hash_map<string, double> dist;
     for (const auto& [vtx, _] : digraph) {
         dist[vtx] = std::numeric_limits<double>::infinity();
     }
