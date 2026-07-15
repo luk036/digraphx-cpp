@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['end_0',['end',['../classcppcoro_1_1generator.html#a5a93382e2f6118efb975f36fc4ff84bf',1,'cppcoro::generator::end()'],['../classcppcoro_1_1recursive__generator.html#a768644162c1b158bf483e931ab29bcb2',1,'cppcoro::recursive_generator::end()']]],
-  ['enqueue_1',['enqueue',['../classThreadPool.html#a26e67526c70650724a805bf9aee27ebb',1,'ThreadPool']]]
+  ['log_5fwith_5fspdlog_0',['log_with_spdlog',['../namespacedigraphx.html#ab760004694a785605c64d92da1636126',1,'digraphx']]]
 ];

@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['destroy_0',['destroy',['../classcppcoro_1_1recursive__generator_1_1promise__type.html#a5a08308c2ba8bbe14622460a53789034',1,'cppcoro::recursive_generator::promise_type']]],
-  ['distance_1',['distance',['../classCycleRatioAPI.html#a39a77b164052d2bddca8bd68da2e1428',1,'CycleRatioAPI::distance()'],['../classMinParametricAPI.html#ab77e988f0c6b96e8c105b29142118649',1,'MinParametricAPI::distance()']]]
+  ['howard_0',['howard',['../classNegCycleFinder.html#a535c5626fa7d8c326264ffb0729f9703',1,'NegCycleFinder']]],
+  ['howard_5fpred_1',['howard_pred',['../classNegCycleFinderQ.html#ae345541758f836b33a8e4f1fdc9ace07',1,'NegCycleFinderQ']]],
+  ['howard_5fsucc_2',['howard_succ',['../classNegCycleFinderQ.html#a3e7e515fb1252a0c617e5d3d225714e0',1,'NegCycleFinderQ']]]
 ];

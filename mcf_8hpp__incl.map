@@ -1,0 +1,19 @@
+<map id="digraphx/mcf.hpp" name="digraphx/mcf.hpp">
+<area shape="rect" id="Node000001" title="Min&#45;cost flow via cycle&#45;cancellation descent (Bellman&#45;Ford)." alt="" coords="449,5,583,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,144,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="449,32,318,52,158,81,157,76,317,47,448,27"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="168,79,307,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="476,33,318,78,316,72,475,28"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="331,86,416,111"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="496,33,407,82,405,77,494,29"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="440,86,507,111"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="512,32,488,75,484,73,507,30"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="531,86,589,111"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="525,30,549,73,544,75,520,32"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="614,86,677,111"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="536,29,616,76,613,81,534,33"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="701,86,761,111"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="553,28,690,76,695,78,693,83,688,81,552,33"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="785,86,847,111"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="581,28,673,48,774,76,780,78,778,83,773,81,672,53,580,33"/>
+</map>

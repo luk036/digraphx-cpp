@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['negcyclefinder_0',['NegCycleFinder',['../classNegCycleFinder.html#a1f2a75ba4e012310bc07b289cf18789a',1,'NegCycleFinder']]],
-  ['negcyclefinderq_1',['NegCycleFinderQ',['../classNegCycleFinderQ.html#abf33796c13326bd7fb967c767b6b8e41',1,'NegCycleFinderQ']]]
+  ['_7eminparametricapi_0',['~MinParametricAPI',['../classMinParametricAPI.html#a1a563dc206307d42a22b95469b7618b1',1,'MinParametricAPI']]],
+  ['_7ethreadpool_1',['~ThreadPool',['../classThreadPool.html#a44d3d2ab618970605e684efc216655eb',1,'ThreadPool']]]
 ];

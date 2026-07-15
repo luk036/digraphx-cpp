@@ -28,7 +28,7 @@ MathJax.Hub.Config({
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">DiGraphX<span id="projectnumber">&#160;1.1.5;  VERSION ${PROJECT_VERSION}</span>
+   <div id="projectname">DiGraphX<span id="projectnumber">&#160;1.1.6;  VERSION ${PROJECT_VERSION}</span>
    </div>
   </td>
  </tr>
@@ -106,7 +106,7 @@ Usage</h2>
 Adjust the template to your needs</h3>
 <ul>
 <li>Use this repo <a href="https://help.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-from-a-template">as a template</a>.</li>
-<li>Replace all occurrences of "DiGraphX" in the relevant CMakeLists.txt with the name of your project<ul>
+<li>Replace all occurrences of "DiGraphX" in the relevant <a class="el" href="classCycleRatioAPI.html#a9bcebd889758c6f676866ad5a1ae5fe8" title="Construct a new Cycle Ratio API object.">CMakeLists.txt</a> with the name of your project<ul>
 <li>Capitalization matters here: <code>DiGraphX</code> means the name of the project, while <code>digraphx</code> is used in file names.</li>
 <li>Remember to rename the <code>include/digraphx</code> directory to use your project's lowercase name and update all relevant <code>#include</code>s accordingly.</li>
 </ul>
@@ -117,7 +117,7 @@ Adjust the template to your needs</h3>
 <li>Happy coding!</li>
 </ul>
 <p>Eventually, you can remove any unused files, such as the standalone directory or irrelevant github workflows for your project. Feel free to replace the License with one suited for your project.</p>
-<p>To cleanly separate the library and subproject code, the outer <code>CMakeList.txt</code> only defines the library itself while the tests and other subprojects are self-contained in their own directories. During development it is usually convenient to <a class="el" href="index.html#build-everything-at-once">build all subprojects at once</a>.</p>
+<p>To cleanly separate the library and subproject code, the outer <code><a class="el" href="classCycleRatioAPI.html#a9bcebd889758c6f676866ad5a1ae5fe8" title="Construct a new Cycle Ratio API object.">CMakeList.txt</a></code> only defines the library itself while the tests and other subprojects are self-contained in their own directories. During development it is usually convenient to <a class="el" href="index.html#build-everything-at-once">build all subprojects at once</a>.</p>
 <h3><a class="anchor" id="autotoc_md4"></a>
 Build and run the standalone target</h3>
 <p>Use the following command to build and run the executable target.</p>
@@ -195,21 +195,21 @@ Ccache</h4>
 </blockquote>
 <p>To keep the template modular, all subprojects derived from the library have been separated into their own CMake modules. This approach makes it trivial for third-party projects to re-use the projects library code. To allow IDEs to see the full scope of the project, the template includes the <code>all</code> directory that will create a single build for all subprojects. Use this as the main directory for best IDE support.</p>
 <blockquote class="doxtable">
-<p>&zwj;I see you are using <code>GLOB</code> to add source files in CMakeLists.txt. Isn't that evil? </p>
+<p>&zwj;I see you are using <code>GLOB</code> to add source files in <a class="el" href="classCycleRatioAPI.html#a9bcebd889758c6f676866ad5a1ae5fe8" title="Construct a new Cycle Ratio API object.">CMakeLists.txt</a>. Isn't that evil? </p>
 </blockquote>
 <p>Glob is considered bad because any changes to the source file structure <a href="https://cmake.org/cmake/help/latest/command/file.html#filesystem">might not be automatically caught</a> by CMake's builders and you will need to manually invoke CMake on changes. I personally prefer the <code>GLOB</code> solution for its simplicity, but feel free to change it to explicitly listing sources.</p>
 <blockquote class="doxtable">
 <p>&zwj;I want create additional targets that depend on my library. Should I modify the main CMakeLists to include them? </p>
 </blockquote>
-<p>Avoid including derived projects from the libraries CMakeLists (even though it is a common sight in the C++ world), as this effectively inverts the dependency tree and makes the build system hard to reason about. Instead, create a new directory or project with a CMakeLists that adds the library as a dependency (e.g. like the <a href="standalone/CMakeLists.txt">standalone</a> directory). Depending type it might make sense move these components into a separate repositories and reference a specific commit or version of the library. This has the advantage that individual libraries and components can be improved and updated independently.</p>
+<p>Avoid including derived projects from the libraries CMakeLists (even though it is a common sight in the C++ world), as this effectively inverts the dependency tree and makes the build system hard to reason about. Instead, create a new directory or project with a CMakeLists that adds the library as a dependency (<a class="el" href="classCycleRatioAPI.html#a9bcebd889758c6f676866ad5a1ae5fe8" title="Construct a new Cycle Ratio API object.">e.g</a>. like the <a href="standalone/CMakeLists.txt">standalone</a> directory). Depending type it might make sense move these components into a separate repositories and reference a specific commit or version of the library. This has the advantage that individual libraries and components can be improved and updated independently.</p>
 <blockquote class="doxtable">
-<p>&zwj;You recommend to add external dependencies using CPM.cmake. Will this force users of my library to use CPM.cmake as well? </p>
+<p>&zwj;You recommend to add external dependencies using <a class="el" href="classCycleRatioAPI.html#a9bcebd889758c6f676866ad5a1ae5fe8" title="Construct a new Cycle Ratio API object.">CPM.cmake</a>. Will this force users of my library to use <a class="el" href="classCycleRatioAPI.html#a9bcebd889758c6f676866ad5a1ae5fe8" title="Construct a new Cycle Ratio API object.">CPM.cmake</a> as well? </p>
 </blockquote>
 <p><a href="https://github.com/TheLartians/CPM.cmake">CPM.cmake</a> should be invisible to library users as it's a self-contained CMake Script. If problems do arise, users can always opt-out by defining the CMake or env variable <a href="https://github.com/cpm-cmake/CPM.cmake#options"><code>CPM_USE_LOCAL_PACKAGES</code></a>, which will override all calls to <code>CPMAddPackage</code> with the according <code>find_package</code> call. This should also enable users to use the project with their favorite external C++ dependency manager, such as vcpkg or Conan.</p>
 <blockquote class="doxtable">
 <p>&zwj;Can I configure and build my project offline? </p>
 </blockquote>
-<p>No internet connection is required for building the project, however when using CPM missing dependencies are downloaded at configure time. To avoid redundant downloads, it's highly recommended to set a CPM.cmake cache directory, e.g.: <code>export CPM_SOURCE_CACHE=$HOME/.cache/CPM</code>. This will enable shallow clones and allow offline configurations dependencies are already available in the cache.</p>
+<p>No internet connection is required for building the project, however when using CPM missing dependencies are downloaded at configure time. To avoid redundant downloads, it's highly recommended to set a <a class="el" href="classCycleRatioAPI.html#a9bcebd889758c6f676866ad5a1ae5fe8" title="Construct a new Cycle Ratio API object.">CPM.cmake</a> cache directory, <a class="el" href="classCycleRatioAPI.html#a9bcebd889758c6f676866ad5a1ae5fe8" title="Construct a new Cycle Ratio API object.">e.g</a>.: <code>export CPM_SOURCE_CACHE=$HOME/.cache/CPM</code>. This will enable shallow clones and allow offline configurations dependencies are already available in the cache.</p>
 <blockquote class="doxtable">
 <p>&zwj;Can I use CPack to create a package installer for my project? </p>
 </blockquote>

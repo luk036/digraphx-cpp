@@ -28,7 +28,7 @@ MathJax.Hub.Config({
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">DiGraphX<span id="projectnumber">&#160;1.1.5;  VERSION ${PROJECT_VERSION}</span>
+   <div id="projectname">DiGraphX<span id="projectnumber">&#160;1.1.6;  VERSION ${PROJECT_VERSION}</span>
    </div>
   </td>
  </tr>
@@ -104,27 +104,27 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>  <span class="keyword">public</span>:</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <a class="code hl_class" href="classThreadPool.html">ThreadPool</a>(<span class="keywordtype">size_t</span>);</div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    <span class="keyword">template</span> &lt;<span class="keyword">class </span>F, <span class="keyword">class</span>... Args&gt; <span class="keyword">auto</span> <a class="code hl_function" href="classThreadPool.html#a26e67526c70650724a805bf9aee27ebb">enqueue</a>(F&amp;&amp; f, Args&amp;&amp;... args)</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>        -&gt; std::future&lt;<span class="keyword">typename</span> std::invoke_result&lt;F, Args...&gt;::type&gt;;</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    <span class="keyword">template</span> &lt;<span class="keyword">class </span><a class="code hl_class" href="classCycleRatioAPI.html">F</a>, <span class="keyword">class</span>... <a class="code hl_class" href="classCycleRatioAPI.html">Args</a>&gt; <span class="keyword">auto</span> <a class="code hl_function" href="classThreadPool.html#a26e67526c70650724a805bf9aee27ebb">enqueue</a>(<a class="code hl_class" href="classCycleRatioAPI.html">F</a>&amp;&amp; <a class="code hl_class" href="classCycleRatioAPI.html">f</a>, <a class="code hl_class" href="classCycleRatioAPI.html">Args</a>&amp;&amp;... <a class="code hl_class" href="classCycleRatioAPI.html">args</a>)</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>        -&gt; <a class="code hl_function" href="classCycleRatioAPI.html#a9bcebd889758c6f676866ad5a1ae5fe8">std::future</a>&lt;<span class="keyword">typename</span> <a class="code hl_function" href="classCycleRatioAPI.html#a9bcebd889758c6f676866ad5a1ae5fe8">std::invoke_result</a>&lt;<a class="code hl_class" href="classCycleRatioAPI.html">F</a>, <a class="code hl_class" href="classCycleRatioAPI.html">Args</a>...&gt;<a class="code hl_class" href="classCycleRatioAPI.html">::type</a>&gt;;</div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
 <div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    <a class="code hl_function" href="classThreadPool.html#a44d3d2ab618970605e684efc216655eb">~ThreadPool</a>();</div>
 <div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span> </div>
 <div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>  <span class="keyword">private</span>:</div>
 <div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    <span class="comment">// need to keep track of threads so we can join them</span></div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>    std::vector&lt;std::thread&gt; workers;</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>    <a class="code hl_function" href="classCycleRatioAPI.html#a9bcebd889758c6f676866ad5a1ae5fe8">std::vector&lt;std::thread&gt;</a> workers;</div>
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    <span class="comment">// the task queue</span></div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    std::queue&lt;std::function&lt;void()&gt;&gt; tasks;</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    <a class="code hl_function" href="classCycleRatioAPI.html#a9bcebd889758c6f676866ad5a1ae5fe8">std::queue</a>&lt;<a class="code hl_function" href="classCycleRatioAPI.html#a9bcebd889758c6f676866ad5a1ae5fe8">std::function</a>&lt;<a class="code hl_class" href="classCycleRatioAPI.html">void</a>()&gt;&gt; tasks;</div>
 <div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span> </div>
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    <span class="comment">// synchronization</span></div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    std::mutex queue_mutex;</div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    std::condition_variable condition;</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    <a class="code hl_function" href="classCycleRatioAPI.html#a9bcebd889758c6f676866ad5a1ae5fe8">std::mutex</a> queue_mutex;</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    <a class="code hl_function" href="classCycleRatioAPI.html#a9bcebd889758c6f676866ad5a1ae5fe8">std::condition_variable</a> condition;</div>
 <div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    <span class="keywordtype">bool</span> stop;</div>
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>};</div>
 </div>
 <div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span> </div>
 <div class="foldopen" id="foldopen00132" data-start="{" data-end="}">
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno"><a class="line" href="classThreadPool.html#ac291710e33dbbed96ee20711080d506d">  132</a></span><span class="keyword">inline</span> <a class="code hl_function" href="classThreadPool.html#ac291710e33dbbed96ee20711080d506d">ThreadPool::ThreadPool</a>(<span class="keywordtype">size_t</span> threads) : stop(false) {</div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; threads; ++i)</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno"><a class="line" href="classThreadPool.html#ac291710e33dbbed96ee20711080d506d">  132</a></span><span class="keyword">inline</span> <a class="code hl_function" href="classThreadPool.html#ac291710e33dbbed96ee20711080d506d">ThreadPool::ThreadPool</a>(<span class="keywordtype">size_t</span> <a class="code hl_class" href="classCycleRatioAPI.html">threads</a>) : stop(<a class="code hl_class" href="classCycleRatioAPI.html">false</a>) {</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> <a class="code hl_class" href="classCycleRatioAPI.html">i</a> = 0; <a class="code hl_class" href="classCycleRatioAPI.html">i</a> &lt; <a class="code hl_class" href="classCycleRatioAPI.html">threads</a>; ++<a class="code hl_class" href="classCycleRatioAPI.html">i</a>)</div>
 <div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>        workers.emplace_back([<span class="keyword">this</span>] {</div>
 <div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>            for (;;) {</div>
 <div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>                std::function&lt;void()&gt; task;</div>
@@ -145,39 +145,41 @@ $(document).ready(function() { init_codefold(0); });
 </div>
 <div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span> </div>
 <div class="foldopen" id="foldopen00161" data-start="{" data-end="}">
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno"><a class="line" href="classThreadPool.html#a26e67526c70650724a805bf9aee27ebb">  161</a></span><span class="keyword">template</span> &lt;<span class="keyword">class </span>F, <span class="keyword">class</span>... Args&gt; <span class="keyword">auto</span> <a class="code hl_function" href="classThreadPool.html#a26e67526c70650724a805bf9aee27ebb">ThreadPool::enqueue</a>(F&amp;&amp; f, Args&amp;&amp;... args)</div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>    -&gt; std::future&lt;<span class="keyword">typename</span> std::invoke_result&lt;F, Args...&gt;::type&gt; {</div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>    <span class="keyword">using </span>return_type = <span class="keyword">typename</span> std::invoke_result&lt;F, Args...&gt;::type;</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno"><a class="line" href="classThreadPool.html#a26e67526c70650724a805bf9aee27ebb">  161</a></span><span class="keyword">template</span> &lt;<span class="keyword">class </span><a class="code hl_class" href="classCycleRatioAPI.html">F</a>, <span class="keyword">class</span>... <a class="code hl_class" href="classCycleRatioAPI.html">Args</a>&gt; <span class="keyword">auto</span> <a class="code hl_function" href="classThreadPool.html#a26e67526c70650724a805bf9aee27ebb">ThreadPool::enqueue</a>(<a class="code hl_class" href="classCycleRatioAPI.html">F</a>&amp;&amp; <a class="code hl_class" href="classCycleRatioAPI.html">f</a>, <a class="code hl_class" href="classCycleRatioAPI.html">Args</a>&amp;&amp;... <a class="code hl_class" href="classCycleRatioAPI.html">args</a>)</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>    -&gt; <a class="code hl_function" href="classCycleRatioAPI.html#a9bcebd889758c6f676866ad5a1ae5fe8">std::future</a>&lt;<span class="keyword">typename</span> <a class="code hl_function" href="classCycleRatioAPI.html#a9bcebd889758c6f676866ad5a1ae5fe8">std::invoke_result</a>&lt;<a class="code hl_class" href="classCycleRatioAPI.html">F</a>, <a class="code hl_class" href="classCycleRatioAPI.html">Args</a>...&gt;<a class="code hl_class" href="classCycleRatioAPI.html">::type</a>&gt; {</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>    <span class="keyword">using </span><a class="code hl_class" href="classCycleRatioAPI.html">return_type</a> = <span class="keyword">typename</span> <a class="code hl_function" href="classCycleRatioAPI.html#a9bcebd889758c6f676866ad5a1ae5fe8">std::invoke_result</a>&lt;<a class="code hl_class" href="classCycleRatioAPI.html">F</a>, <a class="code hl_class" href="classCycleRatioAPI.html">Args</a>...&gt;<a class="code hl_class" href="classCycleRatioAPI.html">::type</a>;</div>
 <div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span> </div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>    <span class="keyword">auto</span> task = std::make_shared&lt;std::packaged_task&lt;return_type()&gt;&gt;(</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>        std::bind(std::forward&lt;F&gt;(f), std::forward&lt;Args&gt;(args)...));</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>    <span class="keyword">auto</span> <a class="code hl_class" href="classCycleRatioAPI.html">task</a> = <a class="code hl_function" href="classCycleRatioAPI.html#a9bcebd889758c6f676866ad5a1ae5fe8">std::make_shared</a>&lt;<a class="code hl_function" href="classCycleRatioAPI.html#a9bcebd889758c6f676866ad5a1ae5fe8">std::packaged_task</a>&lt;<a class="code hl_class" href="classCycleRatioAPI.html">return_type</a>()&gt;&gt;(</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>        <a class="code hl_function" href="classCycleRatioAPI.html#a9bcebd889758c6f676866ad5a1ae5fe8">std::bind</a>(<a class="code hl_function" href="classCycleRatioAPI.html#a9bcebd889758c6f676866ad5a1ae5fe8">std::forward&lt;F&gt;</a>(<a class="code hl_class" href="classCycleRatioAPI.html">f</a>), <a class="code hl_function" href="classCycleRatioAPI.html#a9bcebd889758c6f676866ad5a1ae5fe8">std::forward&lt;Args&gt;</a>(<a class="code hl_class" href="classCycleRatioAPI.html">args</a>)...));</div>
 <div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span> </div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    std::future&lt;return_type&gt; res = task-&gt;get_future();</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    <a class="code hl_function" href="classCycleRatioAPI.html#a9bcebd889758c6f676866ad5a1ae5fe8">std::future&lt;return_type&gt;</a> <a class="code hl_class" href="classCycleRatioAPI.html">res</a> = <a class="code hl_class" href="classCycleRatioAPI.html">task</a>-&gt;get_future();</div>
 <div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>    {</div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>        std::unique_lock&lt;std::mutex&gt; lock(queue_mutex);</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>        <a class="code hl_function" href="classCycleRatioAPI.html#a9bcebd889758c6f676866ad5a1ae5fe8">std::unique_lock&lt;std::mutex&gt;</a> <a class="code hl_class" href="classCycleRatioAPI.html">lock</a>(queue_mutex);</div>
 <div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span> </div>
 <div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>        <span class="comment">// don&#39;t allow enqueueing after stopping the pool</span></div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>        <span class="keywordflow">if</span> (stop) <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;enqueue on stopped ThreadPool&quot;</span>);</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>        <span class="keywordflow">if</span> (stop) <span class="keywordflow">throw</span> <a class="code hl_function" href="classCycleRatioAPI.html#a9bcebd889758c6f676866ad5a1ae5fe8">std::runtime_error</a>(<span class="stringliteral">&quot;enqueue on stopped ThreadPool&quot;</span>);</div>
 <div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span> </div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>        tasks.emplace([task]() { (*task)(); });</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>        tasks.emplace([<a class="code hl_class" href="classCycleRatioAPI.html">task</a>]() { (*task)(); });</div>
 <div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>    }</div>
 <div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>    condition.notify_one();</div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>    <span class="keywordflow">return</span> res;</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>    <span class="keywordflow">return</span> <a class="code hl_class" href="classCycleRatioAPI.html">res</a>;</div>
 <div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>}</div>
 </div>
 <div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span> </div>
 <div class="foldopen" id="foldopen00192" data-start="{" data-end="}">
 <div class="line"><a id="l00192" name="l00192"></a><span class="lineno"><a class="line" href="classThreadPool.html#a44d3d2ab618970605e684efc216655eb">  192</a></span><span class="keyword">inline</span> <a class="code hl_function" href="classThreadPool.html#a44d3d2ab618970605e684efc216655eb">ThreadPool::~ThreadPool</a>() {</div>
 <div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>    {</div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>        std::unique_lock&lt;std::mutex&gt; lock(queue_mutex);</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>        <a class="code hl_function" href="classCycleRatioAPI.html#a9bcebd889758c6f676866ad5a1ae5fe8">std::unique_lock&lt;std::mutex&gt;</a> <a class="code hl_class" href="classCycleRatioAPI.html">lock</a>(queue_mutex);</div>
 <div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>        stop = <span class="keyword">true</span>;</div>
 <div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>    }</div>
 <div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>    condition.notify_all();</div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>    <span class="keywordflow">for</span> (std::thread&amp; worker : workers) worker.join();</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>    <span class="keywordflow">for</span> (<a class="code hl_function" href="classCycleRatioAPI.html#a9bcebd889758c6f676866ad5a1ae5fe8">std::thread</a>&amp; <a class="code hl_class" href="classCycleRatioAPI.html">worker</a> : workers) <a class="code hl_class" href="classCycleRatioAPI.html">worker</a>.join();</div>
 <div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>}</div>
 </div>
 <div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span> </div>
 <div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="aclassCycleRatioAPI_html"><div class="ttname"><a href="classCycleRatioAPI.html">CycleRatioAPI</a></div><div class="ttdef"><b>Definition</b> min_cycle_ratio.hpp:80</div></div>
+<div class="ttc" id="aclassCycleRatioAPI_html_a9bcebd889758c6f676866ad5a1ae5fe8"><div class="ttname"><a href="classCycleRatioAPI.html#a9bcebd889758c6f676866ad5a1ae5fe8">CycleRatioAPI::CycleRatioAPI</a></div><div class="ttdeci">CycleRatioAPI(const DiGraph &amp;digraph)</div><div class="ttdoc">Construct a new Cycle Ratio API object.</div><div class="ttdef"><b>Definition</b> min_cycle_ratio.hpp:106</div></div>
 <div class="ttc" id="aclassThreadPool_html"><div class="ttname"><a href="classThreadPool.html">ThreadPool</a></div><div class="ttdoc">Thread pool for parallel task execution.</div><div class="ttdef"><b>Definition</b> ThreadPool.h:65</div></div>
 <div class="ttc" id="aclassThreadPool_html_a26e67526c70650724a805bf9aee27ebb"><div class="ttname"><a href="classThreadPool.html#a26e67526c70650724a805bf9aee27ebb">ThreadPool::enqueue</a></div><div class="ttdeci">auto enqueue(F &amp;&amp;f, Args &amp;&amp;... args) -&gt; std::future&lt; typename std::invoke_result&lt; F, Args... &gt;::type &gt;</div><div class="ttdoc">Enqueue a new task for execution.</div><div class="ttdef"><b>Definition</b> ThreadPool.h:161</div></div>
 <div class="ttc" id="aclassThreadPool_html_a44d3d2ab618970605e684efc216655eb"><div class="ttname"><a href="classThreadPool.html#a44d3d2ab618970605e684efc216655eb">ThreadPool::~ThreadPool</a></div><div class="ttdeci">~ThreadPool()</div><div class="ttdoc">Destructor - stops the pool and joins all worker threads.</div><div class="ttdef"><b>Definition</b> ThreadPool.h:192</div></div>

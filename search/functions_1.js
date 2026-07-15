@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['await_5ftransform_0',['await_transform',['../classcppcoro_1_1detail_1_1generator__promise.html#acfe999da20ebadf3c2dc2be3bd92b32a',1,'cppcoro::detail::generator_promise::await_transform()'],['../classcppcoro_1_1recursive__generator_1_1promise__type.html#a91b800f237e3469d0ca19a5d7eb684b9',1,'cppcoro::recursive_generator::promise_type::await_transform()']]]
+  ['cycle_5fcanceling_5fmcf_0',['cycle_canceling_mcf',['../mcf_8hpp.html#a2e14096b53f350c6e352e7b48ff2e46f',1,'mcf.hpp']]],
+  ['cycleratioapi_1',['CycleRatioAPI',['../classCycleRatioAPI.html#a9bcebd889758c6f676866ad5a1ae5fe8',1,'CycleRatioAPI']]]
 ];

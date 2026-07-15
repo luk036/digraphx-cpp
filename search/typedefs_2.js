@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['edge_0',['edge',['../classMinParametricSolver.html#a21960858d510e137743629f9f799e97f',1,'MinParametricSolver::Edge'],['../classMaxParametricSolver.html#a451e95ce5dd35b4eac788694c7966c8d',1,'MaxParametricSolver::Edge']]],
-  ['edge1_1',['edge1',['../classMinParametricSolver.html#aa97f6adbcae8c958942a0bb4bb4e0977',1,'MinParametricSolver::Edge1'],['../classMaxParametricSolver.html#af93a5c9df49e84afb24667a799e3f1f6',1,'MaxParametricSolver::Edge1']]]
+  ['mcfdemands_0',['MCFDemands',['../mcf_8hpp.html#a052f35b290a18db3cfed1126e8ddabe7',1,'mcf.hpp']]],
+  ['mcfflow_1',['MCFFlow',['../mcf_8hpp.html#a44396f5568d93218559dbe326c696a68',1,'mcf.hpp']]],
+  ['mcfgraph_2',['MCFGraph',['../mcf_8hpp.html#aad57eb515a76b538b289dbb3bed8db54',1,'mcf.hpp']]],
+  ['mcfresidual_3',['MCFResidual',['../mcf_8hpp.html#ac84ad6817ad068c751292c67e86ae55c',1,'mcf.hpp']]]
 ];

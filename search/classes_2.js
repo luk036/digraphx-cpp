@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['iterator_0',['iterator',['../classcppcoro_1_1recursive__generator_1_1iterator.html',1,'cppcoro::recursive_generator']]]
+  ['negcyclefinder_0',['NegCycleFinder',['../classNegCycleFinder.html',1,'']]],
+  ['negcyclefinderq_1',['NegCycleFinderQ',['../classNegCycleFinderQ.html',1,'']]]
 ];

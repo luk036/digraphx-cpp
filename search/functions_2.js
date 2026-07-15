@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['begin_0',['begin',['../classcppcoro_1_1generator.html#a667230f96a3a2a724181df623404c832',1,'cppcoro::generator::begin()'],['../classcppcoro_1_1recursive__generator.html#aaefdb54743ad57db7b6bc6817584d60f',1,'cppcoro::recursive_generator::begin()']]]
+  ['distance_0',['distance',['../classCycleRatioAPI.html#a39a77b164052d2bddca8bd68da2e1428',1,'CycleRatioAPI::distance()'],['../classMinParametricAPI.html#ab77e988f0c6b96e8c105b29142118649',1,'MinParametricAPI::distance()']]]
 ];

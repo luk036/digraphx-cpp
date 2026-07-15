@@ -9,6 +9,5 @@ var searchData=
   ['and_20alternatives_6',['Related projects and alternatives',['../index.html#autotoc_md14',1,'']]],
   ['and_20run_20test_20suite_7',['Build and run test suite',['../index.html#autotoc_md5',1,'']]],
   ['and_20run_20the_20standalone_20target_8',['Build and run the standalone target',['../index.html#autotoc_md4',1,'']]],
-  ['at_20once_9',['Build everything at once',['../index.html#autotoc_md8',1,'']]],
-  ['await_5ftransform_10',['await_transform',['../classcppcoro_1_1detail_1_1generator__promise.html#acfe999da20ebadf3c2dc2be3bd92b32a',1,'cppcoro::detail::generator_promise::await_transform()'],['../classcppcoro_1_1recursive__generator_1_1promise__type.html#a91b800f237e3469d0ca19a5d7eb684b9',1,'cppcoro::recursive_generator::promise_type::await_transform()']]]
+  ['at_20once_9',['Build everything at once',['../index.html#autotoc_md8',1,'']]]
 ];

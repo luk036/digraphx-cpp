@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['_5fdigraph_5fdetail_0',['_digraph_detail',['../namespace__digraph__detail.html',1,'']]],
-  ['_5fget_5fkey_1',['_get_key',['../namespace__digraph__detail.html#a82b254213242ba81e610f86f238e4a29',1,'_digraph_detail']]],
-  ['_5fget_5fval_2',['_get_val',['../namespace__digraph__detail.html#a8588e6356504d712888eca4ed6218eb2',1,'_digraph_detail']]],
-  ['_5fview_5fitems_3',['_view_items',['../namespace__digraph__detail.html#a5966284e51e03e26bdeffa207b658b19',1,'_digraph_detail']]]
+  ['_5fget_5fkey_0',['_get_key',['../namespacedigraph__detail.html#a209e8907ed5d19a3a40a63945f4e357f',1,'digraph_detail']]],
+  ['_5fget_5fval_1',['_get_val',['../namespacedigraph__detail.html#a2bdc996e235cab0cd65a5216d29ca809',1,'digraph_detail']]]
 ];
