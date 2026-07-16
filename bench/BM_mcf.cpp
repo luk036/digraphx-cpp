@@ -1,9 +1,8 @@
 #include <chrono>
 #include <cmath>
 #include <cstdio>
-#include <iostream>
-
 #include <digraphx/mcf.hpp>
+#include <iostream>
 
 // Van der Corput sequence
 static double vdc(uint32_t n, uint32_t base) {
@@ -30,8 +29,7 @@ static auto build_spare_tsv_graph() -> std::pair<MCFGraph, MCFDemands> {
     std::vector<std::pair<double, double>> pos;
     pos.reserve(t);
     for (size_t i = 0; i < t; ++i) {
-        pos.emplace_back(vdc(static_cast<uint32_t>(i), 2),
-                         vdc(static_cast<uint32_t>(i), 3));
+        pos.emplace_back(vdc(static_cast<uint32_t>(i), 2), vdc(static_cast<uint32_t>(i), 3));
     }
 
     auto n_int = static_cast<int>(std::sqrt(static_cast<double>(t)));
@@ -73,8 +71,7 @@ int main() {
         std::printf("INFEASIBLE\n");
         return 1;
     }
-    std::printf("Cost: %lld (expected 1108)\n",
-                static_cast<long long>(warmup->first));
+    std::printf("Cost: %lld (expected 1108)\n", static_cast<long long>(warmup->first));
 
     // Benchmark
     constexpr int N_RUNS = 5;
@@ -94,7 +91,6 @@ int main() {
                     static_cast<long long>(result->first));
     }
 
-    std::printf("\nC++ average: %.2f ms (over %d runs)\n",
-                total_ms / N_RUNS, N_RUNS);
+    std::printf("\nC++ average: %.2f ms (over %d runs)\n", total_ms / N_RUNS, N_RUNS);
     return 0;
 }

@@ -45,8 +45,8 @@ using MCFFlow = absl::flat_hash_map<size_t, absl::flat_hash_map<size_t, int64_t>
 // ---------------------------------------------------------------------------
 
 static auto bfs_path(const MCFGraph& g, const MCFFlow& flow, size_t src,
-                     const absl::flat_hash_set<size_t>& demand_set,
-                     const MCFDemands& remaining) -> std::vector<size_t> {
+                     const absl::flat_hash_set<size_t>& demand_set, const MCFDemands& remaining)
+    -> std::vector<size_t> {
     absl::flat_hash_set<size_t> visited;
     visited.insert(src);
     absl::flat_hash_map<size_t, size_t> parent;
@@ -195,7 +195,7 @@ static auto build_residual(const MCFGraph& g, const MCFFlow& flow) -> MCFResidua
 }
 
 static void update_residual_edge(MCFResidual& residual, const MCFGraph& g, const MCFFlow& flow,
-                                  size_t u, size_t v) {
+                                 size_t u, size_t v) {
     // Remove stale entries
     auto ru = residual.find(u);
     if (ru != residual.end()) {
@@ -289,7 +289,11 @@ static auto find_all_neg_cycles_bf(const MCFResidual& residual)
     }
 
     bool any_updated = false;
-    for (auto b : updated_in_last) if (b) { any_updated = true; break; }
+    for (auto b : updated_in_last)
+        if (b) {
+            any_updated = true;
+            break;
+        }
     if (!any_updated) return {};
 
     // Build predecessor edge map for cycle reconstruction via a second BF pass
@@ -338,7 +342,10 @@ static auto find_all_neg_cycles_bf(const MCFResidual& residual)
         bool valid = true;
         for (size_t iter = 0; iter < n + 1; ++iter) {
             auto it = pred_edge.find(u);
-            if (it == pred_edge.end()) { valid = false; break; }
+            if (it == pred_edge.end()) {
+                valid = false;
+                break;
+            }
             auto& [prev, edge_ref] = it->second;
             if (!yielded_orig.contains(edge_ref.orig)) {
                 cycle_edges.push_back(edge_ref);
@@ -377,14 +384,16 @@ static auto find_all_neg_cycles_bf(const MCFResidual& residual)
 /// @return (total_cost, flow) or nothing if infeasible.
 inline auto cycle_canceling_mcf(const MCFGraph& g, const MCFDemands& demands)
     -> std::optional<std::pair<int64_t, MCFFlow>> {
-
     // Stage 1: find feasible initial flow
     auto flow = find_feasible_flow(g, demands);
     if (flow.empty() && !demands.empty()) {
         // Check if actually infeasible or just no flow needed
         bool has_demand = false;
         for (const auto& [_, d] : demands) {
-            if (d != 0) { has_demand = true; break; }
+            if (d != 0) {
+                has_demand = true;
+                break;
+            }
         }
         if (has_demand) return std::nullopt;
     }
@@ -404,8 +413,7 @@ inline auto cycle_canceling_mcf(const MCFGraph& g, const MCFDemands& demands)
         bool cancelled = false;
         for (const auto& cycle_edges : cycles) {
             int64_t bottleneck = std::numeric_limits<int64_t>::max();
-            for (const auto& e : cycle_edges)
-                bottleneck = std::min(bottleneck, e.capacity);
+            for (const auto& e : cycle_edges) bottleneck = std::min(bottleneck, e.capacity);
             if (bottleneck <= 0) continue;
 
             // Apply flow changes
