@@ -1,12 +1,11 @@
 #include <chrono>
 #include <cstdint>
 #include <cstdio>
+#include <digraphx/neg_cycle.hpp>
 #include <list>
+#include <mywheel/map_adapter.hpp>
 #include <utility>
 #include <vector>
-
-#include <digraphx/neg_cycle.hpp>
-#include <mywheel/map_adapter.hpp>
 
 using std::list;
 using std::pair;
@@ -39,8 +38,8 @@ static auto build_graph(size_t n_nodes, int k = 3) -> BenchGraph {
 
 int main() {
     std::printf("=== digraphx-cpp: NegCycleFinder (Howard) ===\n");
-    std::printf("%-12s %-10s %-6s %-8s %-12s %-8s\n",
-                "Nodes", "Edges", "Found", "Weight", "Avg(ms)", "Rel");
+    std::printf("%-12s %-10s %-6s %-8s %-12s %-8s\n", "Nodes", "Edges", "Found", "Weight",
+                "Avg(ms)", "Rel");
     const size_t sizes[] = {20000, 50000, 100000, 200000, 500000, 1000000};
     const int n_runs = 5;
     double ref_ms = 0.0;
@@ -56,20 +55,23 @@ int main() {
             cycle_edges = ci;
         }
         bool found = !cycle_edges.empty();
-        if (found) for (auto w : cycle_edges) total_weight += w;
+        if (found)
+            for (auto w : cycle_edges) total_weight += w;
         double total_ms = 0.0;
         for (int run = 0; run < n_runs; ++run) {
             vector<double> d(bg.adj.size(), 0.0);
             auto start = std::chrono::high_resolution_clock::now();
             NegCycleFinder ncf2(g);
-            for (auto const& ci : ncf2.howard(d, get_weight)) { (void)ci; }
+            for (auto const& ci : ncf2.howard(d, get_weight)) {
+                (void)ci;
+            }
             auto end = std::chrono::high_resolution_clock::now();
             total_ms += std::chrono::duration<double, std::milli>(end - start).count();
         }
         double avg = total_ms / n_runs;
         if (ref_ms == 0.0) ref_ms = avg;
-        std::printf("%-12zu %-10zu %-6s %-8.0f %-12.2f %-8.1f\n",
-                    n, bg.edge_count, found ? "yes" : "no", total_weight, avg, avg / ref_ms);
+        std::printf("%-12zu %-10zu %-6s %-8.0f %-12.2f %-8.1f\n", n, bg.edge_count,
+                    found ? "yes" : "no", total_weight, avg, avg / ref_ms);
     }
     return 0;
 }
