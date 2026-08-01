@@ -1,8 +1,8 @@
 
-[![Actions Status](https://github.com/luk036/digraph-cpp/workflows/MacOS/badge.svg)](https://github.com/luk036/digraph-cpp/actions)
-[![Actions Status](https://github.com/luk036/digraph-cpp/workflows/Windows/badge.svg)](https://github.com/luk036/digraph-cpp/actions)
-[![Actions Status](https://github.com/luk036/digraph-cpp/workflows/Ubuntu/badge.svg)](https://github.com/luk036/digraph-cpp/actions)
-[![Actions Status](https://github.com/luk036/digraph-cpp/workflows/Install/badge.svg)](https://github.com/luk036/digraph-cpp/actions)
+[![Actions Status](https://github.com/luk036/digraphx-cpp/workflows/MacOS/badge.svg)](https://github.com/luk036/digraphx-cpp/actions)
+[![Actions Status](https://github.com/luk036/digraphx-cpp/workflows/Windows/badge.svg)](https://github.com/luk036/digraphx-cpp/actions)
+[![Actions Status](https://github.com/luk036/digraphx-cpp/workflows/Ubuntu/badge.svg)](https://github.com/luk036/digraphx-cpp/actions)
+[![Actions Status](https://github.com/luk036/digraphx-cpp/workflows/Install/badge.svg)](https://github.com/luk036/digraphx-cpp/actions)
 [![codecov](https://codecov.io/gh/luk036/digraphx-cpp/graph/badge.svg?token=6wtXYLf7Zd)](https://codecov.io/gh/luk036/digraphx-cpp)
 
 <p align="center">
@@ -201,6 +201,7 @@ Perhaps the [MiniCppStarter](https://github.com/TheLartians/MiniCppStarter) is s
 
 ## Related projects and alternatives
 
+- [**digraphx-fast**](https://github.com/luk036/digraphx-fast): Fast specialized variant (CSR graphs, no abseil)
 - [**ModernCppStarter & PVS-Studio Static Code Analyzer**](https://github.com/viva64/pvs-studio-cmake-examples/tree/master/modern-cpp-starter): Official instructions on how to use the ModernCppStarter with the PVS-Studio Static Code Analyzer.
 - [**cpp-best-practices/gui_starter_template**](https://github.com/cpp-best-practices/gui_starter_template/): A popular C++ starter project, created in 2017.
 - [**filipdutescu/modern-cpp-template**](https://github.com/filipdutescu/modern-cpp-template): A recent starter using a more traditional approach for CMake structure and dependency management.
