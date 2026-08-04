@@ -29,12 +29,13 @@ endfunction()
 
 # Abseil headers emit warnings that -Werror escalates to errors (e.g. MSVC C4100 from
 # prefetch.h, GCC -Woverflow from hashtable_control_bytes.h). Suppress on targets that include
-# abseil headers.
+# abseil headers. GCC coroutine frames also mis-link at -O2 (pre-existing test issue), so the
+# tests build at -O0 to match the original CI behavior.
 function(target_enable_abseil_suppressions TARGET)
   if(MSVC)
     target_compile_options(${TARGET} PRIVATE /wd4100 /wd4324)
   elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|AppleClang")
-    target_compile_options(${TARGET} PRIVATE -Wno-overflow -Wno-pedantic)
+    target_compile_options(${TARGET} PRIVATE -Wno-overflow -Wno-pedantic -O0)
     if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang")
       target_compile_options(${TARGET} PRIVATE -Wno-nullability-extension -Wno-gcc-compat)
     endif()
