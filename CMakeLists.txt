@@ -27,11 +27,17 @@ function(target_enable_warnings TARGET)
   endif()
 endfunction()
 
-# Abseil headers emit MSVC C4100 (unreferenced parameter) from prefetch.h etc.
-# Suppress on targets that include abseil headers.
+# Abseil headers emit warnings that -Werror escalates to errors (e.g. MSVC C4100 from
+# prefetch.h, GCC -Woverflow from hashtable_control_bytes.h). Suppress on targets that include
+# abseil headers.
 function(target_enable_abseil_suppressions TARGET)
   if(MSVC)
     target_compile_options(${TARGET} PRIVATE /wd4100 /wd4324)
+  elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|AppleClang")
+    target_compile_options(${TARGET} PRIVATE -Wno-overflow -Wno-pedantic)
+    if(CMAKE_CXX_COMPILER_ID MATCHES "Clang|AppleClang")
+      target_compile_options(${TARGET} PRIVATE -Wno-nullability-extension -Wno-gcc-compat)
+    endif()
   endif()
 endfunction()
 
