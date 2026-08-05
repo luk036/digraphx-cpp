@@ -28,7 +28,7 @@ MathJax.Hub.Config({
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">DiGraphX<span id="projectnumber">&#160;1.1.6;  VERSION ${PROJECT_VERSION}</span>
+   <div id="projectname">DiGraphX<span id="projectnumber">&#160;1.1.7</span>
    </div>
   </td>
  </tr>
@@ -79,7 +79,7 @@ $(function() {
   <div class="headertitle"><div class="title">DiGraphX </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="md_README"></a><a href="https://github.com/luk036/digraph-cpp/actions"><img src="https://github.com/luk036/digraph-cpp/workflows/MacOS/badge.svg" alt="Actions Status" style="pointer-events: none;" class="inline"/></a> <a href="https://github.com/luk036/digraph-cpp/actions"><img src="https://github.com/luk036/digraph-cpp/workflows/Windows/badge.svg" alt="Actions Status" style="pointer-events: none;" class="inline"/></a> <a href="https://github.com/luk036/digraph-cpp/actions"><img src="https://github.com/luk036/digraph-cpp/workflows/Ubuntu/badge.svg" alt="Actions Status" style="pointer-events: none;" class="inline"/></a> <a href="https://github.com/luk036/digraph-cpp/actions"><img src="https://github.com/luk036/digraph-cpp/workflows/Install/badge.svg" alt="Actions Status" style="pointer-events: none;" class="inline"/></a> <a href="https://codecov.io/gh/luk036/digraphx-cpp"><img src="https://codecov.io/gh/luk036/digraphx-cpp/graph/badge.svg?token=6wtXYLf7Zd" alt="codecov" style="pointer-events: none;" class="inline"/></a></p>
+<div class="textblock"><p><a class="anchor" id="md_README"></a><a href="https://github.com/luk036/digraphx-cpp/actions"><img src="https://github.com/luk036/digraphx-cpp/workflows/MacOS/badge.svg" alt="Actions Status" style="pointer-events: none;" class="inline"/></a> <a href="https://github.com/luk036/digraphx-cpp/actions"><img src="https://github.com/luk036/digraphx-cpp/workflows/Windows/badge.svg" alt="Actions Status" style="pointer-events: none;" class="inline"/></a> <a href="https://github.com/luk036/digraphx-cpp/actions"><img src="https://github.com/luk036/digraphx-cpp/workflows/Ubuntu/badge.svg" alt="Actions Status" style="pointer-events: none;" class="inline"/></a> <a href="https://github.com/luk036/digraphx-cpp/actions"><img src="https://github.com/luk036/digraphx-cpp/workflows/Install/badge.svg" alt="Actions Status" style="pointer-events: none;" class="inline"/></a> <a href="https://codecov.io/gh/luk036/digraphx-cpp"><img src="https://codecov.io/gh/luk036/digraphx-cpp/graph/badge.svg?token=6wtXYLf7Zd" alt="codecov" style="pointer-events: none;" class="inline"/></a></p>
 <p align="center"></p>
 <p><img src="https://repository-images.githubusercontent.com/254842585/4dfa7580-7ffb-11ea-99d0-46b8fe2f4170" alt="" height="175" width="auto" class="inline"/> </p>
 <h1><a class="anchor" id="autotoc_md0"></a>
@@ -120,53 +120,53 @@ Adjust the template to your needs</h3>
 <p>To cleanly separate the library and subproject code, the outer <code><a class="el" href="classCycleRatioAPI.html#a9bcebd889758c6f676866ad5a1ae5fe8" title="Construct a new Cycle Ratio API object.">CMakeList.txt</a></code> only defines the library itself while the tests and other subprojects are self-contained in their own directories. During development it is usually convenient to <a class="el" href="index.html#build-everything-at-once">build all subprojects at once</a>.</p>
 <h3><a class="anchor" id="autotoc_md4"></a>
 Build and run the standalone target</h3>
-<p>Use the following command to build and run the executable target.</p>
-<div class="fragment"><div class="line">cmake -S standalone -B build/standalone</div>
-<div class="line">cmake --build build/standalone</div>
-<div class="line">./build/standalone/DiGraphX --help</div>
+<p>Use the following command from the project's root directory to build and run the executable target.</p>
+<div class="fragment"><div class="line">cmake -B build</div>
+<div class="line">cmake --build build</div>
+<div class="line">./build/DiGraphX --help</div>
 </div><!-- fragment --><h3><a class="anchor" id="autotoc_md5"></a>
 Build and run test suite</h3>
 <p>Use the following commands from the project's root directory to run the test suite.</p>
-<div class="fragment"><div class="line">cmake -S test -B build/test</div>
-<div class="line">cmake --build build/test</div>
-<div class="line">CTEST_OUTPUT_ON_FAILURE=1 cmake --build build/test --target test</div>
+<div class="fragment"><div class="line">cmake -B build</div>
+<div class="line">cmake --build build</div>
+<div class="line">ctest --test-dir build --output-on-failure</div>
 <div class="line"> </div>
 <div class="line"># or simply call the executable:</div>
-<div class="line">./build/test/DiGraphXTests</div>
-</div><!-- fragment --><p>To collect code coverage information, run CMake with the <code>-DENABLE_TEST_COVERAGE=1</code> option.</p>
+<div class="line">./build/DiGraphXTests</div>
+</div><!-- fragment --><p>To collect code coverage information, run CMake with the <code>-DDIGRAPHX_ENABLE_COVERAGE=1</code> option.</p>
 <h3><a class="anchor" id="autotoc_md6"></a>
 Run clang-format</h3>
 <p>Use the following commands from the project's root directory to check and fix C++ and CMake source style. This requires <em>clang-format</em>, <em>cmake-format</em> and <em>pyyaml</em> to be installed on the current system.</p>
-<div class="fragment"><div class="line">cmake -S test -B build/test</div>
+<div class="fragment"><div class="line">cmake -B build</div>
 <div class="line"> </div>
 <div class="line"># view changes</div>
-<div class="line">cmake --build build/test --target format</div>
+<div class="line">cmake --build build --target format</div>
 <div class="line"> </div>
 <div class="line"># apply changes</div>
-<div class="line">cmake --build build/test --target fix-format</div>
+<div class="line">cmake --build build --target fix-format</div>
 </div><!-- fragment --><p>See <a href="https://github.com/TheLartians/Format.cmake">Format.cmake</a> for details. These dependencies can be easily installed using pip.</p>
 <div class="fragment"><div class="line">pip install clang-format==18.1.2 cmake_format==0.6.13 pyyaml</div>
 </div><!-- fragment --><h3><a class="anchor" id="autotoc_md7"></a>
 Build the documentation</h3>
 <p>The documentation is automatically built and <a href="https://thelartians.github.io/ModernCppStarter">published</a> whenever a <a href="https://help.github.com/en/github/administering-a-repository/managing-releases-in-a-repository">GitHub Release</a> is created. To manually build documentation, call the following command.</p>
-<div class="fragment"><div class="line">cmake -S documentation -B build/doc</div>
-<div class="line">cmake --build build/doc --target GenerateDocs</div>
+<div class="fragment"><div class="line">cmake -B build -DDIGRAPHX_BUILD_DOCS=ON</div>
+<div class="line">cmake --build build --target GenerateDocs</div>
 <div class="line"># view the docs</div>
-<div class="line">open build/doc/doxygen/html/index.html</div>
-</div><!-- fragment --><p>To build the documentation locally, you will need Doxygen, jinja2 and Pygments installed on your system.</p>
+<div class="line">open build/doxygen/html/index.html</div>
+</div><!-- fragment --><p>To build the documentation locally, you will need Doxygen and Graphviz installed on your system.</p>
 <h3><a class="anchor" id="autotoc_md8"></a>
 Build everything at once</h3>
-<p><a class="anchor" id="build-everything-at-once"></a> The project also includes an <code>all</code> directory that allows building all targets at the same time. This is useful during development, as it exposes all subprojects to your IDE and avoids redundant builds of the library.</p>
-<div class="fragment"><div class="line">cmake -S all -B build</div>
+<p><a class="anchor" id="build-everything-at-once"></a> A single build configuration from the project root builds the library, tests and standalone together. This is useful during development, as it exposes all targets to your IDE and avoids redundant builds of the library.</p>
+<div class="fragment"><div class="line">cmake -B build</div>
 <div class="line">cmake --build build</div>
 <div class="line"> </div>
 <div class="line"># run tests</div>
-<div class="line">./build/test/DiGraphXTests</div>
+<div class="line">./build/DiGraphXTests</div>
 <div class="line"># format code</div>
 <div class="line">cmake --build build --target fix-format</div>
 <div class="line"># run standalone</div>
-<div class="line">./build/standalone/DiGraphX --help</div>
-<div class="line"># build docs</div>
+<div class="line">./build/DiGraphX --help</div>
+<div class="line"># build docs (requires -DDIGRAPHX_BUILD_DOCS=ON at configure time)</div>
 <div class="line">cmake --build build --target GenerateDocs</div>
 </div><!-- fragment --><h3><a class="anchor" id="autotoc_md9"></a>
 Additional tools</h3>
@@ -221,6 +221,7 @@ Ccache</h4>
 <h2><a class="anchor" id="autotoc_md14"></a>
 Related projects and alternatives</h2>
 <ul>
+<li><a href="https://github.com/luk036/digraphx-fast"><b>digraphx-fast</b></a>: Fast specialized variant (CSR graphs, no abseil)</li>
 <li><a href="https://github.com/viva64/pvs-studio-cmake-examples/tree/master/modern-cpp-starter"><b>ModernCppStarter &amp; PVS-Studio Static Code Analyzer</b></a>: Official instructions on how to use the ModernCppStarter with the PVS-Studio Static Code Analyzer.</li>
 <li><a href="https://github.com/cpp-best-practices/gui_starter_template/"><b>cpp-best-practices/gui_starter_template</b></a>: A popular C++ starter project, created in 2017.</li>
 <li><a href="https://github.com/filipdutescu/modern-cpp-template"><b>filipdutescu/modern-cpp-template</b></a>: A recent starter using a more traditional approach for CMake structure and dependency management.</li>
