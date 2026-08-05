@@ -109,6 +109,15 @@ target("BM_mcf")
     add_packages("fmt", "abseil")
 
 
+target("BM_neg_cycle")
+    set_kind("binary")
+    add_deps("DiGraphX")
+    add_includedirs("include", {public = true})
+    add_includedirs("../py2cpp/include", {public = true})
+    add_includedirs("../mywheel-cpp/include", {public = true})
+    add_files("bench/BM_neg_cycle.cpp")
+    add_packages("fmt", "abseil")
+
 -- If you want to known more usage about xmake, please see https://xmake.io
 --
 -- ## FAQ

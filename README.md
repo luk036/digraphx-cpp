@@ -1,8 +1,8 @@
 
-[![Actions Status](https://github.com/luk036/digraph-cpp/workflows/MacOS/badge.svg)](https://github.com/luk036/digraph-cpp/actions)
-[![Actions Status](https://github.com/luk036/digraph-cpp/workflows/Windows/badge.svg)](https://github.com/luk036/digraph-cpp/actions)
-[![Actions Status](https://github.com/luk036/digraph-cpp/workflows/Ubuntu/badge.svg)](https://github.com/luk036/digraph-cpp/actions)
-[![Actions Status](https://github.com/luk036/digraph-cpp/workflows/Install/badge.svg)](https://github.com/luk036/digraph-cpp/actions)
+[![Actions Status](https://github.com/luk036/digraphx-cpp/workflows/MacOS/badge.svg)](https://github.com/luk036/digraphx-cpp/actions)
+[![Actions Status](https://github.com/luk036/digraphx-cpp/workflows/Windows/badge.svg)](https://github.com/luk036/digraphx-cpp/actions)
+[![Actions Status](https://github.com/luk036/digraphx-cpp/workflows/Ubuntu/badge.svg)](https://github.com/luk036/digraphx-cpp/actions)
+[![Actions Status](https://github.com/luk036/digraphx-cpp/workflows/Install/badge.svg)](https://github.com/luk036/digraphx-cpp/actions)
 [![codecov](https://codecov.io/gh/luk036/digraphx-cpp/graph/badge.svg?token=6wtXYLf7Zd)](https://codecov.io/gh/luk036/digraphx-cpp)
 
 <p align="center">
@@ -48,12 +48,12 @@ During development it is usually convenient to [build all subprojects at once](#
 
 ### Build and run the standalone target
 
-Use the following command to build and run the executable target.
+Use the following command from the project's root directory to build and run the executable target.
 
 ```bash
-cmake -S standalone -B build/standalone
-cmake --build build/standalone
-./build/standalone/DiGraphX --help
+cmake -B build
+cmake --build build
+./build/DiGraphX --help
 ```
 
 ### Build and run test suite
@@ -61,15 +61,15 @@ cmake --build build/standalone
 Use the following commands from the project's root directory to run the test suite.
 
 ```bash
-cmake -S test -B build/test
-cmake --build build/test
-CTEST_OUTPUT_ON_FAILURE=1 cmake --build build/test --target test
+cmake -B build
+cmake --build build
+ctest --test-dir build --output-on-failure
 
 # or simply call the executable:
-./build/test/DiGraphXTests
+./build/DiGraphXTests
 ```
 
-To collect code coverage information, run CMake with the `-DENABLE_TEST_COVERAGE=1` option.
+To collect code coverage information, run CMake with the `-DDIGRAPHX_ENABLE_COVERAGE=1` option.
 
 ### Run clang-format
 
@@ -77,13 +77,13 @@ Use the following commands from the project's root directory to check and fix C+
 This requires _clang-format_, _cmake-format_ and _pyyaml_ to be installed on the current system.
 
 ```bash
-cmake -S test -B build/test
+cmake -B build
 
 # view changes
-cmake --build build/test --target format
+cmake --build build --target format
 
 # apply changes
-cmake --build build/test --target fix-format
+cmake --build build --target fix-format
 ```
 
 See [Format.cmake](https://github.com/TheLartians/Format.cmake) for details.
@@ -99,32 +99,32 @@ The documentation is automatically built and [published](https://thelartians.git
 To manually build documentation, call the following command.
 
 ```bash
-cmake -S documentation -B build/doc
-cmake --build build/doc --target GenerateDocs
+cmake -B build -DDIGRAPHX_BUILD_DOCS=ON
+cmake --build build --target GenerateDocs
 # view the docs
-open build/doc/doxygen/html/index.html
+open build/doxygen/html/index.html
 ```
 
-To build the documentation locally, you will need Doxygen, jinja2 and Pygments installed on your system.
+To build the documentation locally, you will need Doxygen and Graphviz installed on your system.
 
 ### Build everything at once
 
 \anchor build-everything-at-once
 
-The project also includes an `all` directory that allows building all targets at the same time.
-This is useful during development, as it exposes all subprojects to your IDE and avoids redundant builds of the library.
+A single build configuration from the project root builds the library, tests and standalone together.
+This is useful during development, as it exposes all targets to your IDE and avoids redundant builds of the library.
 
 ```bash
-cmake -S all -B build
+cmake -B build
 cmake --build build
 
 # run tests
-./build/test/DiGraphXTests
+./build/DiGraphXTests
 # format code
 cmake --build build --target fix-format
 # run standalone
-./build/standalone/DiGraphX --help
-# build docs
+./build/DiGraphX --help
+# build docs (requires -DDIGRAPHX_BUILD_DOCS=ON at configure time)
 cmake --build build --target GenerateDocs
 ```
 
@@ -201,6 +201,7 @@ Perhaps the [MiniCppStarter](https://github.com/TheLartians/MiniCppStarter) is s
 
 ## Related projects and alternatives
 
+- [**digraphx-fast**](https://github.com/luk036/digraphx-fast): Fast specialized variant (CSR graphs, no abseil)
 - [**ModernCppStarter & PVS-Studio Static Code Analyzer**](https://github.com/viva64/pvs-studio-cmake-examples/tree/master/modern-cpp-starter): Official instructions on how to use the ModernCppStarter with the PVS-Studio Static Code Analyzer.
 - [**cpp-best-practices/gui_starter_template**](https://github.com/cpp-best-practices/gui_starter_template/): A popular C++ starter project, created in 2017.
 - [**filipdutescu/modern-cpp-template**](https://github.com/filipdutescu/modern-cpp-template): A recent starter using a more traditional approach for CMake structure and dependency management.
