@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.14...3.22)
 
 project(
   DiGraphX
-  VERSION 1.1.6
+  VERSION 1.1.7
   LANGUAGES CXX
 )
 
