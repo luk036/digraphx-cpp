@@ -27,10 +27,10 @@ function(target_enable_warnings TARGET)
   endif()
 endfunction()
 
-# Abseil headers emit warnings that -Werror escalates to errors (e.g. MSVC C4100 from
-# prefetch.h, GCC -Woverflow from hashtable_control_bytes.h). Suppress on targets that include
-# abseil headers. GCC coroutine frames also mis-link at -O2 (pre-existing test issue), so the
-# tests build at -O0 to match the original CI behavior.
+# Abseil headers emit warnings that -Werror escalates to errors (e.g. MSVC C4100 from prefetch.h,
+# GCC -Woverflow from hashtable_control_bytes.h). Suppress on targets that include abseil headers.
+# GCC coroutine frames also mis-link at -O2 (pre-existing test issue), so the tests build at -O0 to
+# match the original CI behavior.
 function(target_enable_abseil_suppressions TARGET)
   if(MSVC)
     target_compile_options(${TARGET} PRIVATE /wd4100 /wd4324)
@@ -55,17 +55,16 @@ option(DIGRAPHX_ENABLE_COVERAGE "Enable coverage reporting" OFF)
 # Dependencies
 # ---------------------------------------------------------------------------
 
-# Download CPM.cmake for reproducible dependency management
-# see https://github.com/cpm-cmake/CPM.cmake for more info
+# Download CPM.cmake for reproducible dependency management see
+# https://github.com/cpm-cmake/CPM.cmake for more info
 set(CPM_DOWNLOAD_VERSION 0.38.5)
 set(CPM_HASH_SUM "192aa0ccdc57dfe75bd9e4b176bf7fb5692fd2b3e3f7b09c74856fc39572b31c")
 set(CPM_DOWNLOAD_LOCATION "${CMAKE_BINARY_DIR}/cmake/CPM_${CPM_DOWNLOAD_VERSION}.cmake")
 if(NOT (EXISTS ${CPM_DOWNLOAD_LOCATION}))
   message(STATUS "Downloading CPM.cmake to ${CPM_DOWNLOAD_LOCATION}")
-  file(
-    DOWNLOAD https://github.com/cpm-cmake/CPM.cmake/releases/download/v${CPM_DOWNLOAD_VERSION}/CPM.cmake
-             ${CPM_DOWNLOAD_LOCATION}
-    EXPECTED_HASH SHA256=${CPM_HASH_SUM}
+  file(DOWNLOAD
+       https://github.com/cpm-cmake/CPM.cmake/releases/download/v${CPM_DOWNLOAD_VERSION}/CPM.cmake
+       ${CPM_DOWNLOAD_LOCATION} EXPECTED_HASH SHA256=${CPM_HASH_SUM}
   )
 endif()
 include(${CPM_DOWNLOAD_LOCATION})
@@ -120,14 +119,20 @@ else()
 endif()
 
 # abseil requires C++ >= 17 at its own configure time. check_cxx_source_compiles does not read
-# CMAKE_CXX_STANDARD, so the standard flag must be in CMAKE_CXX_FLAGS (cache) to propagate into
-# the FetchContent subdirectory's compile checks.
+# CMAKE_CXX_STANDARD, so the standard flag must be in CMAKE_CXX_FLAGS (cache) to propagate into the
+# FetchContent subdirectory's compile checks.
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 if(MSVC)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++20" CACHE STRING "" FORCE)
+  set(CMAKE_CXX_FLAGS
+      "${CMAKE_CXX_FLAGS} /std:c++20"
+      CACHE STRING "" FORCE
+  )
 else()
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20" CACHE STRING "" FORCE)
+  set(CMAKE_CXX_FLAGS
+      "${CMAKE_CXX_FLAGS} -std=c++20"
+      CACHE STRING "" FORCE
+  )
 endif()
 
 # abseil provides flat_hash_map used in the headers; prefer a system-installed abseil when
@@ -154,8 +159,7 @@ set(SPECIFIC_LIBS Threads::Threads MyWheel::MyWheel Py2Cpp::Py2Cpp fmt::fmt spdl
 
 # Note: globbing sources is considered bad practice as CMake's generators may not detect new files
 # automatically. Keep that in mind when changing files, or explicitly mention them here.
-file(GLOB_RECURSE headers CONFIGURE_DEPENDS
-     "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h"
+file(GLOB_RECURSE headers CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h"
      "${CMAKE_CURRENT_SOURCE_DIR}/include/*.hpp"
 )
 file(GLOB_RECURSE sources CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp")
@@ -250,8 +254,9 @@ if(DIGRAPHX_BUILD_TESTS)
 
   file(GLOB_RECURSE TEST_SOURCES CONFIGURE_DEPENDS "test/source/*.cpp")
   add_executable(DiGraphXTests ${TEST_SOURCES})
-  target_link_libraries(DiGraphXTests PRIVATE doctest::doctest DiGraphX::DiGraphX ${SPECIFIC_LIBS}
-                                              ${SPECIFIC_ABSEIL_LIBS} rapidcheck
+  target_link_libraries(
+    DiGraphXTests PRIVATE doctest::doctest DiGraphX::DiGraphX ${SPECIFIC_LIBS}
+                          ${SPECIFIC_ABSEIL_LIBS} rapidcheck
   )
   target_include_directories(DiGraphXTests PRIVATE ${rapidcheck_SOURCE_DIR}/include)
   target_compile_definitions(DiGraphXTests PRIVATE RAPIDCHECK_H)
@@ -270,8 +275,7 @@ if(DIGRAPHX_ENABLE_CLANG_TIDY)
   if(CLANG_TIDY)
     add_custom_target(
       clang-tidy
-      COMMAND ${CLANG_TIDY} --extra-arg=-std=c++20
-              --extra-arg=-I${CMAKE_CURRENT_SOURCE_DIR}/include
+      COMMAND ${CLANG_TIDY} --extra-arg=-std=c++20 --extra-arg=-I${CMAKE_CURRENT_SOURCE_DIR}/include
               ${CMAKE_CURRENT_SOURCE_DIR}/include/digraphx/*.hpp
       COMMENT "Running clang-tidy static analysis"
     )
@@ -338,13 +342,15 @@ if(DIGRAPHX_ENABLE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|AppleCl
       coverage
       COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
       COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/coverage
-      COMMAND ${GCOVR_PATH} --root ${PROJECT_SOURCE_DIR} --html-details
-              ${CMAKE_BINARY_DIR}/coverage/index.html --exclude test/ --exclude build/
-              ${extra_gcovr_args}
+      COMMAND
+        ${GCOVR_PATH} --root ${PROJECT_SOURCE_DIR} --html-details
+        ${CMAKE_BINARY_DIR}/coverage/index.html --exclude test/ --exclude build/ ${extra_gcovr_args}
       WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
       COMMENT "Generating coverage report in ${CMAKE_BINARY_DIR}/coverage/index.html"
     )
   else()
-    message(WARNING "gcovr not found - coverage target unavailable. Install with: pip install gcovr")
+    message(
+      WARNING "gcovr not found - coverage target unavailable. Install with: pip install gcovr"
+    )
   endif()
 endif()

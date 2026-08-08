@@ -1,5 +1,4 @@
 #include <digraphx/mcf.hpp>
-
 #include <iostream>
 
 auto main() -> int {
