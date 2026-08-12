@@ -48,6 +48,7 @@ endfunction()
 option(DIGRAPHX_BUILD_TESTS "Build tests" ON)
 option(DIGRAPHX_BUILD_STANDALONE "Build standalone executable" ON)
 option(DIGRAPHX_BUILD_DOCS "Build Doxygen documentation" OFF)
+option(DIGRAPHX_BUILD_BENCHMARKS "Build benchmarks" OFF)
 option(DIGRAPHX_ENABLE_CLANG_TIDY "Enable clang-tidy analysis" OFF)
 option(DIGRAPHX_ENABLE_COVERAGE "Enable coverage reporting" OFF)
 
@@ -264,6 +265,49 @@ if(DIGRAPHX_BUILD_TESTS)
   target_enable_warnings(DiGraphXTests)
   target_enable_abseil_suppressions(DiGraphXTests)
   add_test(NAME DiGraphXTests COMMAND DiGraphXTests)
+endif()
+
+# ---------------------------------------------------------------------------
+# Benchmarks (nanobench, header-only)
+# ---------------------------------------------------------------------------
+
+if(DIGRAPHX_BUILD_BENCHMARKS)
+  # nanobench is a header-only benchmarking library
+  set(NANOBENCH_VERSION 4.3.11)
+  set(NANOBENCH_DIR "${CMAKE_BINARY_DIR}/_deps/nanobench")
+  set(NANOBENCH_HEADER "${NANOBENCH_DIR}/nanobench.h")
+
+  if(NOT EXISTS "${NANOBENCH_HEADER}")
+    file(MAKE_DIRECTORY "${NANOBENCH_DIR}")
+    file(
+      DOWNLOAD
+      "https://raw.githubusercontent.com/martinus/nanobench/v${NANOBENCH_VERSION}/src/include/nanobench.h"
+      "${NANOBENCH_HEADER}"
+      STATUS download_status
+    )
+    list(GET download_status 0 status_code)
+    if(NOT status_code EQUAL 0)
+      message(FATAL_ERROR "Failed to download nanobench (status ${status_code})")
+    endif()
+  endif()
+
+  add_library(nanobench INTERFACE)
+  target_include_directories(nanobench SYSTEM INTERFACE "${NANOBENCH_DIR}")
+
+  file(GLOB_RECURSE ALL_BENCH_CPP CONFIGURE_DEPENDS "bench/*.cpp")
+  foreach(ONE_BENCH_CPP ${ALL_BENCH_CPP})
+    get_filename_component(ONE_BENCH_EXEC ${ONE_BENCH_CPP} NAME_WE)
+    set(TARGET_NAME Bench_${ONE_BENCH_EXEC})
+
+    add_executable(${TARGET_NAME} ${ONE_BENCH_CPP})
+    set_target_properties(${TARGET_NAME} PROPERTIES OUTPUT_NAME ${ONE_BENCH_EXEC} CXX_STANDARD 20)
+    target_link_libraries(${TARGET_NAME} PRIVATE nanobench DiGraphX::DiGraphX ${SPECIFIC_LIBS}
+                          ${SPECIFIC_ABSEIL_LIBS}
+    )
+    target_enable_warnings(${TARGET_NAME})
+    target_enable_abseil_suppressions(${TARGET_NAME})
+    add_test(NAME ${ONE_BENCH_EXEC} COMMAND ${TARGET_NAME})
+  endforeach()
 endif()
 
 # ---------------------------------------------------------------------------
