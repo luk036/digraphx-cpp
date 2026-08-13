@@ -3,8 +3,8 @@
 
 #include <cmath>
 #include <cstdint>
-#include <cstdio>
 #include <digraphx/mcf.hpp>
+#include <fmt/format.h>
 #include <utility>
 #include <vector>
 
@@ -67,15 +67,15 @@ int main() {
     // Count edges
     size_t edge_count = 0;
     for (const auto& [u, nbrs] : g) edge_count += nbrs.size();
-    std::printf("Graph: %zu nodes, %zu edges\n", g.size(), edge_count);
+    fmt::print("Graph: {} nodes, {} edges\n", g.size(), edge_count);
 
-    // Warmup + correctness verification
+    // Warmup
     auto warmup = cycle_canceling_mcf(g, demands);
     if (!warmup) {
-        std::printf("INFEASIBLE\n");
+        fmt::print("INFEASIBLE\n");
         return 1;
     }
-    std::printf("Cost: %lld (expected 1108)\n", static_cast<long long>(warmup->first));
+    fmt::print("Cost: {} (expected 1108)\n", warmup->first);
 
     ankerl::nanobench::Bench bench;
     bench.title("Cycle-canceling MCF")

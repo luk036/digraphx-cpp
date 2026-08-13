@@ -2,8 +2,8 @@
 #include <nanobench.h>
 
 #include <cstdint>
-#include <cstdio>
 #include <digraphx/neg_cycle.hpp>
+#include <fmt/format.h>
 #include <list>
 #include <mywheel/map_adapter.hpp>
 #include <string>
@@ -40,7 +40,7 @@ static auto build_graph(size_t n_nodes, int k = 3) -> BenchGraph {
 }
 
 int main() {
-    std::printf("=== digraphx-cpp: NegCycleFinder (Howard) ===\n");
+    fmt::print("=== digraphx-cpp: NegCycleFinder (Howard) ===\n");
     const size_t sizes[] = {20000, 50000, 100000, 200000, 500000, 1000000};
 
     ankerl::nanobench::Bench bench;
@@ -64,8 +64,8 @@ int main() {
         bool found = !cycle_edges.empty();
         if (found)
             for (auto w : cycle_edges) total_weight += w;
-        std::printf("Nodes=%-8zu Edges=%-10zu Found=%-4s Weight=%.0f\n", n, bg.edge_count,
-                    found ? "yes" : "no", total_weight);
+        fmt::print("Nodes={:<8} Edges={:<10} Found={:<4} Weight={:.0f}\n", n, bg.edge_count,
+                   found ? "yes" : "no", total_weight);
 
         bench.run("n=" + std::to_string(n), [&] {
             vector<double> d(bg.adj.size(), 0.0);
