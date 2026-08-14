@@ -1,9 +1,9 @@
 #define ANKERL_NANOBENCH_IMPLEMENT
+#include <fmt/format.h>
 #include <nanobench.h>
 
 #include <cstdint>
 #include <digraphx/neg_cycle.hpp>
-#include <fmt/format.h>
 #include <list>
 #include <mywheel/map_adapter.hpp>
 #include <string>
@@ -44,11 +44,7 @@ int main() {
     const size_t sizes[] = {20000, 50000, 100000, 200000, 500000, 1000000};
 
     ankerl::nanobench::Bench bench;
-    bench.title("NegCycleFinder (Howard)")
-        .unit("op")
-        .warmup(3)
-        .epochs(10)
-        .minEpochIterations(5);
+    bench.title("NegCycleFinder (Howard)").unit("op").warmup(3).epochs(10).minEpochIterations(5);
 
     for (auto n : sizes) {
         auto bg = build_graph(n);

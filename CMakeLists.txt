@@ -301,8 +301,8 @@ if(DIGRAPHX_BUILD_BENCHMARKS)
 
     add_executable(${TARGET_NAME} ${ONE_BENCH_CPP})
     set_target_properties(${TARGET_NAME} PROPERTIES OUTPUT_NAME ${ONE_BENCH_EXEC} CXX_STANDARD 20)
-    target_link_libraries(${TARGET_NAME} PRIVATE nanobench DiGraphX::DiGraphX ${SPECIFIC_LIBS}
-                          ${SPECIFIC_ABSEIL_LIBS}
+    target_link_libraries(
+      ${TARGET_NAME} PRIVATE nanobench DiGraphX::DiGraphX ${SPECIFIC_LIBS} ${SPECIFIC_ABSEIL_LIBS}
     )
     target_enable_warnings(${TARGET_NAME})
     target_enable_abseil_suppressions(${TARGET_NAME})

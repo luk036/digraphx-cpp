@@ -1,10 +1,10 @@
 #define ANKERL_NANOBENCH_IMPLEMENT
+#include <fmt/format.h>
 #include <nanobench.h>
 
 #include <cmath>
 #include <cstdint>
 #include <digraphx/mcf.hpp>
-#include <fmt/format.h>
 #include <utility>
 #include <vector>
 
@@ -78,11 +78,7 @@ int main() {
     fmt::print("Cost: {} (expected 1108)\n", warmup->first);
 
     ankerl::nanobench::Bench bench;
-    bench.title("Cycle-canceling MCF")
-        .unit("op")
-        .warmup(5)
-        .epochs(30)
-        .minEpochIterations(10);
+    bench.title("Cycle-canceling MCF").unit("op").warmup(5).epochs(30).minEpochIterations(10);
 
     bench.run("cycle_canceling_mcf", [&] {
         auto result = cycle_canceling_mcf(g, demands);
