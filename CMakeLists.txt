@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.14...3.22)
 
 project(
   DiGraphX
-  VERSION 1.1.7
+  VERSION 1.1.8
   LANGUAGES CXX
 )
 
@@ -100,7 +100,7 @@ endif()
 
 CPMAddPackage(
   NAME Py2Cpp
-  GIT_TAG v1.6.4
+  GIT_TAG v1.6.5
   GITHUB_REPOSITORY luk036/py2cpp
   OPTIONS "INSTALL_ONLY YES" "PY2CPP_BUILD_TESTS OFF"
 )
@@ -219,7 +219,7 @@ packageProject(
   INCLUDE_DESTINATION include/${PROJECT_NAME}-${PROJECT_VERSION}
   VERSION_HEADER "${VERSION_HEADER_LOCATION}"
   COMPATIBILITY SameMajorVersion
-  DEPENDENCIES "fmt 12.1.0" "Py2Cpp 1.6.4" "MyWheel 1.1.6"
+  DEPENDENCIES "fmt 12.1.0" "Py2Cpp 1.6.5" "MyWheel 1.1.6"
 )
 
 # ---------------------------------------------------------------------------
