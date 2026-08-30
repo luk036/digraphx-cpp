@@ -223,8 +223,8 @@ auto max_parametric(const DiGraph& digraph, T& r_opt, Fn1 distance, Fn2 zero_can
     using Edge = std::remove_cv_t<std::remove_reference_t<Edge1>>;
     using Cycle = std::vector<Edge>;
 
-    digraph_detail::CallbackParametricAPI<T, Edge, Cycle, D, Fn1, Fn2> omega{std::move(distance),
-                                                                             std::move(zero_cancel)};
+    digraph_detail::CallbackParametricAPI<T, Edge, Cycle, D, Fn1, Fn2> omega{
+        std::move(distance), std::move(zero_cancel)};
     auto solver = MaxParametricSolver<DiGraph, decltype(omega)>(digraph, omega);
     return solver.run(r_opt, dist, domain);
 }
