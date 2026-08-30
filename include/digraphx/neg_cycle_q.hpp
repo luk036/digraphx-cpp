@@ -87,7 +87,7 @@ class NegCycleFinderQ {
             return digraph_detail::relax_pred(this->_digraph, d, gw, this->_pred, update_ok);
         };
         // Hook: verify candidate cycles are actually negative
-        auto check = [this](const auto& vtx, const auto& d, auto& gw) {
+        auto check = [&](const auto& vtx, const auto& d, auto& gw) {
             assert(digraph_detail::is_negative(vtx, d, gw, this->_pred));
             (void)vtx;
             (void)d;
