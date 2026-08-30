@@ -28,7 +28,7 @@ MathJax.Hub.Config({
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">DiGraphX<span id="projectnumber">&#160;1.1.7</span>
+   <div id="projectname">DiGraphX<span id="projectnumber">&#160;1.1.8</span>
    </div>
   </td>
  </tr>
@@ -90,35 +90,23 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:abf33796c13326bd7fb967c767b6b8e41" id="r_abf33796c13326bd7fb967c767b6b8e41"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNegCycleFinderQ.html#abf33796c13326bd7fb967c767b6b8e41">NegCycleFinderQ</a> (<a class="el" href="classCycleRatioAPI.html">const</a> <a class="el" href="classCycleRatioAPI.html">DiGraph</a> &amp;digraph)</td></tr>
+<tr class="memitem:abf33796c13326bd7fb967c767b6b8e41" id="r_abf33796c13326bd7fb967c767b6b8e41"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNegCycleFinderQ.html#abf33796c13326bd7fb967c767b6b8e41">NegCycleFinderQ</a> (const DiGraph &amp;digraph)</td></tr>
 <tr class="memdesc:abf33796c13326bd7fb967c767b6b8e41"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the negative cycle finder with a directed graph.  <br /></td></tr>
 <tr class="separator:abf33796c13326bd7fb967c767b6b8e41"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae345541758f836b33a8e4f1fdc9ace07" id="r_ae345541758f836b33a8e4f1fdc9ace07"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">Mapping</a> , <a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">GetWeight</a> , <a class="el" href="classCycleRatioAPI.html">typename</a> UpdateOk &gt; </td></tr>
-<tr class="memitem:ae345541758f836b33a8e4f1fdc9ace07"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classCycleRatioAPI.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classNegCycleFinderQ.html#ae345541758f836b33a8e4f1fdc9ace07">howard_pred</a> (<a class="el" href="classCycleRatioAPI.html">Mapping</a> &amp;<a class="el" href="classCycleRatioAPI.html">dist</a>, <a class="el" href="classCycleRatioAPI.html">GetWeight</a> <a class="el" href="classCycleRatioAPI.html">get_weight</a>, UpdateOk <a class="el" href="classCycleRatioAPI.html">update_ok</a>) -&gt; <a class="el" href="classCycleRatioAPI.html#a9bcebd889758c6f676866ad5a1ae5fe8">py::Generator</a>&lt; Cycle &gt;</td></tr>
+<tr class="memitem:ae345541758f836b33a8e4f1fdc9ace07" id="r_ae345541758f836b33a8e4f1fdc9ace07"><td class="memTemplParams" colspan="2">template&lt;typename Mapping , typename GetWeight , typename UpdateOk &gt; </td></tr>
+<tr class="memitem:ae345541758f836b33a8e4f1fdc9ace07"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classNegCycleFinderQ.html#ae345541758f836b33a8e4f1fdc9ace07">howard_pred</a> (Mapping &amp;dist, GetWeight get_weight, UpdateOk update_ok) -&gt; py::Generator&lt; Cycle &gt;</td></tr>
 <tr class="memdesc:ae345541758f836b33a8e4f1fdc9ace07"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find negative cycles using predecessor-based Howard's algorithm.  <br /></td></tr>
 <tr class="separator:ae345541758f836b33a8e4f1fdc9ace07"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3e7e515fb1252a0c617e5d3d225714e0" id="r_a3e7e515fb1252a0c617e5d3d225714e0"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">Mapping</a> , <a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">GetWeight</a> , <a class="el" href="classCycleRatioAPI.html">typename</a> UpdateOk &gt; </td></tr>
-<tr class="memitem:a3e7e515fb1252a0c617e5d3d225714e0"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classCycleRatioAPI.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classNegCycleFinderQ.html#a3e7e515fb1252a0c617e5d3d225714e0">howard_succ</a> (<a class="el" href="classCycleRatioAPI.html">Mapping</a> &amp;<a class="el" href="classCycleRatioAPI.html">dist</a>, <a class="el" href="classCycleRatioAPI.html">GetWeight</a> <a class="el" href="classCycleRatioAPI.html">get_weight</a>, UpdateOk <a class="el" href="classCycleRatioAPI.html">update_ok</a>) -&gt; <a class="el" href="classCycleRatioAPI.html#a9bcebd889758c6f676866ad5a1ae5fe8">py::Generator</a>&lt; Cycle &gt;</td></tr>
+<tr class="memitem:a3e7e515fb1252a0c617e5d3d225714e0" id="r_a3e7e515fb1252a0c617e5d3d225714e0"><td class="memTemplParams" colspan="2">template&lt;typename Mapping , typename GetWeight , typename UpdateOk &gt; </td></tr>
+<tr class="memitem:a3e7e515fb1252a0c617e5d3d225714e0"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classNegCycleFinderQ.html#a3e7e515fb1252a0c617e5d3d225714e0">howard_succ</a> (Mapping &amp;dist, GetWeight get_weight, UpdateOk update_ok) -&gt; py::Generator&lt; Cycle &gt;</td></tr>
 <tr class="memdesc:a3e7e515fb1252a0c617e5d3d225714e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find negative cycles using successor-based Howard's algorithm.  <br /></td></tr>
 <tr class="separator:a3e7e515fb1252a0c617e5d3d225714e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">DiGraph</a>, <a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">Domain</a>&gt;<br />
+<div class="textblock"><div class="compoundTemplParams">template&lt;typename DiGraph, typename Domain&gt;<br />
 class NegCycleFinderQ&lt; DiGraph, Domain &gt;</div><p>Negative Cycle Finder with constraints using Howard's method. </p>
 <p>This class extends the basic negative cycle detection to support constrained optimization problems. It implements both predecessor and successor versions of Howard's algorithm, providing flexibility in how cycles are detected and how distance updates are constrained, via an update_ok callback.</p>
-<p>Algorithm variants:</p>
-<ol type="1">
-<li>Predecessor-based (howard_pred):<ul>
-<li>Traditional Bellman-Ford relaxation</li>
-<li>Updates dist[v] based on dist[u] + weight(u,v)</li>
-</ul>
-</li>
-<li>Successor-based (howard_succ):<ul>
-<li>Reverse relaxation logic</li>
-<li>Updates dist[u] based on dist[v] - weight(u,v)</li>
-</ul>
-</li>
-</ol>
+<p>The algorithm skeleton is shared with <a class="el" href="classNegCycleFinder.html" title="Negative Cycle Finder using Howard&#39;s policy iteration method.">NegCycleFinder</a> (see <a class="el" href="namespacedigraph__detail.html#a95f3ea7e71b19fcc6bce5d7648127510" title="Template Method: Howard&#39;s policy-iteration skeleton.">digraph_detail::howard_search</a>); the constrained relaxation and the verification hook are supplied as strategies here.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">DiGraph</td><td>Type of the directed graph representation </td></tr>
@@ -133,15 +121,15 @@ class NegCycleFinderQ&lt; DiGraph, Domain &gt;</div><p>Negative Cycle Finder wit
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">DiGraph</a> , <a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">Domain</a> &gt; </div>
+template&lt;typename DiGraph , typename Domain &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classNegCycleFinderQ.html">NegCycleFinderQ</a>&lt; <a class="el" href="classCycleRatioAPI.html">DiGraph</a>, <a class="el" href="classCycleRatioAPI.html">Domain</a> &gt;<a class="el" href="classNegCycleFinderQ.html">::NegCycleFinderQ</a> </td>
+          <td class="memname"><a class="el" href="classNegCycleFinderQ.html">NegCycleFinderQ</a>&lt; DiGraph, Domain &gt;<a class="el" href="classNegCycleFinderQ.html">::NegCycleFinderQ</a> </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classCycleRatioAPI.html">const</a> <a class="el" href="classCycleRatioAPI.html">DiGraph</a> &amp;&#160;</td>
+          <td class="paramtype">const DiGraph &amp;&#160;</td>
           <td class="paramname"><em>digraph</em></td><td>)</td>
           <td></td>
         </tr>
@@ -170,23 +158,23 @@ template&lt;<a class="el" href="classCycleRatioAPI.html">typename</a> <a class="
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">DiGraph</a> , <a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">Domain</a> &gt; </div>
+template&lt;typename DiGraph , typename Domain &gt; </div>
 <div class="memtemplate">
-template&lt;<a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">Mapping</a> , <a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">GetWeight</a> , <a class="el" href="classCycleRatioAPI.html">typename</a> UpdateOk &gt; </div>
+template&lt;typename Mapping , typename GetWeight , typename UpdateOk &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classCycleRatioAPI.html">auto</a> <a class="el" href="classNegCycleFinderQ.html">NegCycleFinderQ</a>&lt; <a class="el" href="classCycleRatioAPI.html">DiGraph</a>, <a class="el" href="classCycleRatioAPI.html">Domain</a> &gt;::howard_pred </td>
+          <td class="memname">auto <a class="el" href="classNegCycleFinderQ.html">NegCycleFinderQ</a>&lt; DiGraph, Domain &gt;::howard_pred </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classCycleRatioAPI.html">Mapping</a> &amp;&#160;</td>
+          <td class="paramtype">Mapping &amp;&#160;</td>
           <td class="paramname"><em>dist</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classCycleRatioAPI.html">GetWeight</a>&#160;</td>
+          <td class="paramtype">GetWeight&#160;</td>
           <td class="paramname"><em>get_weight</em>, </td>
         </tr>
         <tr>
@@ -198,7 +186,7 @@ template&lt;<a class="el" href="classCycleRatioAPI.html">typename</a> <a class="
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td> -&gt; <a class="el" href="classCycleRatioAPI.html#a9bcebd889758c6f676866ad5a1ae5fe8">py::Generator</a>&lt;Cycle&gt; </td>
+          <td></td><td> -&gt; py::Generator&lt;Cycle&gt; </td>
         </tr>
       </table>
   </td>
@@ -231,7 +219,7 @@ template&lt;<a class="el" href="classCycleRatioAPI.html">typename</a> <a class="
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="classCycleRatioAPI.html#a9bcebd889758c6f676866ad5a1ae5fe8" title="Construct a new Cycle Ratio API object.">py::Generator&lt;Cycle&gt;</a> Each negative cycle found as a list of edges </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>py::Generator&lt;Cycle&gt; Each negative cycle found as a list of edges </dd></dl>
 
 </div>
 </div>
@@ -241,23 +229,23 @@ template&lt;<a class="el" href="classCycleRatioAPI.html">typename</a> <a class="
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">DiGraph</a> , <a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">Domain</a> &gt; </div>
+template&lt;typename DiGraph , typename Domain &gt; </div>
 <div class="memtemplate">
-template&lt;<a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">Mapping</a> , <a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">GetWeight</a> , <a class="el" href="classCycleRatioAPI.html">typename</a> UpdateOk &gt; </div>
+template&lt;typename Mapping , typename GetWeight , typename UpdateOk &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classCycleRatioAPI.html">auto</a> <a class="el" href="classNegCycleFinderQ.html">NegCycleFinderQ</a>&lt; <a class="el" href="classCycleRatioAPI.html">DiGraph</a>, <a class="el" href="classCycleRatioAPI.html">Domain</a> &gt;::howard_succ </td>
+          <td class="memname">auto <a class="el" href="classNegCycleFinderQ.html">NegCycleFinderQ</a>&lt; DiGraph, Domain &gt;::howard_succ </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classCycleRatioAPI.html">Mapping</a> &amp;&#160;</td>
+          <td class="paramtype">Mapping &amp;&#160;</td>
           <td class="paramname"><em>dist</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classCycleRatioAPI.html">GetWeight</a>&#160;</td>
+          <td class="paramtype">GetWeight&#160;</td>
           <td class="paramname"><em>get_weight</em>, </td>
         </tr>
         <tr>
@@ -269,7 +257,7 @@ template&lt;<a class="el" href="classCycleRatioAPI.html">typename</a> <a class="
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td> -&gt; <a class="el" href="classCycleRatioAPI.html#a9bcebd889758c6f676866ad5a1ae5fe8">py::Generator</a>&lt;Cycle&gt; </td>
+          <td></td><td> -&gt; py::Generator&lt;Cycle&gt; </td>
         </tr>
       </table>
   </td>
@@ -302,7 +290,7 @@ template&lt;<a class="el" href="classCycleRatioAPI.html">typename</a> <a class="
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd><a class="el" href="classCycleRatioAPI.html#a9bcebd889758c6f676866ad5a1ae5fe8" title="Construct a new Cycle Ratio API object.">py::Generator&lt;Cycle&gt;</a> Each negative cycle found as a list of edges </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>py::Generator&lt;Cycle&gt; Each negative cycle found as a list of edges </dd></dl>
 
 </div>
 </div>

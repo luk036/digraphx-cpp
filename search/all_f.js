@@ -1,13 +1,12 @@
 var searchData=
 [
-  ['target_0',['Build and run the standalone target',['../index.html#autotoc_md4',1,'']]],
-  ['template_20to_20your_20needs_1',['Adjust the template to your needs',['../index.html#autotoc_md3',1,'']]],
-  ['test_20suite_2',['Build and run test suite',['../index.html#autotoc_md5',1,'']]],
-  ['the_20documentation_3',['Build the documentation',['../index.html#autotoc_md7',1,'']]],
-  ['the_20standalone_20target_4',['Build and run the standalone target',['../index.html#autotoc_md4',1,'']]],
-  ['the_20template_20to_20your_20needs_5',['Adjust the template to your needs',['../index.html#autotoc_md3',1,'']]],
-  ['threadpool_6',['threadpool',['../classThreadPool.html',1,'ThreadPool'],['../classThreadPool.html#ac291710e33dbbed96ee20711080d506d',1,'ThreadPool::ThreadPool()']]],
-  ['threadpool_2eh_7',['ThreadPool.h',['../ThreadPool_8h.html',1,'']]],
-  ['to_20your_20needs_8',['Adjust the template to your needs',['../index.html#autotoc_md3',1,'']]],
-  ['tools_9',['Additional tools',['../index.html#autotoc_md9',1,'']]]
+  ['readme_2emd_0',['README.md',['../README_8md.html',1,'']]],
+  ['related_20projects_20and_20alternatives_1',['Related projects and alternatives',['../index.html#autotoc_md11',1,'']]],
+  ['relax_5fpred_2',['relax_pred',['../namespacedigraph__detail.html#ac6898c6d6687ce255dfbe37cb5dfcf78',1,'digraph_detail']]],
+  ['relax_5fsucc_3',['relax_succ',['../namespacedigraph__detail.html#af680bd8dac0a3215262b6472a5acf6b2',1,'digraph_detail']]],
+  ['residualedge_4',['ResidualEdge',['../structResidualEdge.html',1,'']]],
+  ['run_5',['run',['../classMinCycleRatioSolver.html#a964c6a660aebb5b24b29c6e8cb0bb97d',1,'MinCycleRatioSolver::run()'],['../classMinParametricSolver.html#a42fde848b8a00471685e4b275da7b613',1,'MinParametricSolver::run()'],['../classMaxParametricSolver.html#af6bc440f7143e000eff6dc0d4975f0d9',1,'MaxParametricSolver::run()']]],
+  ['run_20clang_20format_6',['Run clang-format',['../index.html#autotoc_md6',1,'']]],
+  ['run_20test_20suite_7',['Build and run test suite',['../index.html#autotoc_md5',1,'']]],
+  ['run_20the_20standalone_20target_8',['Build and run the standalone target',['../index.html#autotoc_md4',1,'']]]
 ];

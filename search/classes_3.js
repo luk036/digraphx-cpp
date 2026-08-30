@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['residualedge_0',['ResidualEdge',['../structResidualEdge.html',1,'']]]
+  ['negcyclefinder_0',['NegCycleFinder',['../classNegCycleFinder.html',1,'']]],
+  ['negcyclefinderq_1',['NegCycleFinderQ',['../classNegCycleFinderQ.html',1,'']]]
 ];

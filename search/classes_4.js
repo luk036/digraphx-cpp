@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['threadpool_0',['ThreadPool',['../classThreadPool.html',1,'']]]
+  ['residualedge_0',['ResidualEdge',['../structResidualEdge.html',1,'']]]
 ];

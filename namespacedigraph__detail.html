@@ -28,7 +28,7 @@ MathJax.Hub.Config({
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">DiGraphX<span id="projectnumber">&#160;1.1.7</span>
+   <div id="projectname">DiGraphX<span id="projectnumber">&#160;1.1.8</span>
    </div>
   </td>
  </tr>
@@ -77,19 +77,56 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">digraph_detail Namespace Reference</div></div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdigraph__detail_1_1CallbackMinParametricAPI.html">CallbackMinParametricAPI</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Strategy adapter: present a (distance, zero_cancel) callback pair as a <a class="el" href="classMinParametricAPI.html">MinParametricAPI</a> (virtual interface).  <a href="classdigraph__detail_1_1CallbackMinParametricAPI.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdigraph__detail_1_1CallbackParametricAPI.html">CallbackParametricAPI</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Strategy adapter: present a (distance, zero_cancel) callback pair as a ParametricAPI (duck-typed interface).  <a href="classdigraph__detail_1_1CallbackParametricAPI.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdigraph__detail_1_1graph__traits.html">graph_traits</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type trait deriving Node / Edge / Cycle from any supported graph container.  <a href="structdigraph__detail_1_1graph__traits.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a209e8907ed5d19a3a40a63945f4e357f" id="r_a209e8907ed5d19a3a40a63945f4e357f"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">T</a> &gt; </td></tr>
-<tr class="memitem:a209e8907ed5d19a3a40a63945f4e357f"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classCycleRatioAPI.html">decltype</a>(<a class="el" href="classCycleRatioAPI.html">auto</a>)&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacedigraph__detail.html#a209e8907ed5d19a3a40a63945f4e357f">_get_key</a> (<a class="el" href="classCycleRatioAPI.html">const</a> <a class="el" href="classCycleRatioAPI.html">T</a> &amp;<a class="el" href="classCycleRatioAPI.html">entry</a>)</td></tr>
+<tr class="memitem:a209e8907ed5d19a3a40a63945f4e357f" id="r_a209e8907ed5d19a3a40a63945f4e357f"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a209e8907ed5d19a3a40a63945f4e357f"><td class="memTemplItemLeft" align="right" valign="top">decltype(auto)&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacedigraph__detail.html#a209e8907ed5d19a3a40a63945f4e357f">_get_key</a> (const T &amp;entry)</td></tr>
 <tr class="separator:a209e8907ed5d19a3a40a63945f4e357f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2bdc996e235cab0cd65a5216d29ca809" id="r_a2bdc996e235cab0cd65a5216d29ca809"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">T</a> , <a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">Container</a> &gt; </td></tr>
-<tr class="memitem:a2bdc996e235cab0cd65a5216d29ca809"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classCycleRatioAPI.html">decltype</a>(<a class="el" href="classCycleRatioAPI.html">auto</a>)&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacedigraph__detail.html#a2bdc996e235cab0cd65a5216d29ca809">_get_val</a> (<a class="el" href="classCycleRatioAPI.html">const</a> <a class="el" href="classCycleRatioAPI.html">T</a> &amp;<a class="el" href="classCycleRatioAPI.html">entry</a>, <a class="el" href="classCycleRatioAPI.html">const</a> <a class="el" href="classCycleRatioAPI.html">Container</a> &amp;<a class="el" href="classCycleRatioAPI.html">c</a>)</td></tr>
+<tr class="memitem:a2bdc996e235cab0cd65a5216d29ca809" id="r_a2bdc996e235cab0cd65a5216d29ca809"><td class="memTemplParams" colspan="2">template&lt;typename T , typename Container &gt; </td></tr>
+<tr class="memitem:a2bdc996e235cab0cd65a5216d29ca809"><td class="memTemplItemLeft" align="right" valign="top">decltype(auto)&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacedigraph__detail.html#a2bdc996e235cab0cd65a5216d29ca809">_get_val</a> (const T &amp;entry, const Container &amp;c)</td></tr>
 <tr class="separator:a2bdc996e235cab0cd65a5216d29ca809"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab4fca2fee4321906a88dea585323567" id="r_aab4fca2fee4321906a88dea585323567"><td class="memTemplParams" colspan="2">template&lt;typename DiGraph , typename PointTo &gt; </td></tr>
+<tr class="memitem:aab4fca2fee4321906a88dea585323567"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacedigraph__detail.html#aab4fca2fee4321906a88dea585323567">find_cycle</a> (const DiGraph &amp;digraph, const PointTo &amp;point_to) -&gt; py::Generator&lt; typename <a class="el" href="structdigraph__detail_1_1graph__traits.html">graph_traits</a>&lt; DiGraph &gt;::Node &gt;</td></tr>
+<tr class="memdesc:aab4fca2fee4321906a88dea585323567"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find all cycles in a predecessor/successor map (policy graph).  <br /></td></tr>
+<tr class="separator:aab4fca2fee4321906a88dea585323567"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac10f3d2ba849c6014a40a1d65b779c0f" id="r_ac10f3d2ba849c6014a40a1d65b779c0f"><td class="memTemplParams" colspan="2">template&lt;typename PointTo &gt; </td></tr>
+<tr class="memitem:ac10f3d2ba849c6014a40a1d65b779c0f"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacedigraph__detail.html#ac10f3d2ba849c6014a40a1d65b779c0f">cycle_list</a> (const typename PointTo::key_type &amp;handle, const PointTo &amp;point_to) -&gt; std::vector&lt; typename PointTo::mapped_type::second_type &gt;</td></tr>
+<tr class="memdesc:ac10f3d2ba849c6014a40a1d65b779c0f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reconstruct the cycle edges starting from a handle node.  <br /></td></tr>
+<tr class="separator:ac10f3d2ba849c6014a40a1d65b779c0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab74195babb092a2e16d7e5d59536853a" id="r_ab74195babb092a2e16d7e5d59536853a"><td class="memTemplParams" colspan="2">template&lt;typename Node , typename Mapping , typename GetWeight , typename PointTo &gt; </td></tr>
+<tr class="memitem:ab74195babb092a2e16d7e5d59536853a"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacedigraph__detail.html#ab74195babb092a2e16d7e5d59536853a">is_negative</a> (const Node &amp;handle, const Mapping &amp;dist, GetWeight &amp;&amp;get_weight, const PointTo &amp;point_to) -&gt; bool</td></tr>
+<tr class="memdesc:ab74195babb092a2e16d7e5d59536853a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check whether the cycle starting at <code>handle</code> is negative.  <br /></td></tr>
+<tr class="separator:ab74195babb092a2e16d7e5d59536853a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac6898c6d6687ce255dfbe37cb5dfcf78" id="r_ac6898c6d6687ce255dfbe37cb5dfcf78"><td class="memTemplParams" colspan="2">template&lt;typename DiGraph , typename Mapping , typename GetWeight , typename PointTo , typename UpdateOk &gt; </td></tr>
+<tr class="memitem:ac6898c6d6687ce255dfbe37cb5dfcf78"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacedigraph__detail.html#ac6898c6d6687ce255dfbe37cb5dfcf78">relax_pred</a> (const DiGraph &amp;digraph, Mapping &amp;dist, GetWeight &amp;&amp;get_weight, PointTo &amp;pred, UpdateOk &amp;&amp;update_ok) -&gt; bool</td></tr>
+<tr class="memdesc:ac6898c6d6687ce255dfbe37cb5dfcf78"><td class="mdescLeft">&#160;</td><td class="mdescRight">Predecessor relaxation (Bellman-Ford forward) with an update gate.  <br /></td></tr>
+<tr class="separator:ac6898c6d6687ce255dfbe37cb5dfcf78"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af680bd8dac0a3215262b6472a5acf6b2" id="r_af680bd8dac0a3215262b6472a5acf6b2"><td class="memTemplParams" colspan="2">template&lt;typename DiGraph , typename Mapping , typename GetWeight , typename PointTo , typename UpdateOk &gt; </td></tr>
+<tr class="memitem:af680bd8dac0a3215262b6472a5acf6b2"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacedigraph__detail.html#af680bd8dac0a3215262b6472a5acf6b2">relax_succ</a> (const DiGraph &amp;digraph, Mapping &amp;dist, GetWeight &amp;&amp;get_weight, PointTo &amp;succ, UpdateOk &amp;&amp;update_ok) -&gt; bool</td></tr>
+<tr class="memdesc:af680bd8dac0a3215262b6472a5acf6b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Successor relaxation (reverse) with an update gate.  <br /></td></tr>
+<tr class="separator:af680bd8dac0a3215262b6472a5acf6b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a95f3ea7e71b19fcc6bce5d7648127510" id="r_a95f3ea7e71b19fcc6bce5d7648127510"><td class="memTemplParams" colspan="2">template&lt;typename DiGraph , typename Mapping , typename GetWeight , typename PointTo , typename Relax , typename Check &gt; </td></tr>
+<tr class="memitem:a95f3ea7e71b19fcc6bce5d7648127510"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacedigraph__detail.html#a95f3ea7e71b19fcc6bce5d7648127510">howard_search</a> (const DiGraph &amp;digraph, Mapping &amp;dist, GetWeight get_weight, PointTo &amp;point_to, Relax relax, Check check) -&gt; py::Generator&lt; typename <a class="el" href="structdigraph__detail_1_1graph__traits.html">graph_traits</a>&lt; DiGraph &gt;::Cycle &gt;</td></tr>
+<tr class="memdesc:a95f3ea7e71b19fcc6bce5d7648127510"><td class="mdescLeft">&#160;</td><td class="mdescRight">Template Method: Howard's policy-iteration skeleton.  <br /></td></tr>
+<tr class="separator:a95f3ea7e71b19fcc6bce5d7648127510"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="a209e8907ed5d19a3a40a63945f4e357f" name="a209e8907ed5d19a3a40a63945f4e357f"></a>
@@ -98,12 +135,12 @@ Functions</h2></td></tr>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">T</a> &gt; </div>
+template&lt;typename T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classCycleRatioAPI.html">decltype</a>(<a class="el" href="classCycleRatioAPI.html">auto</a>) digraph_detail::_get_key </td>
+          <td class="memname">decltype(auto) digraph_detail::_get_key </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classCycleRatioAPI.html">const</a> <a class="el" href="classCycleRatioAPI.html">T</a> &amp;&#160;</td>
+          <td class="paramtype">const T &amp;&#160;</td>
           <td class="paramname"><em>entry</em></td><td>)</td>
           <td></td>
         </tr>
@@ -118,18 +155,18 @@ template&lt;<a class="el" href="classCycleRatioAPI.html">typename</a> <a class="
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">T</a> , <a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">Container</a> &gt; </div>
+template&lt;typename T , typename Container &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classCycleRatioAPI.html">decltype</a>(<a class="el" href="classCycleRatioAPI.html">auto</a>) digraph_detail::_get_val </td>
+          <td class="memname">decltype(auto) digraph_detail::_get_val </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classCycleRatioAPI.html">const</a> <a class="el" href="classCycleRatioAPI.html">T</a> &amp;&#160;</td>
+          <td class="paramtype">const T &amp;&#160;</td>
           <td class="paramname"><em>entry</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classCycleRatioAPI.html">const</a> <a class="el" href="classCycleRatioAPI.html">Container</a> &amp;&#160;</td>
+          <td class="paramtype">const Container &amp;&#160;</td>
           <td class="paramname"><em>c</em>&#160;</td>
         </tr>
         <tr>
@@ -139,6 +176,384 @@ template&lt;<a class="el" href="classCycleRatioAPI.html">typename</a> <a class="
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac10f3d2ba849c6014a40a1d65b779c0f" name="ac10f3d2ba849c6014a40a1d65b779c0f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac10f3d2ba849c6014a40a1d65b779c0f">&#9670;&#160;</a></span>cycle_list()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename PointTo &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto digraph_detail::cycle_list </td>
+          <td>(</td>
+          <td class="paramtype">const typename PointTo::key_type &amp;&#160;</td>
+          <td class="paramname"><em>handle</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const PointTo &amp;&#160;</td>
+          <td class="paramname"><em>point_to</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> -&gt; std::vector&lt;typename PointTo::mapped_type::second_type&gt; </td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Reconstruct the cycle edges starting from a handle node. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">PointTo</td><td>a map Node -&gt; (Node, Edge) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">handle</td><td>starting node (must be part of a cycle) </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">point_to</td><td>the policy map </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>std::vector&lt;Edge&gt; the cycle as a list of edges </dd></dl>
+
+</div>
+</div>
+<a id="aab4fca2fee4321906a88dea585323567" name="aab4fca2fee4321906a88dea585323567"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aab4fca2fee4321906a88dea585323567">&#9670;&#160;</a></span>find_cycle()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename DiGraph , typename PointTo &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto digraph_detail::find_cycle </td>
+          <td>(</td>
+          <td class="paramtype">const DiGraph &amp;&#160;</td>
+          <td class="paramname"><em>digraph</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const PointTo &amp;&#160;</td>
+          <td class="paramname"><em>point_to</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> -&gt; py::Generator&lt;typename <a class="el" href="structdigraph__detail_1_1graph__traits.html">graph_traits</a>&lt;DiGraph&gt;::Node&gt; </td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Find all cycles in a predecessor/successor map (policy graph). </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">DiGraph</td><td>graph container type </td></tr>
+    <tr><td class="paramname">PointTo</td><td>a map Node -&gt; (Node, Edge) (the policy) </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">digraph</td><td>the graph being searched </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">point_to</td><td>the policy map built by relaxation </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>py::Generator&lt;Node&gt; generator yielding the start node of each cycle </dd></dl>
+
+</div>
+</div>
+<a id="a95f3ea7e71b19fcc6bce5d7648127510" name="a95f3ea7e71b19fcc6bce5d7648127510"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a95f3ea7e71b19fcc6bce5d7648127510">&#9670;&#160;</a></span>howard_search()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename DiGraph , typename Mapping , typename GetWeight , typename PointTo , typename Relax , typename Check &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto digraph_detail::howard_search </td>
+          <td>(</td>
+          <td class="paramtype">const DiGraph &amp;&#160;</td>
+          <td class="paramname"><em>digraph</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Mapping &amp;&#160;</td>
+          <td class="paramname"><em>dist</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">GetWeight&#160;</td>
+          <td class="paramname"><em>get_weight</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">PointTo &amp;&#160;</td>
+          <td class="paramname"><em>point_to</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Relax&#160;</td>
+          <td class="paramname"><em>relax</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Check&#160;</td>
+          <td class="paramname"><em>check</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> -&gt; py::Generator&lt;typename <a class="el" href="structdigraph__detail_1_1graph__traits.html">graph_traits</a>&lt;DiGraph&gt;::Cycle&gt; </td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Template Method: Howard's policy-iteration skeleton. </p>
+<p>The algorithm structure is fixed here; the variable parts (the relaxation step and the cycle-verification hook) are injected as strategies.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">DiGraph</td><td>graph container type </td></tr>
+    <tr><td class="paramname">Mapping</td><td>distance mapping </td></tr>
+    <tr><td class="paramname">GetWeight</td><td>weight callable </td></tr>
+    <tr><td class="paramname">PointTo</td><td>policy map </td></tr>
+    <tr><td class="paramname">Relax</td><td>callable (dist, get_weight) -&gt; bool performing one pass </td></tr>
+    <tr><td class="paramname">Check</td><td>callable (vtx, dist, get_weight) -&gt; void verifying a cycle </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">digraph</td><td>the graph </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">dist</td><td>distance estimates </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">get_weight</td><td>weight function </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">point_to</td><td>policy map to populate </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">relax</td><td>the relaxation strategy </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">check</td><td>the verification hook </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>py::Generator&lt;Cycle&gt; generator yielding negative cycles </dd></dl>
+
+</div>
+</div>
+<a id="ab74195babb092a2e16d7e5d59536853a" name="ab74195babb092a2e16d7e5d59536853a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab74195babb092a2e16d7e5d59536853a">&#9670;&#160;</a></span>is_negative()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Node , typename Mapping , typename GetWeight , typename PointTo &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto digraph_detail::is_negative </td>
+          <td>(</td>
+          <td class="paramtype">const Node &amp;&#160;</td>
+          <td class="paramname"><em>handle</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Mapping &amp;&#160;</td>
+          <td class="paramname"><em>dist</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">GetWeight &amp;&amp;&#160;</td>
+          <td class="paramname"><em>get_weight</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const PointTo &amp;&#160;</td>
+          <td class="paramname"><em>point_to</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> -&gt; bool </td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Check whether the cycle starting at <code>handle</code> is negative. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Node</td><td>node type </td></tr>
+    <tr><td class="paramname">Mapping</td><td>distance mapping (node -&gt; distance) </td></tr>
+    <tr><td class="paramname">GetWeight</td><td>weight extraction callable </td></tr>
+    <tr><td class="paramname">PointTo</td><td>policy map </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">handle</td><td>starting node of the cycle </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">dist</td><td>current distance estimates </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">get_weight</td><td>weight function </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">point_to</td><td>the policy map </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if the cycle violates the triangle inequality (negative) </dd></dl>
+
+</div>
+</div>
+<a id="ac6898c6d6687ce255dfbe37cb5dfcf78" name="ac6898c6d6687ce255dfbe37cb5dfcf78"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac6898c6d6687ce255dfbe37cb5dfcf78">&#9670;&#160;</a></span>relax_pred()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename DiGraph , typename Mapping , typename GetWeight , typename PointTo , typename UpdateOk &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto digraph_detail::relax_pred </td>
+          <td>(</td>
+          <td class="paramtype">const DiGraph &amp;&#160;</td>
+          <td class="paramname"><em>digraph</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Mapping &amp;&#160;</td>
+          <td class="paramname"><em>dist</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">GetWeight &amp;&amp;&#160;</td>
+          <td class="paramname"><em>get_weight</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">PointTo &amp;&#160;</td>
+          <td class="paramname"><em>pred</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">UpdateOk &amp;&amp;&#160;</td>
+          <td class="paramname"><em>update_ok</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> -&gt; bool </td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Predecessor relaxation (Bellman-Ford forward) with an update gate. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">DiGraph</td><td>graph container type </td></tr>
+    <tr><td class="paramname">Mapping</td><td>distance mapping </td></tr>
+    <tr><td class="paramname">GetWeight</td><td>weight callable </td></tr>
+    <tr><td class="paramname">PointTo</td><td>policy map </td></tr>
+    <tr><td class="paramname">UpdateOk</td><td>constraint callable (old, new) -&gt; bool </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">digraph</td><td>the graph </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">dist</td><td>distance estimates </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">get_weight</td><td>weight function </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">pred</td><td>predecessor policy map </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">update_ok</td><td>gate on distance updates </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if any distance was updated </dd></dl>
+
+</div>
+</div>
+<a id="af680bd8dac0a3215262b6472a5acf6b2" name="af680bd8dac0a3215262b6472a5acf6b2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af680bd8dac0a3215262b6472a5acf6b2">&#9670;&#160;</a></span>relax_succ()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename DiGraph , typename Mapping , typename GetWeight , typename PointTo , typename UpdateOk &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto digraph_detail::relax_succ </td>
+          <td>(</td>
+          <td class="paramtype">const DiGraph &amp;&#160;</td>
+          <td class="paramname"><em>digraph</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Mapping &amp;&#160;</td>
+          <td class="paramname"><em>dist</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">GetWeight &amp;&amp;&#160;</td>
+          <td class="paramname"><em>get_weight</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">PointTo &amp;&#160;</td>
+          <td class="paramname"><em>succ</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">UpdateOk &amp;&amp;&#160;</td>
+          <td class="paramname"><em>update_ok</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> -&gt; bool </td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Successor relaxation (reverse) with an update gate. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">DiGraph</td><td>graph container type </td></tr>
+    <tr><td class="paramname">Mapping</td><td>distance mapping </td></tr>
+    <tr><td class="paramname">GetWeight</td><td>weight callable </td></tr>
+    <tr><td class="paramname">PointTo</td><td>policy map </td></tr>
+    <tr><td class="paramname">UpdateOk</td><td>constraint callable (old, new) -&gt; bool </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">digraph</td><td>the graph </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">dist</td><td>distance estimates </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">get_weight</td><td>weight function </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">succ</td><td>successor policy map </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">update_ok</td><td>gate on distance updates </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>true if any distance was updated </dd></dl>
 
 </div>
 </div>

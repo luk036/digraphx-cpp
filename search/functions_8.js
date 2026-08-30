@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['operator_3d_0',['operator=',['../classMinParametricAPI.html#af3f5adf3a88d24fb277b20dd7d363e38',1,'MinParametricAPI::operator=(const MinParametricAPI &amp;)=default'],['../classMinParametricAPI.html#a786eaa70568da1c8c95c4a9cb139b662',1,'MinParametricAPI::operator=(MinParametricAPI &amp;&amp;)=default']]]
+  ['log_5fwith_5fspdlog_0',['log_with_spdlog',['../namespacedigraphx.html#ab760004694a785605c64d92da1636126',1,'digraphx']]]
 ];

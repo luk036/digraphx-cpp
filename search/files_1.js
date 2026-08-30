@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['logger_2ehpp_0',['logger.hpp',['../logger_8hpp.html',1,'']]]
+  ['digraph_5fdetail_2ehpp_0',['digraph_detail.hpp',['../digraph__detail_8hpp.html',1,'']]]
 ];

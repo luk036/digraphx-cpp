@@ -28,7 +28,7 @@ MathJax.Hub.Config({
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">DiGraphX<span id="projectnumber">&#160;1.1.7</span>
+   <div id="projectname">DiGraphX<span id="projectnumber">&#160;1.1.8</span>
    </div>
   </td>
  </tr>
@@ -90,15 +90,15 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a64b2c2033e08d4184e2aba331a8a3684" id="r_a64b2c2033e08d4184e2aba331a8a3684"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMinCycleRatioSolver.html#a64b2c2033e08d4184e2aba331a8a3684">MinCycleRatioSolver</a> (<a class="el" href="classCycleRatioAPI.html">const</a> <a class="el" href="classCycleRatioAPI.html">DiGraph</a> &amp;digraph)</td></tr>
+<tr class="memitem:a64b2c2033e08d4184e2aba331a8a3684" id="r_a64b2c2033e08d4184e2aba331a8a3684"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMinCycleRatioSolver.html#a64b2c2033e08d4184e2aba331a8a3684">MinCycleRatioSolver</a> (const DiGraph &amp;digraph)</td></tr>
 <tr class="separator:a64b2c2033e08d4184e2aba331a8a3684"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a964c6a660aebb5b24b29c6e8cb0bb97d" id="r_a964c6a660aebb5b24b29c6e8cb0bb97d"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">Mapping</a> , <a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">Domain</a> &gt; </td></tr>
-<tr class="memitem:a964c6a660aebb5b24b29c6e8cb0bb97d"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classCycleRatioAPI.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classMinCycleRatioSolver.html#a964c6a660aebb5b24b29c6e8cb0bb97d">run</a> (<a class="el" href="classCycleRatioAPI.html">Ratio</a> &amp;<a class="el" href="classCycleRatioAPI.html">r0</a>, <a class="el" href="classCycleRatioAPI.html">Mapping</a> &amp;<a class="el" href="classCycleRatioAPI.html">dist</a>, <a class="el" href="classCycleRatioAPI.html">Domain</a> <a class="el" href="classCycleRatioAPI.html">dummy</a>) -&gt; Cycle</td></tr>
+<tr class="memitem:a964c6a660aebb5b24b29c6e8cb0bb97d" id="r_a964c6a660aebb5b24b29c6e8cb0bb97d"><td class="memTemplParams" colspan="2">template&lt;typename Mapping , typename Domain &gt; </td></tr>
+<tr class="memitem:a964c6a660aebb5b24b29c6e8cb0bb97d"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classMinCycleRatioSolver.html#a964c6a660aebb5b24b29c6e8cb0bb97d">run</a> (Ratio &amp;r0, Mapping &amp;dist, Domain dummy) -&gt; Cycle</td></tr>
 <tr class="memdesc:a964c6a660aebb5b24b29c6e8cb0bb97d"><td class="mdescLeft">&#160;</td><td class="mdescRight">run  <br /></td></tr>
 <tr class="separator:a964c6a660aebb5b24b29c6e8cb0bb97d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;<a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">DiGraph</a>, <a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">Ratio</a>&gt;<br />
+<div class="textblock"><div class="compoundTemplParams">template&lt;typename DiGraph, typename Ratio&gt;<br />
 class MinCycleRatioSolver&lt; DiGraph, Ratio &gt;</div><p>Minimum Cycle Ratio Solver. </p>
 <p>This class provides algorithms for solving the minimum cycle ratio (MCR) problem in directed graphs. The MCR problem seeks to find the cycle with the minimum ratio of total cost to total time, which is crucial for analyzing performance characteristics of discrete event systems.</p>
 <p>Problem definition:  </p><p class="formulaDsp">
@@ -139,15 +139,15 @@ class MinCycleRatioSolver&lt; DiGraph, Ratio &gt;</div><p>Minimum Cycle Ratio So
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">DiGraph</a> , <a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">Ratio</a> &gt; </div>
+template&lt;typename DiGraph , typename Ratio &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classMinCycleRatioSolver.html">MinCycleRatioSolver</a>&lt; <a class="el" href="classCycleRatioAPI.html">DiGraph</a>, <a class="el" href="classCycleRatioAPI.html">Ratio</a> &gt;<a class="el" href="classMinCycleRatioSolver.html">::MinCycleRatioSolver</a> </td>
+          <td class="memname"><a class="el" href="classMinCycleRatioSolver.html">MinCycleRatioSolver</a>&lt; DiGraph, Ratio &gt;<a class="el" href="classMinCycleRatioSolver.html">::MinCycleRatioSolver</a> </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classCycleRatioAPI.html">const</a> <a class="el" href="classCycleRatioAPI.html">DiGraph</a> &amp;&#160;</td>
+          <td class="paramtype">const DiGraph &amp;&#160;</td>
           <td class="paramname"><em>digraph</em></td><td>)</td>
           <td></td>
         </tr>
@@ -175,29 +175,29 @@ template&lt;<a class="el" href="classCycleRatioAPI.html">typename</a> <a class="
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">DiGraph</a> , <a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">Ratio</a> &gt; </div>
+template&lt;typename DiGraph , typename Ratio &gt; </div>
 <div class="memtemplate">
-template&lt;<a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">Mapping</a> , <a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">Domain</a> &gt; </div>
+template&lt;typename Mapping , typename Domain &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classCycleRatioAPI.html">auto</a> <a class="el" href="classMinCycleRatioSolver.html">MinCycleRatioSolver</a>&lt; <a class="el" href="classCycleRatioAPI.html">DiGraph</a>, <a class="el" href="classCycleRatioAPI.html">Ratio</a> &gt;::run </td>
+          <td class="memname">auto <a class="el" href="classMinCycleRatioSolver.html">MinCycleRatioSolver</a>&lt; DiGraph, Ratio &gt;::run </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classCycleRatioAPI.html">Ratio</a> &amp;&#160;</td>
+          <td class="paramtype">Ratio &amp;&#160;</td>
           <td class="paramname"><em>r0</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classCycleRatioAPI.html">Mapping</a> &amp;&#160;</td>
+          <td class="paramtype">Mapping &amp;&#160;</td>
           <td class="paramname"><em>dist</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classCycleRatioAPI.html">Domain</a>&#160;</td>
+          <td class="paramtype">Domain&#160;</td>
           <td class="paramname"><em>dummy</em>&#160;</td>
         </tr>
         <tr>

@@ -1,18 +1,26 @@
 <map id="digraphx/parametric.hpp" name="digraphx/parametric.hpp">
-<area shape="rect" id="Node000001" title="Maximum parametric network problem solver." alt="" coords="72,5,255,31"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,159,68,185"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="156,32,57,151,53,147,152,29"/>
-<area shape="rect" id="Node000003" href="$neg__cycle_8hpp.html" title="Negative cycle detection for weighted directed graphs." alt="" coords="233,79,347,104"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="185,28,259,69,256,74,182,33"/>
-<area shape="poly" id="edge8_Node000003_Node000002" title=" " alt="" coords="244,107,168,127,82,155,76,157,74,152,80,149,166,122,243,101"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="93,152,231,192"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="273,106,206,147,203,142,270,102"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="255,159,325,185"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="293,104,293,145,287,145,287,104"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="349,159,474,185"/>
-<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="309,102,384,150,381,154,306,106"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="499,159,591,185"/>
-<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="329,102,487,149,497,153,496,158,485,155,328,107"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="615,159,675,185"/>
-<area shape="poly" id="edge7_Node000003_Node000008" title=" " alt="" coords="348,97,467,116,536,131,604,149,610,151,608,157,603,155,535,136,466,121,347,102"/>
+<area shape="rect" id="Node000001" title="Maximum parametric network problem solver." alt="" coords="28,5,211,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,233,68,258"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="118,32,48,220,43,218,113,30"/>
+<area shape="rect" id="Node000003" href="$neg__cycle_8hpp.html" title="Negative cycle detection for weighted directed graphs." alt="" coords="210,79,325,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="144,28,232,70,230,75,142,33"/>
+<area shape="poly" id="edge8_Node000003_Node000002" title=" " alt="" coords="251,106,67,227,64,223,249,102"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="93,225,231,265"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="262,106,185,216,181,213,257,103"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="255,233,325,258"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="261,105,243,138,238,157,241,177,253,200,269,221,265,224,248,203,235,178,233,157,238,136,256,103"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="349,233,474,258"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="326,100,370,118,390,132,407,150,415,167,419,185,419,219,413,219,414,186,410,169,402,154,387,136,367,123,324,105"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="499,233,591,258"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="310,102,368,121,430,150,482,185,524,221,521,225,479,189,427,154,366,126,309,107"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="615,233,675,258"/>
+<area shape="poly" id="edge7_Node000003_Node000008" title=" " alt="" coords="316,102,388,122,468,150,549,187,615,223,613,228,546,192,466,154,387,127,314,107"/>
+<area shape="rect" id="Node000009" href="$digraph__detail_8hpp.html" title="Internal implementation helpers shared by the digraphx algorithms." alt="" coords="251,152,393,177"/>
+<area shape="poly" id="edge9_Node000003_Node000009" title=" " alt="" coords="278,103,307,140,303,143,274,106"/>
+<area shape="poly" id="edge15_Node000009_Node000002" title=" " alt="" coords="265,180,178,200,81,228,75,230,73,225,80,223,177,195,264,175"/>
+<area shape="poly" id="edge10_Node000009_Node000004" title=" " alt="" coords="300,180,214,221,212,217,298,175"/>
+<area shape="poly" id="edge12_Node000009_Node000005" title=" " alt="" coords="320,179,302,221,298,219,315,176"/>
+<area shape="poly" id="edge11_Node000009_Node000006" title=" " alt="" coords="337,176,390,222,386,226,333,180"/>
+<area shape="poly" id="edge13_Node000009_Node000007" title=" " alt="" coords="355,175,500,226,499,231,353,180"/>
+<area shape="poly" id="edge14_Node000009_Node000008" title=" " alt="" coords="394,174,495,193,604,223,610,225,608,230,603,228,493,199,393,179"/>
 </map>

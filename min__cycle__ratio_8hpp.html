@@ -28,7 +28,7 @@ MathJax.Hub.Config({
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">DiGraphX<span id="projectnumber">&#160;1.1.7</span>
+   <div id="projectname">DiGraphX<span id="projectnumber">&#160;1.1.8</span>
    </div>
   </td>
  </tr>
@@ -94,7 +94,7 @@ $(function() {
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for min_cycle_ratio.hpp:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="min__cycle__ratio_8hpp__incl.svg" width="680" height="286"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="min__cycle__ratio_8hpp__incl.svg" width="730" height="359"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div>
 <p><a href="min__cycle__ratio_8hpp_source.html">Go to the source code of this file.</a></p>
@@ -109,8 +109,8 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:af054f051928f7b72f3975ee33c743a0f" id="r_af054f051928f7b72f3975ee33c743a0f"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">DiGraph</a> , <a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">Ratio</a> , <a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">Fn1</a> , <a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">Fn2</a> , <a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">Mapping</a> , <a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">Domain</a> &gt; </td></tr>
-<tr class="memitem:af054f051928f7b72f3975ee33c743a0f"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classCycleRatioAPI.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="min__cycle__ratio_8hpp.html#af054f051928f7b72f3975ee33c743a0f">min_cycle_ratio</a> (<a class="el" href="classCycleRatioAPI.html">const</a> <a class="el" href="classCycleRatioAPI.html">DiGraph</a> &amp;digraph, <a class="el" href="classCycleRatioAPI.html">Ratio</a> &amp;<a class="el" href="classCycleRatioAPI.html">r0</a>, <a class="el" href="classCycleRatioAPI.html">Fn1</a> <a class="el" href="classCycleRatioAPI.html">get_cost</a>, <a class="el" href="classCycleRatioAPI.html">Fn2</a> <a class="el" href="classCycleRatioAPI.html">get_time</a>, <a class="el" href="classCycleRatioAPI.html">Mapping</a> &amp;<a class="el" href="classCycleRatioAPI.html">dist</a>, <a class="el" href="classCycleRatioAPI.html">Domain</a> <a class="el" href="classCycleRatioAPI.html">dummy</a>)</td></tr>
+<tr class="memitem:af054f051928f7b72f3975ee33c743a0f" id="r_af054f051928f7b72f3975ee33c743a0f"><td class="memTemplParams" colspan="2">template&lt;typename DiGraph , typename Ratio , typename Fn1 , typename Fn2 , typename Mapping , typename Domain &gt; </td></tr>
+<tr class="memitem:af054f051928f7b72f3975ee33c743a0f"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="min__cycle__ratio_8hpp.html#af054f051928f7b72f3975ee33c743a0f">min_cycle_ratio</a> (const DiGraph &amp;digraph, Ratio &amp;r0, Fn1 get_cost, Fn2 get_time, Mapping &amp;dist, Domain dummy)</td></tr>
 <tr class="memdesc:af054f051928f7b72f3975ee33c743a0f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Free function for minimum cost-to-time cycle ratio problem.  <br /></td></tr>
 <tr class="separator:af054f051928f7b72f3975ee33c743a0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -147,7 +147,7 @@ Functions</h2></td></tr>
 *    For cycle a-&gt;b-&gt;d-&gt;c-&gt;a with costs [2, 3, 4, 1] and times [1, 1, 1, 1]:
 *    ratio = (2 + 3 + 4 + 1) / (1 + 1 + 1 + 1) = 10 / 4 = 2.5
 * </pre><p>Algorithm approach:</p><ul>
-<li>Transforms to parametric problem: max r <a class="el" href="classCycleRatioAPI.html#a9bcebd889758c6f676866ad5a1ae5fe8" title="Construct a new Cycle Ratio API object.">s.t</a>. cost(e) - r * time(e) &gt;= 0</li>
+<li>Transforms to parametric problem: max r s.t. cost(e) - r * time(e) &gt;= 0</li>
 <li>Uses Howard's method for negative cycle detection</li>
 <li>Iteratively adjusts parameter r until convergence</li>
 </ul>
@@ -170,42 +170,42 @@ Functions</h2></td></tr>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">DiGraph</a> , <a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">Ratio</a> , <a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">Fn1</a> , <a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">Fn2</a> , <a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">Mapping</a> , <a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">Domain</a> &gt; </div>
+template&lt;typename DiGraph , typename Ratio , typename Fn1 , typename Fn2 , typename Mapping , typename Domain &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classCycleRatioAPI.html">auto</a> min_cycle_ratio </td>
+          <td class="memname">auto min_cycle_ratio </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classCycleRatioAPI.html">const</a> <a class="el" href="classCycleRatioAPI.html">DiGraph</a> &amp;&#160;</td>
+          <td class="paramtype">const DiGraph &amp;&#160;</td>
           <td class="paramname"><em>digraph</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classCycleRatioAPI.html">Ratio</a> &amp;&#160;</td>
+          <td class="paramtype">Ratio &amp;&#160;</td>
           <td class="paramname"><em>r0</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classCycleRatioAPI.html">Fn1</a>&#160;</td>
+          <td class="paramtype">Fn1&#160;</td>
           <td class="paramname"><em>get_cost</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classCycleRatioAPI.html">Fn2</a>&#160;</td>
+          <td class="paramtype">Fn2&#160;</td>
           <td class="paramname"><em>get_time</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classCycleRatioAPI.html">Mapping</a> &amp;&#160;</td>
+          <td class="paramtype">Mapping &amp;&#160;</td>
           <td class="paramname"><em>dist</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classCycleRatioAPI.html">Domain</a>&#160;</td>
+          <td class="paramtype">Domain&#160;</td>
           <td class="paramname"><em>dummy</em>&#160;</td>
         </tr>
         <tr>

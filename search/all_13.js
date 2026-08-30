@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['zero_5fcancel_0',['zero_cancel',['../classCycleRatioAPI.html#af01c63396ca32bc7b3b4c4d96c7532de',1,'CycleRatioAPI::zero_cancel()'],['../classMinParametricAPI.html#a150cb861b7e3cc3556a0a98b66e66126',1,'MinParametricAPI::zero_cancel()']]]
+  ['weight_0',['weight',['../structMCFEdge.html#ad7883bc8ffd97c1b406577efef0fa959',1,'MCFEdge']]]
 ];

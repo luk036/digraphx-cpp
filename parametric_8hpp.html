@@ -28,7 +28,7 @@ MathJax.Hub.Config({
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">DiGraphX<span id="projectnumber">&#160;1.1.7</span>
+   <div id="projectname">DiGraphX<span id="projectnumber">&#160;1.1.8</span>
    </div>
   </td>
  </tr>
@@ -94,7 +94,7 @@ $(function() {
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for parametric.hpp:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="parametric_8hpp__incl.svg" width="680" height="198"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" frameborder="0" src="parametric_8hpp__incl.svg" width="680" height="271"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
@@ -111,8 +111,8 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a8305920358587e4ba77762e194460c9b" id="r_a8305920358587e4ba77762e194460c9b"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">DiGraph</a> , <a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">T</a> , <a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">Fn1</a> , <a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">Fn2</a> , <a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">Mapping</a> , <a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">D</a> &gt; </td></tr>
-<tr class="memitem:a8305920358587e4ba77762e194460c9b"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classCycleRatioAPI.html">auto</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="parametric_8hpp.html#a8305920358587e4ba77762e194460c9b">max_parametric</a> (<a class="el" href="classCycleRatioAPI.html">const</a> <a class="el" href="classCycleRatioAPI.html">DiGraph</a> &amp;digraph, <a class="el" href="classCycleRatioAPI.html">T</a> &amp;<a class="el" href="classCycleRatioAPI.html">r_opt</a>, <a class="el" href="classCycleRatioAPI.html">Fn1</a> distance, <a class="el" href="classCycleRatioAPI.html">Fn2</a> zero_cancel, <a class="el" href="classCycleRatioAPI.html">Mapping</a> &amp;<a class="el" href="classCycleRatioAPI.html">dist</a>, <a class="el" href="classCycleRatioAPI.html">D</a> <a class="el" href="classCycleRatioAPI.html">domain</a>)</td></tr>
+<tr class="memitem:a8305920358587e4ba77762e194460c9b" id="r_a8305920358587e4ba77762e194460c9b"><td class="memTemplParams" colspan="2">template&lt;typename DiGraph , typename T , typename Fn1 , typename Fn2 , typename Mapping , typename D &gt; </td></tr>
+<tr class="memitem:a8305920358587e4ba77762e194460c9b"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="parametric_8hpp.html#a8305920358587e4ba77762e194460c9b">max_parametric</a> (const DiGraph &amp;digraph, T &amp;r_opt, Fn1 distance, Fn2 zero_cancel, Mapping &amp;dist, D domain)</td></tr>
 <tr class="memdesc:a8305920358587e4ba77762e194460c9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Free function for solving maximum parametric network problems.  <br /></td></tr>
 <tr class="separator:a8305920358587e4ba77762e194460c9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -132,15 +132,14 @@ Functions</h2></td></tr>
 <li>Scheduling and timing analysis</li>
 <li>Network flow optimization with parameter-dependent costs</li>
 </ul>
-<p>Example parametric network: </p><div class="fragment"><div class="line">   <a class="code hl_class" href="classCycleRatioAPI.html">a</a> --<a class="code hl_class" href="classCycleRatioAPI.html">c</a>(5,<a class="code hl_class" href="classCycleRatioAPI.html">r</a>)--&gt; <a class="code hl_class" href="classCycleRatioAPI.html">b</a></div>
+<p>Example parametric network: </p><div class="fragment"><div class="line">   a --c(5,r)--&gt; b</div>
 <div class="line">   |             |</div>
-<div class="line"><a class="code hl_class" href="classCycleRatioAPI.html">c</a>(2,<a class="code hl_class" href="classCycleRatioAPI.html">r</a>)       <a class="code hl_class" href="classCycleRatioAPI.html">c</a>(3,<a class="code hl_class" href="classCycleRatioAPI.html">r</a>)</div>
+<div class="line">c(2,r)       c(3,r)</div>
 <div class="line">   |             |</div>
-<div class="line">   <a class="code hl_class" href="classCycleRatioAPI.html">v</a>             <a class="code hl_class" href="classCycleRatioAPI.html">v</a></div>
-<div class="line">   <a class="code hl_class" href="classCycleRatioAPI.html">d</a> --<a class="code hl_class" href="classCycleRatioAPI.html">c</a>(4,<a class="code hl_class" href="classCycleRatioAPI.html">r</a>)--&gt; <a class="code hl_class" href="classCycleRatioAPI.html">e</a></div>
+<div class="line">   v             v</div>
+<div class="line">   d --c(4,r)--&gt; e</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_class" href="classCycleRatioAPI.html">Where</a> <a class="code hl_class" href="classCycleRatioAPI.html">c</a>(<a class="code hl_class" href="classCycleRatioAPI.html">i</a>,<a class="code hl_class" href="classCycleRatioAPI.html">r</a>) <a class="code hl_class" href="classCycleRatioAPI.html">represents</a> cost <a class="code hl_class" href="classCycleRatioAPI.html">depending</a> <a class="code hl_class" href="classCycleRatioAPI.html">on</a> <a class="code hl_class" href="classCycleRatioAPI.html">parameter</a> <a class="code hl_class" href="classCycleRatioAPI.html">r</a></div>
-<div class="ttc" id="aclassCycleRatioAPI_html"><div class="ttname"><a href="classCycleRatioAPI.html">CycleRatioAPI</a></div><div class="ttdef"><b>Definition</b> min_cycle_ratio.hpp:80</div></div>
+<div class="line">Where c(i,r) represents cost depending on parameter r</div>
 </div><!-- fragment --><p>Algorithm approach:</p><ol type="1">
 <li>Start with initial parameter value r₀</li>
 <li>Use negative cycle detection to find infeasibility</li>
@@ -166,42 +165,42 @@ Functions</h2></td></tr>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;<a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">DiGraph</a> , <a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">T</a> , <a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">Fn1</a> , <a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">Fn2</a> , <a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">Mapping</a> , <a class="el" href="classCycleRatioAPI.html">typename</a> <a class="el" href="classCycleRatioAPI.html">D</a> &gt; </div>
+template&lt;typename DiGraph , typename T , typename Fn1 , typename Fn2 , typename Mapping , typename D &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classCycleRatioAPI.html">auto</a> max_parametric </td>
+          <td class="memname">auto max_parametric </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classCycleRatioAPI.html">const</a> <a class="el" href="classCycleRatioAPI.html">DiGraph</a> &amp;&#160;</td>
+          <td class="paramtype">const DiGraph &amp;&#160;</td>
           <td class="paramname"><em>digraph</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classCycleRatioAPI.html">T</a> &amp;&#160;</td>
+          <td class="paramtype">T &amp;&#160;</td>
           <td class="paramname"><em>r_opt</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classCycleRatioAPI.html">Fn1</a>&#160;</td>
+          <td class="paramtype">Fn1&#160;</td>
           <td class="paramname"><em>distance</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classCycleRatioAPI.html">Fn2</a>&#160;</td>
+          <td class="paramtype">Fn2&#160;</td>
           <td class="paramname"><em>zero_cancel</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classCycleRatioAPI.html">Mapping</a> &amp;&#160;</td>
+          <td class="paramtype">Mapping &amp;&#160;</td>
           <td class="paramname"><em>dist</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classCycleRatioAPI.html">D</a>&#160;</td>
+          <td class="paramtype">D&#160;</td>
           <td class="paramname"><em>domain</em>&#160;</td>
         </tr>
         <tr>
