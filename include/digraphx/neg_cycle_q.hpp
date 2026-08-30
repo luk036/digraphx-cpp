@@ -25,37 +25,7 @@
 #include <utility>
 #include <vector>
 
-#ifdef _MSC_VER
-#    pragma warning(push)
-#    pragma warning(disable : 4702)
-#endif
-
-namespace digraph_detail {
-
-    // Get the key from an iteration element:
-    // - For pair-like (unordered_map, list<pair>): .first
-    // - For direct (SimpleDiGraphS nodes): the element itself
-    template <typename T> decltype(auto) _get_key(const T& entry) {
-        if constexpr (requires { entry.first; }) {
-            return entry.first;
-        } else {
-            return entry;
-        }
-    }
-
-    // Get the value from an iteration element:
-    // - For pair-like: .second
-    // - For direct: .at(key) on the container
-    template <typename T, typename Container>
-    decltype(auto) _get_val(const T& entry, const Container& c) {
-        if constexpr (requires { entry.second; }) {
-            return entry.second;
-        } else {
-            return c.at(entry);
-        }
-    }
-
-}  // namespace digraph_detail
+#include "digraph_detail.hpp"
 
 using digraph_detail::_get_key;
 using digraph_detail::_get_val;
@@ -67,129 +37,23 @@ using digraph_detail::_get_val;
  * of Howard's algorithm, providing flexibility in how cycles are detected and
  * how distance updates are constrained, via an update_ok callback.
  *
- * Algorithm variants:
- *
- * 1. Predecessor-based (howard_pred):
- *    - Traditional Bellman-Ford relaxation
- *    - Updates dist[v] based on dist[u] + weight(u,v)
- *
- * 2. Successor-based (howard_succ):
- *    - Reverse relaxation logic
- *    - Updates dist[u] based on dist[v] - weight(u,v)
+ * The algorithm skeleton is shared with NegCycleFinder (see
+ * digraph_detail::howard_search); the constrained relaxation and the
+ * verification hook are supplied as strategies here.
  *
  * @tparam DiGraph Type of the directed graph representation
  * @tparam Domain Numeric type for distance calculations
  */
 template <typename DiGraph, typename Domain>  //
 class NegCycleFinderQ {
-    using ItemsT = decltype(std::declval<const DiGraph&>());
-    using Elem = decltype(*std::declval<ItemsT>().begin());
-    using Node
-        = std::remove_cv_t<std::remove_reference_t<decltype(_get_key(std::declval<Elem>()))>>;
-    using NbrFunc = decltype(_get_val(std::declval<Elem>(), std::declval<const DiGraph&>()));
-    using Nbrs = std::remove_cv_t<std::remove_reference_t<NbrFunc>>;
-    using NbrItemsT = decltype(std::declval<const Nbrs&>());
-    using NbrElem = decltype(*std::declval<NbrItemsT>().begin());
-    using Edge = std::remove_cv_t<std::remove_reference_t<decltype(_get_val(
-        std::declval<NbrElem>(), std::declval<const Nbrs&>()))>>;
-    using Cycle = std::vector<Edge>;
+    using Traits = digraph_detail::graph_traits<DiGraph>;
+    using Node = typename Traits::Node;
+    using Edge = typename Traits::Edge;
+    using Cycle = typename Traits::Cycle;
 
     absl::flat_hash_map<Node, std::pair<Node, Edge>> _pred{};
     absl::flat_hash_map<Node, std::pair<Node, Edge>> _succ{};
     const DiGraph& _digraph;
-
-    auto _find_cycle(const absl::flat_hash_map<Node, std::pair<Node, Edge>>& point_to)
-        -> py::Generator<Node> {
-        auto visited = absl::flat_hash_map<Node, Node>{};
-        if constexpr (requires { this->_digraph.size(); }) visited.reserve(this->_digraph.size());
-        for (const auto& entry : this->_digraph) {
-            const auto& vtx = _get_key(entry);
-            if (visited.contains(vtx)) continue;
-            auto utx = vtx;
-            visited[utx] = vtx;
-            while (point_to.contains(utx)) {
-                utx = point_to.at(utx).first;
-                auto it = visited.find(utx);
-                if (it != visited.end()) {
-                    if (it->second == vtx) co_yield utx;
-                    break;
-                }
-                visited[utx] = vtx;
-            }
-        }
-        co_return;
-    }
-
-    template <typename Mapping, typename GetWeight, typename UpdateOk>
-    auto _relax_pred(Mapping& dist, GetWeight&& get_weight, UpdateOk&& update_ok) -> bool {
-        auto changed = false;
-        for (const auto& entry : this->_digraph) {
-            const auto& utx = _get_key(entry);
-            const auto& nbrs = _get_val(entry, this->_digraph);
-            for (const auto& nbr_entry : nbrs) {
-                const auto& vtx = _get_key(nbr_entry);
-                const auto& edge = _get_val(nbr_entry, nbrs);
-                auto distance = dist[utx] + std::forward<GetWeight>(get_weight)(edge);
-                if (dist[vtx] > distance
-                    && std::forward<UpdateOk>(update_ok)(dist[vtx], distance)) {
-                    dist[vtx] = distance;
-                    this->_pred.insert_or_assign(vtx, std::pair(utx, edge));
-                    changed = true;
-                }
-            }
-        }
-        return changed;
-    }
-
-    template <typename Mapping, typename GetWeight, typename UpdateOk>
-    auto _relax_succ(Mapping& dist, GetWeight&& get_weight, UpdateOk&& update_ok) -> bool {
-        auto changed = false;
-        for (const auto& entry : this->_digraph) {
-            const auto& utx = _get_key(entry);
-            const auto& nbrs = _get_val(entry, this->_digraph);
-            for (const auto& nbr_entry : nbrs) {
-                const auto& vtx = _get_key(nbr_entry);
-                const auto& edge = _get_val(nbr_entry, nbrs);
-                auto distance = dist[vtx] - std::forward<GetWeight>(get_weight)(edge);
-                if (dist[utx] < distance
-                    && std::forward<UpdateOk>(update_ok)(dist[utx], distance)) {
-                    dist[utx] = distance;
-                    this->_succ.insert_or_assign(utx, std::pair(vtx, edge));
-                    changed = true;
-                }
-            }
-        }
-        return changed;
-    }
-
-    auto _cycle_list(const Node& handle,
-                     const absl::flat_hash_map<Node, std::pair<Node, Edge>>& point_to) const
-        -> Cycle {
-        auto vtx = handle;
-        auto cycle = Cycle{};
-        cycle.reserve(point_to.size());
-        while (true) {
-            const auto& [utx, edge] = point_to.at(vtx);
-            cycle.emplace_back(edge);
-            vtx = utx;
-            if (vtx == handle) break;
-        }
-        return cycle;
-    }
-
-    template <typename Mapping, typename GetWeight>
-    auto _is_negative(const Node& handle, const Mapping& dist, GetWeight&& get_weight) const
-        -> bool {
-        auto vtx = handle;
-        while (true) {
-            const auto& [utx, edge] = this->_pred.at(vtx);
-            if (dist.at(vtx) > dist.at(utx) + std::forward<GetWeight>(get_weight)(edge))
-                return true;
-            vtx = utx;
-            if (vtx == handle) break;
-        }
-        return false;
-    }
 
   public:
     /**
@@ -218,18 +82,19 @@ class NegCycleFinderQ {
     template <typename Mapping, typename GetWeight, typename UpdateOk>
     auto howard_pred(Mapping& dist, GetWeight get_weight, UpdateOk update_ok)
         -> py::Generator<Cycle> {
-        this->_pred.clear();
-        if constexpr (requires { this->_digraph.size(); })
-            this->_pred.reserve(this->_digraph.size());
-        auto found = false;
-        while (!found && this->_relax_pred(dist, get_weight, update_ok)) {
-            for (auto vtx : this->_find_cycle(this->_pred)) {
-                assert(this->_is_negative(vtx, dist, get_weight));
-                co_yield this->_cycle_list(vtx, this->_pred);
-                found = true;
-            }
-        }
-        co_return;
+        // Strategy: constrained predecessor relaxation
+        auto relax = [this, update_ok](Mapping& d, auto& gw) {
+            return digraph_detail::relax_pred(this->_digraph, d, gw, this->_pred, update_ok);
+        };
+        // Hook: verify candidate cycles are actually negative
+        auto check = [this](const auto& vtx, const auto& d, auto& gw) {
+            assert(digraph_detail::is_negative(vtx, d, gw, this->_pred));
+            (void)vtx;
+            (void)d;
+            (void)gw;
+        };
+        return digraph_detail::howard_search(this->_digraph, dist, std::move(get_weight),
+                                             this->_pred, std::move(relax), std::move(check));
     }
 
     /**
@@ -251,20 +116,13 @@ class NegCycleFinderQ {
     template <typename Mapping, typename GetWeight, typename UpdateOk>
     auto howard_succ(Mapping& dist, GetWeight get_weight, UpdateOk update_ok)
         -> py::Generator<Cycle> {
-        this->_succ.clear();
-        if constexpr (requires { this->_digraph.size(); })
-            this->_succ.reserve(this->_digraph.size());
-        auto found = false;
-        while (!found && this->_relax_succ(dist, get_weight, update_ok)) {
-            for (auto vtx : this->_find_cycle(this->_succ)) {
-                co_yield this->_cycle_list(vtx, this->_succ);
-                found = true;
-            }
-        }
-        co_return;
+        // Strategy: constrained successor relaxation
+        auto relax = [this, update_ok](Mapping& d, auto& gw) {
+            return digraph_detail::relax_succ(this->_digraph, d, gw, this->_succ, update_ok);
+        };
+        // Hook: successor variant performs no negativity assertion
+        auto no_check = [](const auto&, const auto&, auto&) {};
+        return digraph_detail::howard_search(this->_digraph, dist, std::move(get_weight),
+                                             this->_succ, std::move(relax), std::move(no_check));
     }
 };
-
-#ifdef _MSC_VER
-#    pragma warning(pop)
-#endif

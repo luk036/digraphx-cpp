@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.14...3.22)
 
 project(
   DiGraphX
-  VERSION 1.1.7
+  VERSION 1.1.8
   LANGUAGES CXX
 )
 
@@ -27,10 +27,10 @@ function(target_enable_warnings TARGET)
   endif()
 endfunction()
 
-# Abseil headers emit warnings that -Werror escalates to errors (e.g. MSVC C4100 from
-# prefetch.h, GCC -Woverflow from hashtable_control_bytes.h). Suppress on targets that include
-# abseil headers. GCC coroutine frames also mis-link at -O2 (pre-existing test issue), so the
-# tests build at -O0 to match the original CI behavior.
+# Abseil headers emit warnings that -Werror escalates to errors (e.g. MSVC C4100 from prefetch.h,
+# GCC -Woverflow from hashtable_control_bytes.h). Suppress on targets that include abseil headers.
+# GCC coroutine frames also mis-link at -O2 (pre-existing test issue), so the tests build at -O0 to
+# match the original CI behavior.
 function(target_enable_abseil_suppressions TARGET)
   if(MSVC)
     target_compile_options(${TARGET} PRIVATE /wd4100 /wd4324)
@@ -48,6 +48,7 @@ endfunction()
 option(DIGRAPHX_BUILD_TESTS "Build tests" ON)
 option(DIGRAPHX_BUILD_STANDALONE "Build standalone executable" ON)
 option(DIGRAPHX_BUILD_DOCS "Build Doxygen documentation" OFF)
+option(DIGRAPHX_BUILD_BENCHMARKS "Build benchmarks" OFF)
 option(DIGRAPHX_ENABLE_CLANG_TIDY "Enable clang-tidy analysis" OFF)
 option(DIGRAPHX_ENABLE_COVERAGE "Enable coverage reporting" OFF)
 
@@ -55,17 +56,16 @@ option(DIGRAPHX_ENABLE_COVERAGE "Enable coverage reporting" OFF)
 # Dependencies
 # ---------------------------------------------------------------------------
 
-# Download CPM.cmake for reproducible dependency management
-# see https://github.com/cpm-cmake/CPM.cmake for more info
+# Download CPM.cmake for reproducible dependency management see
+# https://github.com/cpm-cmake/CPM.cmake for more info
 set(CPM_DOWNLOAD_VERSION 0.38.5)
 set(CPM_HASH_SUM "192aa0ccdc57dfe75bd9e4b176bf7fb5692fd2b3e3f7b09c74856fc39572b31c")
 set(CPM_DOWNLOAD_LOCATION "${CMAKE_BINARY_DIR}/cmake/CPM_${CPM_DOWNLOAD_VERSION}.cmake")
 if(NOT (EXISTS ${CPM_DOWNLOAD_LOCATION}))
   message(STATUS "Downloading CPM.cmake to ${CPM_DOWNLOAD_LOCATION}")
-  file(
-    DOWNLOAD https://github.com/cpm-cmake/CPM.cmake/releases/download/v${CPM_DOWNLOAD_VERSION}/CPM.cmake
-             ${CPM_DOWNLOAD_LOCATION}
-    EXPECTED_HASH SHA256=${CPM_HASH_SUM}
+  file(DOWNLOAD
+       https://github.com/cpm-cmake/CPM.cmake/releases/download/v${CPM_DOWNLOAD_VERSION}/CPM.cmake
+       ${CPM_DOWNLOAD_LOCATION} EXPECTED_HASH SHA256=${CPM_HASH_SUM}
   )
 endif()
 include(${CPM_DOWNLOAD_LOCATION})
@@ -76,12 +76,20 @@ CPMAddPackage("gh:TheLartians/PackageProject.cmake@1.8.0")
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
-# fmt is a transitive dependency of mywheel/py2cpp; prefer a system-installed fmt when available.
-find_package(fmt CONFIG QUIET)
-if(fmt_FOUND)
-  message(STATUS "Found system fmt: ${fmt_DIR}")
-  set(CPM_fmt_ADDED YES)
-else()
+# fmt is a transitive dependency of mywheel/py2cpp; prefer a system-installed fmt when available. On
+# MSVC, skip prebuilt system packages (e.g. conda): they are Release-only shared libraries whose
+# std::string ABI (_ITERATOR_DEBUG_LEVEL=0) mismatches Debug builds (_ITERATOR_DEBUG_LEVEL=2),
+# corrupting std::strings returned by fmt::format. Build fmt from source on MSVC so the ABI always
+# matches (same as CI's windows-latest runner).
+if(NOT MSVC)
+  find_package(fmt CONFIG QUIET)
+  if(fmt_FOUND)
+    message(STATUS "Found system fmt: ${fmt_DIR}")
+    set(CPM_fmt_ADDED YES)
+  endif()
+endif()
+
+if(NOT fmt_FOUND)
   CPMAddPackage(
     NAME fmt
     GIT_TAG 12.1.0
@@ -92,7 +100,7 @@ endif()
 
 CPMAddPackage(
   NAME Py2Cpp
-  GIT_TAG v1.6.4
+  GIT_TAG v1.6.5
   GITHUB_REPOSITORY luk036/py2cpp
   OPTIONS "INSTALL_ONLY YES" "PY2CPP_BUILD_TESTS OFF"
 )
@@ -104,12 +112,17 @@ CPMAddPackage(
   OPTIONS "INSTALL_ONLY YES" "MYWHEEL_BUILD_TESTS OFF"
 )
 
-# spdlog is used by the compiled sources; prefer a system-installed spdlog when available.
-find_package(spdlog CONFIG QUIET)
-if(spdlog_FOUND)
-  message(STATUS "Found system spdlog: ${spdlog_DIR}")
-  set(CPM_spdlog_ADDED YES)
-else()
+# spdlog is used by the compiled sources; prefer a system-installed spdlog when available. On MSVC,
+# build spdlog from source for the same std::string ABI reason as fmt.
+if(NOT MSVC)
+  find_package(spdlog CONFIG QUIET)
+  if(spdlog_FOUND)
+    message(STATUS "Found system spdlog: ${spdlog_DIR}")
+    set(CPM_spdlog_ADDED YES)
+  endif()
+endif()
+
+if(NOT spdlog_FOUND)
   CPMAddPackage(
     NAME spdlog
     GIT_TAG v1.17.0
@@ -120,14 +133,20 @@ else()
 endif()
 
 # abseil requires C++ >= 17 at its own configure time. check_cxx_source_compiles does not read
-# CMAKE_CXX_STANDARD, so the standard flag must be in CMAKE_CXX_FLAGS (cache) to propagate into
-# the FetchContent subdirectory's compile checks.
+# CMAKE_CXX_STANDARD, so the standard flag must be in CMAKE_CXX_FLAGS (cache) to propagate into the
+# FetchContent subdirectory's compile checks.
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 if(MSVC)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++20" CACHE STRING "" FORCE)
+  set(CMAKE_CXX_FLAGS
+      "${CMAKE_CXX_FLAGS} /std:c++20"
+      CACHE STRING "" FORCE
+  )
 else()
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20" CACHE STRING "" FORCE)
+  set(CMAKE_CXX_FLAGS
+      "${CMAKE_CXX_FLAGS} -std=c++20"
+      CACHE STRING "" FORCE
+  )
 endif()
 
 # abseil provides flat_hash_map used in the headers; prefer a system-installed abseil when
@@ -154,8 +173,7 @@ set(SPECIFIC_LIBS Threads::Threads MyWheel::MyWheel Py2Cpp::Py2Cpp fmt::fmt spdl
 
 # Note: globbing sources is considered bad practice as CMake's generators may not detect new files
 # automatically. Keep that in mind when changing files, or explicitly mention them here.
-file(GLOB_RECURSE headers CONFIGURE_DEPENDS
-     "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h"
+file(GLOB_RECURSE headers CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/include/*.h"
      "${CMAKE_CURRENT_SOURCE_DIR}/include/*.hpp"
 )
 file(GLOB_RECURSE sources CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp")
@@ -173,7 +191,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE ${SPECIFIC_LIBS})
 
 # Any TU using spdlog must compile with spdlog's own interface definitions (SPDLOG_COMPILED_LIB,
 # SPDLOG_FMT_EXTERNAL) or the header-only and compiled registries diverge.
-get_target_property(SPDLOG_COMPILE_DEFS spdlog INTERFACE_COMPILE_DEFINITIONS)
+get_target_property(SPDLOG_COMPILE_DEFS spdlog::spdlog INTERFACE_COMPILE_DEFINITIONS)
 if(SPDLOG_COMPILE_DEFS)
   target_compile_definitions(${PROJECT_NAME} PRIVATE ${SPDLOG_COMPILE_DEFS})
 endif()
@@ -201,7 +219,7 @@ packageProject(
   INCLUDE_DESTINATION include/${PROJECT_NAME}-${PROJECT_VERSION}
   VERSION_HEADER "${VERSION_HEADER_LOCATION}"
   COMPATIBILITY SameMajorVersion
-  DEPENDENCIES "fmt 12.1.0" "Py2Cpp 1.6.4" "MyWheel 1.1.6"
+  DEPENDENCIES "fmt 12.1.0" "Py2Cpp 1.6.5" "MyWheel 1.1.6"
 )
 
 # ---------------------------------------------------------------------------
@@ -250,8 +268,9 @@ if(DIGRAPHX_BUILD_TESTS)
 
   file(GLOB_RECURSE TEST_SOURCES CONFIGURE_DEPENDS "test/source/*.cpp")
   add_executable(DiGraphXTests ${TEST_SOURCES})
-  target_link_libraries(DiGraphXTests PRIVATE doctest::doctest DiGraphX::DiGraphX ${SPECIFIC_LIBS}
-                                              ${SPECIFIC_ABSEIL_LIBS} rapidcheck
+  target_link_libraries(
+    DiGraphXTests PRIVATE doctest::doctest DiGraphX::DiGraphX ${SPECIFIC_LIBS}
+                          ${SPECIFIC_ABSEIL_LIBS} rapidcheck
   )
   target_include_directories(DiGraphXTests PRIVATE ${rapidcheck_SOURCE_DIR}/include)
   target_compile_definitions(DiGraphXTests PRIVATE RAPIDCHECK_H)
@@ -259,6 +278,49 @@ if(DIGRAPHX_BUILD_TESTS)
   target_enable_warnings(DiGraphXTests)
   target_enable_abseil_suppressions(DiGraphXTests)
   add_test(NAME DiGraphXTests COMMAND DiGraphXTests)
+endif()
+
+# ---------------------------------------------------------------------------
+# Benchmarks (nanobench, header-only)
+# ---------------------------------------------------------------------------
+
+if(DIGRAPHX_BUILD_BENCHMARKS)
+  # nanobench is a header-only benchmarking library
+  set(NANOBENCH_VERSION 4.3.11)
+  set(NANOBENCH_DIR "${CMAKE_BINARY_DIR}/_deps/nanobench")
+  set(NANOBENCH_HEADER "${NANOBENCH_DIR}/nanobench.h")
+
+  if(NOT EXISTS "${NANOBENCH_HEADER}")
+    file(MAKE_DIRECTORY "${NANOBENCH_DIR}")
+    file(
+      DOWNLOAD
+      "https://raw.githubusercontent.com/martinus/nanobench/v${NANOBENCH_VERSION}/src/include/nanobench.h"
+      "${NANOBENCH_HEADER}"
+      STATUS download_status
+    )
+    list(GET download_status 0 status_code)
+    if(NOT status_code EQUAL 0)
+      message(FATAL_ERROR "Failed to download nanobench (status ${status_code})")
+    endif()
+  endif()
+
+  add_library(nanobench INTERFACE)
+  target_include_directories(nanobench SYSTEM INTERFACE "${NANOBENCH_DIR}")
+
+  file(GLOB_RECURSE ALL_BENCH_CPP CONFIGURE_DEPENDS "bench/*.cpp")
+  foreach(ONE_BENCH_CPP ${ALL_BENCH_CPP})
+    get_filename_component(ONE_BENCH_EXEC ${ONE_BENCH_CPP} NAME_WE)
+    set(TARGET_NAME Bench_${ONE_BENCH_EXEC})
+
+    add_executable(${TARGET_NAME} ${ONE_BENCH_CPP})
+    set_target_properties(${TARGET_NAME} PROPERTIES OUTPUT_NAME ${ONE_BENCH_EXEC} CXX_STANDARD 20)
+    target_link_libraries(
+      ${TARGET_NAME} PRIVATE nanobench DiGraphX::DiGraphX ${SPECIFIC_LIBS} ${SPECIFIC_ABSEIL_LIBS}
+    )
+    target_enable_warnings(${TARGET_NAME})
+    target_enable_abseil_suppressions(${TARGET_NAME})
+    add_test(NAME ${ONE_BENCH_EXEC} COMMAND ${TARGET_NAME})
+  endforeach()
 endif()
 
 # ---------------------------------------------------------------------------
@@ -270,8 +332,7 @@ if(DIGRAPHX_ENABLE_CLANG_TIDY)
   if(CLANG_TIDY)
     add_custom_target(
       clang-tidy
-      COMMAND ${CLANG_TIDY} --extra-arg=-std=c++20
-              --extra-arg=-I${CMAKE_CURRENT_SOURCE_DIR}/include
+      COMMAND ${CLANG_TIDY} --extra-arg=-std=c++20 --extra-arg=-I${CMAKE_CURRENT_SOURCE_DIR}/include
               ${CMAKE_CURRENT_SOURCE_DIR}/include/digraphx/*.hpp
       COMMENT "Running clang-tidy static analysis"
     )
@@ -338,13 +399,15 @@ if(DIGRAPHX_ENABLE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang|AppleCl
       coverage
       COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
       COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/coverage
-      COMMAND ${GCOVR_PATH} --root ${PROJECT_SOURCE_DIR} --html-details
-              ${CMAKE_BINARY_DIR}/coverage/index.html --exclude test/ --exclude build/
-              ${extra_gcovr_args}
+      COMMAND
+        ${GCOVR_PATH} --root ${PROJECT_SOURCE_DIR} --html-details
+        ${CMAKE_BINARY_DIR}/coverage/index.html --exclude test/ --exclude build/ ${extra_gcovr_args}
       WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
       COMMENT "Generating coverage report in ${CMAKE_BINARY_DIR}/coverage/index.html"
     )
   else()
-    message(WARNING "gcovr not found - coverage target unavailable. Install with: pip install gcovr")
+    message(
+      WARNING "gcovr not found - coverage target unavailable. Install with: pip install gcovr"
+    )
   endif()
 endif()

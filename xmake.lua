@@ -8,7 +8,7 @@ if is_mode("release") then
 end
 add_requires("doctest", {alias = "doctest"})
 add_requires("fmt", {alias = "fmt"})
-add_requires("benchmark", {alias = "benchmark"})
+add_requires("nanobench", {alias = "nanobench"})
 add_requires("spdlog", {alias = "spdlog"})
 add_requires("cxxopts", {alias = "cxxopts"})
 add_requires("abseil", {alias = "abseil"})
@@ -106,7 +106,7 @@ target("BM_mcf")
     add_includedirs("../py2cpp/include", {public = true})
     add_includedirs("../mywheel-cpp/include", {public = true})
     add_files("bench/BM_mcf.cpp")
-    add_packages("fmt", "abseil")
+    add_packages("fmt", "abseil", "nanobench")
 
 
 target("BM_neg_cycle")
@@ -116,7 +116,7 @@ target("BM_neg_cycle")
     add_includedirs("../py2cpp/include", {public = true})
     add_includedirs("../mywheel-cpp/include", {public = true})
     add_files("bench/BM_neg_cycle.cpp")
-    add_packages("fmt", "abseil")
+    add_packages("fmt", "abseil", "nanobench")
 
 -- If you want to known more usage about xmake, please see https://xmake.io
 --

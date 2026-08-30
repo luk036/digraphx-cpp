@@ -96,6 +96,38 @@ template <typename Node, typename Edge, typename Ratio> class MinParametricAPI {
     virtual auto zero_cancel(const std::vector<Edge>& cycle) -> Ratio = 0;
 };
 
+namespace digraph_detail {
+
+    /**
+     * @brief Strategy adapter: present a (distance, zero_cancel) callback pair
+     *        as a MinParametricAPI (virtual interface).
+     *
+     * @tparam Node node type
+     * @tparam Edge edge type
+     * @tparam Ratio parameter / ratio type
+     * @tparam Fn1 distance callable (ratio, edge) -> distance
+     * @tparam Fn2 zero-cancel callable (cycle) -> ratio
+     */
+    template <typename Node, typename Edge, typename Ratio, typename Fn1, typename Fn2>
+    class CallbackMinParametricAPI : public MinParametricAPI<Node, Edge, Ratio> {
+      public:
+        CallbackMinParametricAPI(Fn1 distance, Fn2 zero_cancel)
+            : _distance(std::move(distance)), _zero_cancel(std::move(zero_cancel)) {}
+
+        auto distance(const Ratio& ratio, const Edge& edge) -> Ratio override {
+            return static_cast<Ratio>(_distance(ratio, edge));
+        }
+        auto zero_cancel(const std::vector<Edge>& cycle) -> Ratio override {
+            return static_cast<Ratio>(_zero_cancel(cycle));
+        }
+
+      private:
+        Fn1 _distance;
+        Fn2 _zero_cancel;
+    };
+
+}  // namespace digraph_detail
+
 /**
  * @brief Minimum Parametric Solver with constraint support
  *
@@ -339,69 +371,16 @@ inline auto min_parametric(const DiGraph& digraph, Ratio ratio, Fn1 distance, Fn
     -> std::pair<Ratio, std::vector<typename MinParametricSolver<DiGraph, Ratio, Domain>::Edge>> {
     (void)domain;  // Mark as used to avoid compiler warning
 
-    // using Node1 = decltype((*std::declval<DiGraph>().begin()).first);
-    // using Node = std::remove_cv_t<std::remove_reference_t<Node1>>;
     using Nbrs1 = decltype((*std::declval<DiGraph>().begin()).second);
     using Nbrs = std::remove_cv_t<std::remove_reference_t<Nbrs1>>;
     using Edge1 = decltype((*std::declval<Nbrs>().begin()).second);
     using Edge = std::remove_cv_t<std::remove_reference_t<Edge1>>;
-    using Cycle = std::vector<Edge>;
-    // using UpdateOk = std::function<bool(const Domain&, const Domain&)>;
+    using Node1 = decltype((*std::declval<DiGraph>().begin()).first);
+    using Node = std::remove_cv_t<std::remove_reference_t<Node1>>;
 
-    // Create a default update_ok that always allows updates
+    digraph_detail::CallbackMinParametricAPI<Node, Edge, Ratio, Fn1, Fn2> omega{std::move(distance),
+                                                                                std::move(zero_cancel)};
+    auto solver = MinParametricSolver<DiGraph, Ratio, Domain>{digraph, omega};
     auto update_ok = [](const Domain& /*old_val*/, const Domain& /*new_val*/) { return true; };
-
-    // Helper function to calculate edge weights based on current ratio
-    auto get_weight = [&ratio, &distance](const Edge& edge) -> Domain {
-        return static_cast<Domain>(distance(ratio, edge));
-    };
-
-    auto r_max = ratio;
-    auto c_max = Cycle{};
-    auto cycle = Cycle{};
-    auto reverse = true;
-
-    auto ncf = NegCycleFinderQ<DiGraph, Domain>{digraph};
-
-    // Main optimization loop
-    while (true) {
-        // Search for cycles in either forward or reverse direction
-        if (reverse) {
-            auto cycles = ncf.howard_succ(dist, get_weight, update_ok);
-            for (auto&& c_i : cycles) {
-                auto r_i = zero_cancel(c_i);
-                if (r_max < r_i) {
-                    r_max = r_i;
-                    c_max = std::move(c_i);
-                    if (pick_one_only) {
-                        break;
-                    }
-                }
-            }
-        } else {
-            auto cycles = ncf.howard_pred(dist, get_weight, update_ok);
-            for (auto&& c_i : cycles) {
-                auto r_i = zero_cancel(c_i);
-                if (r_max < r_i) {
-                    r_max = r_i;
-                    c_max = std::move(c_i);
-                    if (pick_one_only) {
-                        break;
-                    }
-                }
-            }
-        }
-
-        // Termination condition: no better ratio found
-        if (r_max <= ratio) {
-            break;
-        }
-
-        // Update state for next iteration
-        cycle = std::move(c_max);
-        ratio = r_max;
-        reverse = !reverse;
-    }
-
-    return std::make_pair(ratio, std::move(cycle));
+    return solver.run(dist, ratio, update_ok, pick_one_only);
 }

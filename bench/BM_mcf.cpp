@@ -1,8 +1,12 @@
-#include <chrono>
+#define ANKERL_NANOBENCH_IMPLEMENT
+#include <fmt/format.h>
+#include <nanobench.h>
+
 #include <cmath>
-#include <cstdio>
+#include <cstdint>
 #include <digraphx/mcf.hpp>
-#include <iostream>
+#include <utility>
+#include <vector>
 
 // Van der Corput sequence
 static double vdc(uint32_t n, uint32_t base) {
@@ -63,34 +67,22 @@ int main() {
     // Count edges
     size_t edge_count = 0;
     for (const auto& [u, nbrs] : g) edge_count += nbrs.size();
-    std::printf("Graph: %zu nodes, %zu edges\n", g.size(), edge_count);
+    fmt::print("Graph: {} nodes, {} edges\n", g.size(), edge_count);
 
     // Warmup
     auto warmup = cycle_canceling_mcf(g, demands);
     if (!warmup) {
-        std::printf("INFEASIBLE\n");
+        fmt::print("INFEASIBLE\n");
         return 1;
     }
-    std::printf("Cost: %lld (expected 1108)\n", static_cast<long long>(warmup->first));
+    fmt::print("Cost: {} (expected 1108)\n", warmup->first);
 
-    // Benchmark
-    constexpr int N_RUNS = 5;
-    double total_ms = 0.0;
-    for (int run = 0; run < N_RUNS; ++run) {
-        auto start = std::chrono::high_resolution_clock::now();
+    ankerl::nanobench::Bench bench;
+    bench.title("Cycle-canceling MCF").unit("op").warmup(5).epochs(30).minEpochIterations(10);
+
+    bench.run("cycle_canceling_mcf", [&] {
         auto result = cycle_canceling_mcf(g, demands);
-        auto end = std::chrono::high_resolution_clock::now();
-        auto ms = std::chrono::duration<double, std::milli>(end - start).count();
-        total_ms += ms;
-
-        if (!result) {
-            std::printf("Run %d: INFEASIBLE\n", run);
-            return 1;
-        }
-        std::printf("  Run %d: %.2f ms (cost=%lld)\n", run, ms,
-                    static_cast<long long>(result->first));
-    }
-
-    std::printf("\nC++ average: %.2f ms (over %d runs)\n", total_ms / N_RUNS, N_RUNS);
+        ankerl::nanobench::doNotOptimizeAway(result);
+    });
     return 0;
 }
