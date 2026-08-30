@@ -35,37 +35,7 @@
 #include <utility>
 #include <vector>
 
-#ifdef _MSC_VER
-#    pragma warning(push)
-#    pragma warning(disable : 4702)
-#endif
-
-namespace digraph_detail {
-
-    // Get the key from an iteration element:
-    // - For pair-like (unordered_map, list<pair>): .first
-    // - For direct (SimpleDiGraphS nodes): the element itself
-    template <typename T> decltype(auto) _get_key(const T& entry) {
-        if constexpr (requires { entry.first; }) {
-            return entry.first;
-        } else {
-            return entry;
-        }
-    }
-
-    // Get the value from an iteration element:
-    // - For pair-like: .second
-    // - For direct: .at(key) on the container
-    template <typename T, typename Container>
-    decltype(auto) _get_val(const T& entry, const Container& c) {
-        if constexpr (requires { entry.second; }) {
-            return entry.second;
-        } else {
-            return c.at(entry);
-        }
-    }
-
-}  // namespace digraph_detail
+#include "digraph_detail.hpp"
 
 using digraph_detail::_get_key;
 using digraph_detail::_get_val;
@@ -81,174 +51,17 @@ using digraph_detail::_get_val;
  * Supports unordered_map, list-of-pairs, SimpleDiGraphS, and
  * MapAdapter-wrapped containers (see _get_key / _get_val helpers).
  *
- * Algorithm overview:
- * 1. Initialize a policy (predecessor mapping)
- * 2. Perform relaxation steps to improve the policy
- * 3. Detect cycles in the current policy graph
- * 4. Verify if detected cycles are negative
- * 5. Yield negative cycles and continue until no improvements possible
- *
  * @tparam DiGraph Type of the directed graph representation
  */
 template <typename DiGraph>  //
 class NegCycleFinder {
-    using ItemsT = decltype(std::declval<const DiGraph&>());
-    using Elem = decltype(*std::declval<ItemsT>().begin());
-    using Node
-        = std::remove_cv_t<std::remove_reference_t<decltype(_get_key(std::declval<Elem>()))>>;
-    using NbrFunc = decltype(_get_val(std::declval<Elem>(), std::declval<const DiGraph&>()));
-    using Nbrs = std::remove_cv_t<std::remove_reference_t<NbrFunc>>;
-    using NbrItemsT = decltype(std::declval<const Nbrs&>());
-    using NbrElem = decltype(*std::declval<NbrItemsT>().begin());
-    using Edge = std::remove_cv_t<std::remove_reference_t<decltype(_get_val(
-        std::declval<NbrElem>(), std::declval<const Nbrs&>()))>>;
-    using Cycle = std::vector<Edge>;
+    using Traits = digraph_detail::graph_traits<DiGraph>;
+    using Node = typename Traits::Node;
+    using Edge = typename Traits::Edge;
+    using Cycle = typename Traits::Cycle;
 
     absl::flat_hash_map<Node, std::pair<Node, Edge>> _pred{};
     const DiGraph& _digraph;
-
-    /**
-     * @brief Perform one Bellman-Ford relaxation step on the graph
-     *
-     * For each edge (u,v), checks if dist[v] > dist[u] + weight(u,v)
-     * and updates the distance and predecessor if true.
-     *
-     * @f[
-     *     d_v \gets \min(d_v,\; d_u + w(u,v)), \quad \forall (u,v) \in E
-     * @f]
-     *
-     * @dot
-     *   digraph relax_step {
-     *     bgcolor="transparent"; rankdir=LR;
-     *     node [shape=circle, style=filled, fillcolor="#d4e6f1", fontsize=10];
-     *     u [label="u", fillcolor="#a9cce3"];
-     *     v [label="v", fillcolor="#a9cce3"];
-     *     uv [label="", shape=plaintext];
-     *     u -> v [label="d[u]+w(u,v)", color="#e74c3c"];
-     *     u -> uv [style=invis];
-     *     note [shape=note, fillcolor="#fcf3cf", label="if d[v] > d[u] + w(u,v)\nthen d[v] = d[u] +
-     * w(u,v)"]; uv -> note [style=dashed, color="#888", constraint=false];
-     *   }
-     * @enddot
-     *
-     * @tparam Mapping Type of the distance mapping (node -> distance)
-     * @tparam Callable Type of the weight extraction function
-     * @param[in,out] dist Current distance estimates for each node
-     * @param[in] get_weight Function that extracts weight from an edge
-     * @return true if any distances were updated, false if no changes occurred
-     */
-    template <typename Mapping, typename Callable> auto _relax(Mapping& dist, Callable&& get_weight)
-        -> bool {
-        auto changed = false;
-        for (const auto& entry : this->_digraph) {
-            const auto& utx = _get_key(entry);
-            const auto& nbrs = _get_val(entry, this->_digraph);
-            for (const auto& nbr_entry : nbrs) {
-                const auto& vtx = _get_key(nbr_entry);
-                const auto& edge = _get_val(nbr_entry, nbrs);
-                auto distance = dist[utx] + std::forward<Callable>(get_weight)(edge);
-                if (dist[vtx] > distance) {
-                    dist[vtx] = distance;
-                    this->_pred.insert_or_assign(vtx, std::pair(utx, edge));
-                    changed = true;
-                }
-            }
-        }
-        return changed;
-    }
-
-    /**
-     * @brief Verify if a cycle starting from handle is negative
-     *
-     * Traverses the cycle in the predecessor map and checks if any edge
-     * violates the triangle inequality: dist[v] > dist[u] + weight(u,v).
-     *
-     * @f[
-     *     d_v > d_u + w(u,v)
-     * @f]
-     *
-     * @dot
-     *   digraph inequality_check {
-     *     bgcolor="transparent"; rankdir=LR;
-     *     node [shape=circle, style=filled, fillcolor="#d4e6f1", fontsize=10];
-     *     u [label="u", fillcolor="#a9cce3"];
-     *     v [label="v", fillcolor="#a9cce3"];
-     *     u -> v [label="d[u] + w(u,v)", color="#e74c3c"];
-     *     note [shape=note, fillcolor="#fcf3cf", label="if d[v] > d[u] + w(u,v)\nreturn true
-     * (negative)"]; v -> note [style=dashed, color="#888", constraint=false];
-     *   }
-     * @enddot
-     *
-     * @tparam Mapping Type of the distance mapping
-     * @tparam Callable Type of the weight extraction function
-     * @param[in] handle Starting node of the cycle to verify
-     * @param[in] dist Current distance estimates
-     * @param[in] get_weight Function that extracts weight from an edge
-     * @return true if the cycle is negative, false otherwise
-     */
-    template <typename Mapping, typename Callable>
-    auto _is_negative(const Node& handle, const Mapping& dist, Callable&& get_weight) const
-        -> bool {
-        auto vtx = handle;
-        while (true) {
-            const auto& [utx, edge] = this->_pred.at(vtx);
-            if (dist.at(vtx) > dist.at(utx) + std::forward<Callable>(get_weight)(edge)) return true;
-            vtx = utx;
-            if (vtx == handle) break;
-        }
-        return false;
-    }
-
-    /**
-     * @brief Extract the cycle edges starting from the given node
-     *
-     * Reconstructs a complete cycle by following predecessor links
-     * starting from the handle node until returning to it.
-     *
-     * @param[in] handle Starting node of the cycle (must be part of a cycle)
-     * @return Cycle A vector of edges forming the complete cycle
-     */
-    auto _cycle_list(const Node& handle) const -> Cycle {
-        auto vtx = handle;
-        auto cycle = Cycle{};
-        cycle.reserve(this->_pred.size());
-        while (true) {
-            const auto& [utx, edge] = this->_pred.at(vtx);
-            cycle.emplace_back(edge);
-            vtx = utx;
-            if (vtx == handle) break;
-        }
-        return cycle;
-    }
-
-    /**
-     * @brief Find all cycles in the current predecessor policy graph
-     *
-     * Searches the predecessor graph for cycles using visited tracking.
-     * Yields nodes that complete cycles back to their start.
-     *
-     * @return py::Generator<Node> Generator yielding nodes that start cycles
-     */
-    auto _find_cycle() -> py::Generator<Node> {
-        auto visited = absl::flat_hash_map<Node, Node>{};
-        if constexpr (requires { this->_digraph.size(); }) visited.reserve(this->_digraph.size());
-        for (const auto& entry : this->_digraph) {
-            const auto& vtx = _get_key(entry);
-            if (visited.contains(vtx)) continue;
-            auto utx = vtx;
-            visited[utx] = vtx;
-            while (this->_pred.contains(utx)) {
-                utx = this->_pred[utx].first;
-                auto it = visited.find(utx);
-                if (it != visited.end()) {
-                    if (it->second == vtx) co_yield utx;
-                    break;
-                }
-                visited[utx] = vtx;
-            }
-        }
-        co_return;
-    }
 
   public:
     /**
@@ -293,21 +106,19 @@ class NegCycleFinder {
      */
     template <typename Mapping, typename Callable> auto howard(Mapping& dist, Callable get_weight)
         -> py::Generator<Cycle> {
-        this->_pred.clear();
-        if constexpr (requires { this->_digraph.size(); })
-            this->_pred.reserve(this->_digraph.size());
-        auto found = false;
-        while (!found && this->_relax(dist, get_weight)) {
-            for (const auto& vtx : this->_find_cycle()) {
-                assert(this->_is_negative(vtx, dist, get_weight));
-                co_yield this->_cycle_list(vtx);
-                found = true;
-            }
-        }
-        co_return;
+        // Strategy: unconstrained predecessor relaxation (always allow updates)
+        auto relax = [this](Mapping& d, auto& gw) {
+            return digraph_detail::relax_pred(this->_digraph, d, gw, this->_pred,
+                                              [](const auto&, const auto&) { return true; });
+        };
+        // Hook: verify candidate cycles are actually negative
+        auto check = [this](const auto& vtx, const auto& d, auto& gw) {
+            assert(digraph_detail::is_negative(vtx, d, gw, this->_pred));
+            (void)vtx;
+            (void)d;
+            (void)gw;
+        };
+        return digraph_detail::howard_search(this->_digraph, dist, std::move(get_weight),
+                                             this->_pred, std::move(relax), std::move(check));
     }
 };
-
-#ifdef _MSC_VER
-#    pragma warning(pop)
-#endif

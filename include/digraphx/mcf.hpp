@@ -40,11 +40,20 @@ using MCFDemands = absl::flat_hash_map<size_t, int64_t>;
 using MCFResidual = absl::flat_hash_map<size_t, absl::flat_hash_map<size_t, ResidualEdge>>;
 using MCFFlow = absl::flat_hash_map<size_t, absl::flat_hash_map<size_t, int64_t>>;
 
+/// Current flow value on edge (u, v), defaulting to 0 when absent.
+inline auto flow_value(const MCFFlow& flow, size_t u, size_t v) -> int64_t {
+    auto fu = flow.find(u);
+    if (fu == flow.end()) return 0;
+    auto fv = fu->second.find(v);
+    if (fv == fu->second.end()) return 0;
+    return fv->second;
+}
+
 // ---------------------------------------------------------------------------
 // Feasible flow (greedy BFS)
 // ---------------------------------------------------------------------------
 
-static auto bfs_path(const MCFGraph& g, const MCFFlow& flow, size_t src,
+inline auto bfs_path(const MCFGraph& g, const MCFFlow& flow, size_t src,
                      const absl::flat_hash_set<size_t>& demand_set, const MCFDemands& remaining)
     -> std::vector<size_t> {
     absl::flat_hash_set<size_t> visited;
@@ -77,13 +86,7 @@ static auto bfs_path(const MCFGraph& g, const MCFFlow& flow, size_t src,
         if (nbr_it != g.end()) {
             for (const auto& [v, edge] : nbr_it->second) {
                 if (visited.contains(v)) continue;
-                int64_t existing = 0;
-                auto fu = flow.find(u);
-                if (fu != flow.end()) {
-                    auto fv = fu->second.find(v);
-                    if (fv != fu->second.end()) existing = fv->second;
-                }
-                if (existing < edge.capacity) {
+                if (flow_value(flow, u, v) < edge.capacity) {
                     visited.insert(v);
                     parent[v] = u;
                     queue.push(v);
@@ -94,7 +97,7 @@ static auto bfs_path(const MCFGraph& g, const MCFFlow& flow, size_t src,
     return {};  // no path found
 }
 
-static auto find_feasible_flow(const MCFGraph& g, const MCFDemands& demands) -> MCFFlow {
+inline auto find_feasible_flow(const MCFGraph& g, const MCFDemands& demands) -> MCFFlow {
     // Initialise flow to zero for every edge
     MCFFlow flow;
     for (const auto& [u, nbrs] : g) {
@@ -155,19 +158,14 @@ static auto find_feasible_flow(const MCFGraph& g, const MCFDemands& demands) -> 
 // Residual graph construction
 // ---------------------------------------------------------------------------
 
-static auto build_residual(const MCFGraph& g, const MCFFlow& flow) -> MCFResidual {
+inline auto build_residual(const MCFGraph& g, const MCFFlow& flow) -> MCFResidual {
     MCFResidual residual;
 
     for (const auto& [u, nbrs] : g) {
         for (const auto& [v, data] : nbrs) {
             auto cap = data.capacity;
             auto wgt = data.weight;
-            int64_t f = 0;
-            auto fu = flow.find(u);
-            if (fu != flow.end()) {
-                auto fv = fu->second.find(v);
-                if (fv != fu->second.end()) f = fv->second;
-            }
+            auto f = flow_value(flow, u, v);
 
             // Forward residual edge
             if (f < cap) {
@@ -194,7 +192,7 @@ static auto build_residual(const MCFGraph& g, const MCFFlow& flow) -> MCFResidua
     return residual;
 }
 
-static void update_residual_edge(MCFResidual& residual, const MCFGraph& g, const MCFFlow& flow,
+inline void update_residual_edge(MCFResidual& residual, const MCFGraph& g, const MCFFlow& flow,
                                  size_t u, size_t v) {
     // Remove stale entries
     auto ru = residual.find(u);
@@ -215,12 +213,7 @@ static void update_residual_edge(MCFResidual& residual, const MCFGraph& g, const
         if (gv != gu->second.end()) {
             auto cap = gv->second.capacity;
             auto wgt = gv->second.weight;
-            int64_t f = 0;
-            auto fu = flow.find(u);
-            if (fu != flow.end()) {
-                auto fv = fu->second.find(v);
-                if (fv != fu->second.end()) f = fv->second;
-            }
+            auto f = flow_value(flow, u, v);
             if (f < cap) {
                 residual[u][v] = ResidualEdge{wgt, cap - f, {u, v}, true};
             }
@@ -235,7 +228,7 @@ static void update_residual_edge(MCFResidual& residual, const MCFGraph& g, const
 // Negative cycle detection (Bellman-Ford)
 // ---------------------------------------------------------------------------
 
-static auto find_all_neg_cycles_bf(const MCFResidual& residual)
+inline auto find_all_neg_cycles_bf(const MCFResidual& residual)
     -> std::vector<std::vector<ResidualEdge>> {
     // Collect all nodes
     absl::flat_hash_set<size_t> node_set;
@@ -443,13 +436,7 @@ inline auto cycle_canceling_mcf(const MCFGraph& g, const MCFDemands& demands)
     int64_t total_cost = 0;
     for (const auto& [u, nbrs] : g) {
         for (const auto& [v, data] : nbrs) {
-            int64_t f = 0;
-            auto fu = flow.find(u);
-            if (fu != flow.end()) {
-                auto fv = fu->second.find(v);
-                if (fv != fu->second.end()) f = fv->second;
-            }
-            total_cost += f * data.weight;
+            total_cost += flow_value(flow, u, v) * data.weight;
         }
     }
 
