@@ -256,7 +256,6 @@ namespace digraph_detail {
     auto howard_search(const DiGraph& digraph, Mapping& dist, GetWeight get_weight,
                        PointTo& point_to, Relax relax, Check check)
         -> py::Generator<typename graph_traits<DiGraph>::Cycle> {
-        using Cycle = typename graph_traits<DiGraph>::Cycle;
         point_to.clear();
         if constexpr (requires { digraph.size(); }) point_to.reserve(digraph.size());
         auto found = false;
