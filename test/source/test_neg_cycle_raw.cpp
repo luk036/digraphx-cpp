@@ -77,3 +77,29 @@ TEST_CASE("Test Negative Cycle (MapAdapter of list's)") {
     }
     CHECK(cycle.empty());
 }
+
+TEST_CASE("Test Negative Cycle (multi-pass, cached weights)") {
+    // A reverse chain whose long negative cycle only surfaces after many
+    // relaxation passes, so the cached-weight relaxation path is exercised.
+    const size_t n = 128;
+    auto digraph = vector<list<pair<size_t, double>>>(n);
+    for (size_t i = 1; i < n; ++i) {
+        digraph[i].emplace_back(i - 1, 1.0);
+    }
+    digraph[0].emplace_back(n - 1, -static_cast<double>(n));
+    auto ga = MapConstAdapter{digraph};
+
+    auto get_weight = [](const auto& edge) -> double { return edge; };
+    auto dist = vector<double>(n, 0.0);
+    NegCycleFinder ncf(ga);
+    auto cycle = vector<double>{};
+    for (auto const& ci : ncf.howard(dist, std::move(get_weight))) {
+        cycle = ci;
+    }
+    CHECK_FALSE(cycle.empty());
+    auto total = 0.0;
+    for (auto w : cycle) {
+        total += w;
+    }
+    CHECK_LT(total, 0.0);
+}
