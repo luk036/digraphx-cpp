@@ -257,8 +257,8 @@ namespace digraph_detail {
         RelaxCached(const DiGraph& digraph, PointTo& point_to, UpdateOk update_ok)
             : _digraph(digraph), _point_to(point_to), _update_ok(std::move(update_ok)) {}
 
-        template <typename GetWeight>
-        auto operator()(Mapping& dist, GetWeight& get_weight) -> bool {
+        template <typename GetWeight> auto operator()(Mapping& dist, GetWeight& get_weight)
+            -> bool {
             const auto build = (_pass == 1);
             if (build) _weights.clear();
             auto wit = _weights.begin();
@@ -325,8 +325,8 @@ namespace digraph_detail {
     template <typename DiGraph, typename Mapping, typename GetWeight, typename PointTo,
               typename Relax, typename Check>
     auto howard_search(const DiGraph& digraph, Mapping& dist, GetWeight get_weight,
-                       PointTo& point_to, Relax relax,
-                       Check check) -> py::Generator<typename graph_traits<DiGraph>::Cycle> {
+                       PointTo& point_to, Relax relax, Check check)
+        -> py::Generator<typename graph_traits<DiGraph>::Cycle> {
         point_to.clear();
         if constexpr (requires { digraph.size(); }) point_to.reserve(digraph.size());
         auto found = false;

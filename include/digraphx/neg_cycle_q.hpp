@@ -80,8 +80,8 @@ class NegCycleFinderQ {
      * @return py::Generator<Cycle> Each negative cycle found as a list of edges
      */
     template <typename Mapping, typename GetWeight, typename UpdateOk>
-    auto howard_pred(Mapping& dist, GetWeight get_weight,
-                     UpdateOk update_ok) -> py::Generator<Cycle> {
+    auto howard_pred(Mapping& dist, GetWeight get_weight, UpdateOk update_ok)
+        -> py::Generator<Cycle> {
         // Strategy: constrained predecessor relaxation
         using Weight = std::remove_cv_t<
             std::remove_reference_t<decltype(get_weight(std::declval<const Edge&>()))>>;
@@ -116,8 +116,8 @@ class NegCycleFinderQ {
      * @return py::Generator<Cycle> Each negative cycle found as a list of edges
      */
     template <typename Mapping, typename GetWeight, typename UpdateOk>
-    auto howard_succ(Mapping& dist, GetWeight get_weight,
-                     UpdateOk update_ok) -> py::Generator<Cycle> {
+    auto howard_succ(Mapping& dist, GetWeight get_weight, UpdateOk update_ok)
+        -> py::Generator<Cycle> {
         // Strategy: constrained successor relaxation
         using Weight = std::remove_cv_t<
             std::remove_reference_t<decltype(get_weight(std::declval<const Edge&>()))>>;

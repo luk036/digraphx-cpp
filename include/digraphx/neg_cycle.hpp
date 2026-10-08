@@ -104,8 +104,8 @@ class NegCycleFinder {
      * @param[in] get_weight Function to extract weight from an edge
      * @return py::Generator<Cycle> Generator yielding negative cycles
      */
-    template <typename Mapping, typename Callable>
-    auto howard(Mapping& dist, Callable get_weight) -> py::Generator<Cycle> {
+    template <typename Mapping, typename Callable> auto howard(Mapping& dist, Callable get_weight)
+        -> py::Generator<Cycle> {
         // Strategy: unconstrained predecessor relaxation (always allow updates)
         auto always_true = [](const auto&, const auto&) { return true; };
         using Weight = std::remove_cv_t<
