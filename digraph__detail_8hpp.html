@@ -28,7 +28,7 @@ MathJax.Hub.Config({
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">DiGraphX<span id="projectnumber">&#160;1.1.8</span>
+   <div id="projectname">DiGraphX<span id="projectnumber">&#160;1.1.9</span>
    </div>
   </td>
  </tr>
@@ -91,8 +91,8 @@ $(function() {
 <p>Internal implementation helpers shared by the digraphx algorithms.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;absl/container/flat_hash_map.h&gt;</code><br />
-<code>#include &lt;py2cpp/gen.hpp&gt;</code><br />
 <code>#include &lt;cassert&gt;</code><br />
+<code>#include &lt;py2cpp/gen.hpp&gt;</code><br />
 <code>#include &lt;type_traits&gt;</code><br />
 <code>#include &lt;utility&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
@@ -113,6 +113,9 @@ This graph shows which files directly or indirectly include this file:</div>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdigraph__detail_1_1graph__traits.html">digraph_detail::graph_traits&lt; DiGraph &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type trait deriving Node / Edge / Cycle from any supported graph container.  <a href="structdigraph__detail_1_1graph__traits.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdigraph__detail_1_1RelaxCached.html">digraph_detail::RelaxCached&lt; IsPred, Weight, DiGraph, Mapping, PointTo, UpdateOk &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Relaxation strategy that caches edge weights across passes.  <a href="classdigraph__detail_1_1RelaxCached.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdigraph__detail_1_1CallbackParametricAPI.html">digraph_detail::CallbackParametricAPI&lt; Ratio, Edge, Cycle, Domain, Fn1, Fn2 &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Strategy adapter: present a (distance, zero_cancel) callback pair as a ParametricAPI (duck-typed interface).  <a href="classdigraph__detail_1_1CallbackParametricAPI.html#details">More...</a><br /></td></tr>

@@ -4,9 +4,10 @@ var searchData=
   ['related_20projects_20and_20alternatives_1',['Related projects and alternatives',['../index.html#autotoc_md11',1,'']]],
   ['relax_5fpred_2',['relax_pred',['../namespacedigraph__detail.html#ac6898c6d6687ce255dfbe37cb5dfcf78',1,'digraph_detail']]],
   ['relax_5fsucc_3',['relax_succ',['../namespacedigraph__detail.html#af680bd8dac0a3215262b6472a5acf6b2',1,'digraph_detail']]],
-  ['residualedge_4',['ResidualEdge',['../structResidualEdge.html',1,'']]],
-  ['run_5',['run',['../classMinCycleRatioSolver.html#a964c6a660aebb5b24b29c6e8cb0bb97d',1,'MinCycleRatioSolver::run()'],['../classMinParametricSolver.html#a42fde848b8a00471685e4b275da7b613',1,'MinParametricSolver::run()'],['../classMaxParametricSolver.html#af6bc440f7143e000eff6dc0d4975f0d9',1,'MaxParametricSolver::run()']]],
-  ['run_20clang_20format_6',['Run clang-format',['../index.html#autotoc_md6',1,'']]],
-  ['run_20test_20suite_7',['Build and run test suite',['../index.html#autotoc_md5',1,'']]],
-  ['run_20the_20standalone_20target_8',['Build and run the standalone target',['../index.html#autotoc_md4',1,'']]]
+  ['relaxcached_4',['relaxcached',['../classdigraph__detail_1_1RelaxCached.html',1,'digraph_detail::RelaxCached&lt; IsPred, Weight, DiGraph, Mapping, PointTo, UpdateOk &gt;'],['../classdigraph__detail_1_1RelaxCached.html#a7ce9a04a5f19f7e386bda7f83bf7c40e',1,'digraph_detail::RelaxCached::RelaxCached()']]],
+  ['residualedge_5',['ResidualEdge',['../structResidualEdge.html',1,'']]],
+  ['run_6',['run',['../classMinCycleRatioSolver.html#a964c6a660aebb5b24b29c6e8cb0bb97d',1,'MinCycleRatioSolver::run()'],['../classMinParametricSolver.html#a42fde848b8a00471685e4b275da7b613',1,'MinParametricSolver::run()'],['../classMaxParametricSolver.html#af6bc440f7143e000eff6dc0d4975f0d9',1,'MaxParametricSolver::run()']]],
+  ['run_20clang_20format_7',['Run clang-format',['../index.html#autotoc_md6',1,'']]],
+  ['run_20test_20suite_8',['Build and run test suite',['../index.html#autotoc_md5',1,'']]],
+  ['run_20the_20standalone_20target_9',['Build and run the standalone target',['../index.html#autotoc_md4',1,'']]]
 ];

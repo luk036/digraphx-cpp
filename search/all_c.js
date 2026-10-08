@@ -10,6 +10,6 @@ var searchData=
   ['neg_5fcycle_5fq_2ehpp_7',['neg_cycle_q.hpp',['../neg__cycle__q_8hpp.html',1,'']]],
   ['negcyclefinder_8',['negcyclefinder',['../classNegCycleFinder.html#a1f2a75ba4e012310bc07b289cf18789a',1,'NegCycleFinder::NegCycleFinder()'],['../classNegCycleFinder.html',1,'NegCycleFinder&lt; DiGraph &gt;']]],
   ['negcyclefinderq_9',['negcyclefinderq',['../classNegCycleFinderQ.html',1,'NegCycleFinderQ&lt; DiGraph, Domain &gt;'],['../classNegCycleFinderQ.html#abf33796c13326bd7fb967c767b6b8e41',1,'NegCycleFinderQ::NegCycleFinderQ()']]],
-  ['node_10',['node',['../structdigraph__detail_1_1graph__traits.html#a3b76c9390af365c5f736c2d0e35ecf8e',1,'digraph_detail::graph_traits::Node'],['../classMinParametricSolver.html#abe29f96564976089367b0899f8385989',1,'MinParametricSolver::Node']]],
+  ['node_10',['node',['../structdigraph__detail_1_1graph__traits.html#a3b76c9390af365c5f736c2d0e35ecf8e',1,'digraph_detail::graph_traits::Node'],['../classdigraph__detail_1_1RelaxCached.html#ae877ea52dfa73d77b3f96b3c315bda08',1,'digraph_detail::RelaxCached::Node'],['../classMinParametricSolver.html#abe29f96564976089367b0899f8385989',1,'MinParametricSolver::Node']]],
   ['node1_11',['Node1',['../classMinParametricSolver.html#ad45a649920efea0cfbdde84b5696fcf4',1,'MinParametricSolver']]]
 ];

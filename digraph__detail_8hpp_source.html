@@ -28,7 +28,7 @@ MathJax.Hub.Config({
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">DiGraphX<span id="projectnumber">&#160;1.1.8</span>
+   <div id="projectname">DiGraphX<span id="projectnumber">&#160;1.1.9</span>
    </div>
   </td>
  </tr>
@@ -92,9 +92,9 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;absl/container/flat_hash_map.h&gt;</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &lt;py2cpp/gen.hpp&gt;</span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &lt;cassert&gt;</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &lt;cassert&gt;</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &lt;py2cpp/gen.hpp&gt;</span></div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;type_traits&gt;</span></div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &lt;utility&gt;</span></div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
@@ -159,170 +159,234 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<span class="keyword">requires</span> { digraph.size(); }) visited.reserve(digraph.size());</div>
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; entry : digraph) {</div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>            <span class="keyword">const</span> <span class="keyword">auto</span>&amp; vtx = <a class="code hl_function" href="namespacedigraph__detail.html#a209e8907ed5d19a3a40a63945f4e357f">_get_key</a>(entry);</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>            <span class="keywordflow">if</span> (visited.contains(vtx)) <span class="keywordflow">continue</span>;</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>            <span class="keyword">auto</span> utx = vtx;</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>            visited[utx] = vtx;</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>            <span class="keywordflow">while</span> (point_to.contains(utx)) {</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>                utx = point_to.at(utx).first;</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>                <span class="keyword">auto</span> it = visited.find(utx);</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>                <span class="keywordflow">if</span> (it != visited.end()) {</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>                    <span class="keywordflow">if</span> (it-&gt;second == vtx) <span class="keyword">co_yield</span> utx;</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>                    <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>                }</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>                visited[utx] = vtx;</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>            }</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        }</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>        <span class="keyword">co_return</span>;</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    }</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>            <span class="comment">// Single probe: mark the DFS root and skip if already visited.</span></div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>            <span class="keywordflow">if</span> (!visited.try_emplace(vtx, vtx).second) <span class="keywordflow">continue</span>;</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>            <span class="keyword">auto</span> utx = vtx;</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>            <span class="keywordflow">while</span> (<span class="keyword">true</span>) {</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>                <span class="keyword">auto</span> pit = point_to.find(utx);</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>                <span class="keywordflow">if</span> (pit == point_to.end()) <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>                utx = pit-&gt;second.first;</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>                <span class="keyword">auto</span> it = visited.find(utx);</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>                <span class="keywordflow">if</span> (it != visited.end()) {</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>                    <span class="keywordflow">if</span> (it-&gt;second == vtx) <span class="keyword">co_yield</span> utx;</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>                    <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>                }</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>                visited.emplace(utx, vtx);</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>            }</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>        }</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>        <span class="keyword">co_return</span>;</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    }</div>
 </div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Po<span class="keywordtype">int</span>To&gt;</div>
-<div class="foldopen" id="foldopen00115" data-start="{" data-end="}">
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno"><a class="line" href="namespacedigraph__detail.html#ac10f3d2ba849c6014a40a1d65b779c0f">  115</a></span>    <span class="keyword">auto</span> <a class="code hl_function" href="namespacedigraph__detail.html#ac10f3d2ba849c6014a40a1d65b779c0f">cycle_list</a>(<span class="keyword">const</span> <span class="keyword">typename</span> PointTo::key_type&amp; handle, <span class="keyword">const</span> PointTo&amp; point_to)</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        -&gt; std::vector&lt;typename PointTo::mapped_type::second_type&gt; {</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>        <span class="keyword">using </span>Edge = <span class="keyword">typename</span> PointTo::mapped_type::second_type;</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>        <span class="keyword">auto</span> vtx = handle;</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>        <span class="keyword">auto</span> cycle = std::vector&lt;Edge&gt;{};</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        cycle.reserve(point_to.size());</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>        <span class="keywordflow">while</span> (<span class="keyword">true</span>) {</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>            <span class="keyword">const</span> <span class="keyword">auto</span>&amp; [utx, edge] = point_to.at(vtx);</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>            cycle.emplace_back(edge);</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>            vtx = utx;</div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>            <span class="keywordflow">if</span> (vtx == handle) <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>        }</div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>        <span class="keywordflow">return</span> cycle;</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>    }</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Po<span class="keywordtype">int</span>To&gt;</div>
+<div class="foldopen" id="foldopen00117" data-start="{" data-end="}">
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno"><a class="line" href="namespacedigraph__detail.html#ac10f3d2ba849c6014a40a1d65b779c0f">  117</a></span>    <span class="keyword">auto</span> <a class="code hl_function" href="namespacedigraph__detail.html#ac10f3d2ba849c6014a40a1d65b779c0f">cycle_list</a>(<span class="keyword">const</span> <span class="keyword">typename</span> PointTo::key_type&amp; handle, <span class="keyword">const</span> PointTo&amp; point_to)</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>        -&gt; std::vector&lt;typename PointTo::mapped_type::second_type&gt; {</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>        <span class="keyword">using </span>Edge = <span class="keyword">typename</span> PointTo::mapped_type::second_type;</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>        <span class="keyword">auto</span> vtx = handle;</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>        <span class="keyword">auto</span> cycle = std::vector&lt;Edge&gt;{};</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>        cycle.reserve(point_to.size());</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>        <span class="keywordflow">while</span> (<span class="keyword">true</span>) {</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>            <span class="keyword">const</span> <span class="keyword">auto</span>&amp; [utx, edge] = point_to.at(vtx);</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>            cycle.emplace_back(edge);</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>            vtx = utx;</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>            <span class="keywordflow">if</span> (vtx == handle) <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>        }</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>        <span class="keywordflow">return</span> cycle;</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>    }</div>
 </div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span> </div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Node, <span class="keyword">typename</span> Mapping, <span class="keyword">typename</span> GetWeight, <span class="keyword">typename</span> Po<span class="keywordtype">int</span>To&gt;</div>
-<div class="foldopen" id="foldopen00144" data-start="{" data-end="}">
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno"><a class="line" href="namespacedigraph__detail.html#ab74195babb092a2e16d7e5d59536853a">  144</a></span>    <span class="keyword">auto</span> <a class="code hl_function" href="namespacedigraph__detail.html#ab74195babb092a2e16d7e5d59536853a">is_negative</a>(<span class="keyword">const</span> Node&amp; handle, <span class="keyword">const</span> Mapping&amp; dist, GetWeight&amp;&amp; get_weight,</div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>                     <span class="keyword">const</span> PointTo&amp; point_to) -&gt; <span class="keywordtype">bool</span> {</div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>        <span class="keyword">auto</span> vtx = handle;</div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>        <span class="keywordflow">while</span> (<span class="keyword">true</span>) {</div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>            <span class="keyword">const</span> <span class="keyword">auto</span>&amp; [utx, edge] = point_to.at(vtx);</div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>            <span class="keywordflow">if</span> (dist.at(vtx) &gt; dist.at(utx) + std::forward&lt;GetWeight&gt;(get_weight)(edge))</div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>                <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>            vtx = utx;</div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>            <span class="keywordflow">if</span> (vtx == handle) <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>        }</div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>    }</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span> </div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Node, <span class="keyword">typename</span> Mapping, <span class="keyword">typename</span> GetWeight, <span class="keyword">typename</span> Po<span class="keywordtype">int</span>To&gt;</div>
+<div class="foldopen" id="foldopen00146" data-start="{" data-end="}">
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno"><a class="line" href="namespacedigraph__detail.html#ab74195babb092a2e16d7e5d59536853a">  146</a></span>    <span class="keyword">auto</span> <a class="code hl_function" href="namespacedigraph__detail.html#ab74195babb092a2e16d7e5d59536853a">is_negative</a>(<span class="keyword">const</span> Node&amp; handle, <span class="keyword">const</span> Mapping&amp; dist, GetWeight&amp;&amp; get_weight,</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>                     <span class="keyword">const</span> PointTo&amp; point_to) -&gt; <span class="keywordtype">bool</span> {</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>        <span class="keyword">auto</span> vtx = handle;</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>        <span class="keywordflow">while</span> (<span class="keyword">true</span>) {</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>            <span class="keyword">const</span> <span class="keyword">auto</span>&amp; [utx, edge] = point_to.at(vtx);</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>            <span class="keywordflow">if</span> (dist.at(vtx) &gt; dist.at(utx) + std::forward&lt;GetWeight&gt;(get_weight)(edge))</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>                <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>            vtx = utx;</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>            <span class="keywordflow">if</span> (vtx == handle) <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>        }</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>        <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>    }</div>
 </div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span> </div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> DiGraph, <span class="keyword">typename</span> Mapping, <span class="keyword">typename</span> GetWeight, <span class="keyword">typename</span> PointTo,</div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>              <span class="keyword">typename</span> UpdateOk&gt;</div>
-<div class="foldopen" id="foldopen00174" data-start="{" data-end="}">
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno"><a class="line" href="namespacedigraph__detail.html#ac6898c6d6687ce255dfbe37cb5dfcf78">  174</a></span>    <span class="keyword">auto</span> <a class="code hl_function" href="namespacedigraph__detail.html#ac6898c6d6687ce255dfbe37cb5dfcf78">relax_pred</a>(<span class="keyword">const</span> DiGraph&amp; digraph, Mapping&amp; dist, GetWeight&amp;&amp; get_weight, PointTo&amp; pred,</div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>                    UpdateOk&amp;&amp; update_ok) -&gt; <span class="keywordtype">bool</span> {</div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>        <span class="keyword">auto</span> changed = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; entry : digraph) {</div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>            <span class="keyword">const</span> <span class="keyword">auto</span>&amp; utx = <a class="code hl_function" href="namespacedigraph__detail.html#a209e8907ed5d19a3a40a63945f4e357f">_get_key</a>(entry);</div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>            <span class="keyword">const</span> <span class="keyword">auto</span>&amp; nbrs = <a class="code hl_function" href="namespacedigraph__detail.html#a2bdc996e235cab0cd65a5216d29ca809">_get_val</a>(entry, digraph);</div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; nbr_entry : nbrs) {</div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>                <span class="keyword">const</span> <span class="keyword">auto</span>&amp; vtx = <a class="code hl_function" href="namespacedigraph__detail.html#a209e8907ed5d19a3a40a63945f4e357f">_get_key</a>(nbr_entry);</div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>                <span class="keyword">const</span> <span class="keyword">auto</span>&amp; edge = <a class="code hl_function" href="namespacedigraph__detail.html#a2bdc996e235cab0cd65a5216d29ca809">_get_val</a>(nbr_entry, nbrs);</div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>                <span class="keyword">auto</span> distance = dist[utx] + std::forward&lt;GetWeight&gt;(get_weight)(edge);</div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>                <span class="keywordflow">if</span> (dist[vtx] &gt; distance</div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>                    &amp;&amp; std::forward&lt;UpdateOk&gt;(update_ok)(dist[vtx], distance)) {</div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>                    dist[vtx] = distance;</div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>                    pred.insert_or_assign(vtx, std::pair(utx, edge));</div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>                    changed = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>                }</div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>            }</div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>        }</div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>        <span class="keywordflow">return</span> changed;</div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>    }</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span> </div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> DiGraph, <span class="keyword">typename</span> Mapping, <span class="keyword">typename</span> GetWeight, <span class="keyword">typename</span> PointTo,</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>              <span class="keyword">typename</span> UpdateOk&gt;</div>
+<div class="foldopen" id="foldopen00176" data-start="{" data-end="}">
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno"><a class="line" href="namespacedigraph__detail.html#ac6898c6d6687ce255dfbe37cb5dfcf78">  176</a></span>    <span class="keyword">auto</span> <a class="code hl_function" href="namespacedigraph__detail.html#ac6898c6d6687ce255dfbe37cb5dfcf78">relax_pred</a>(<span class="keyword">const</span> DiGraph&amp; digraph, Mapping&amp; dist, GetWeight&amp;&amp; get_weight, PointTo&amp; pred,</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>                    UpdateOk&amp;&amp; update_ok) -&gt; <span class="keywordtype">bool</span> {</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>        <span class="keyword">auto</span> changed = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; entry : digraph) {</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>            <span class="keyword">const</span> <span class="keyword">auto</span>&amp; utx = <a class="code hl_function" href="namespacedigraph__detail.html#a209e8907ed5d19a3a40a63945f4e357f">_get_key</a>(entry);</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>            <span class="keyword">const</span> <span class="keyword">auto</span>&amp; nbrs = <a class="code hl_function" href="namespacedigraph__detail.html#a2bdc996e235cab0cd65a5216d29ca809">_get_val</a>(entry, digraph);</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; nbr_entry : nbrs) {</div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>                <span class="keyword">const</span> <span class="keyword">auto</span>&amp; vtx = <a class="code hl_function" href="namespacedigraph__detail.html#a209e8907ed5d19a3a40a63945f4e357f">_get_key</a>(nbr_entry);</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>                <span class="keyword">const</span> <span class="keyword">auto</span>&amp; edge = <a class="code hl_function" href="namespacedigraph__detail.html#a2bdc996e235cab0cd65a5216d29ca809">_get_val</a>(nbr_entry, nbrs);</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>                <span class="keyword">auto</span> distance = dist[utx] + std::forward&lt;GetWeight&gt;(get_weight)(edge);</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>                <span class="keywordflow">if</span> (dist[vtx] &gt; distance</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>                    &amp;&amp; std::forward&lt;UpdateOk&gt;(update_ok)(dist[vtx], distance)) {</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>                    dist[vtx] = distance;</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>                    pred.insert_or_assign(vtx, std::pair(utx, edge));</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>                    changed = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>                }</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>            }</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>        }</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>        <span class="keywordflow">return</span> changed;</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>    }</div>
 </div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span> </div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> DiGraph, <span class="keyword">typename</span> Mapping, <span class="keyword">typename</span> GetWeight, <span class="keyword">typename</span> PointTo,</div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>              <span class="keyword">typename</span> UpdateOk&gt;</div>
-<div class="foldopen" id="foldopen00212" data-start="{" data-end="}">
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno"><a class="line" href="namespacedigraph__detail.html#af680bd8dac0a3215262b6472a5acf6b2">  212</a></span>    <span class="keyword">auto</span> <a class="code hl_function" href="namespacedigraph__detail.html#af680bd8dac0a3215262b6472a5acf6b2">relax_succ</a>(<span class="keyword">const</span> DiGraph&amp; digraph, Mapping&amp; dist, GetWeight&amp;&amp; get_weight, PointTo&amp; succ,</div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>                    UpdateOk&amp;&amp; update_ok) -&gt; <span class="keywordtype">bool</span> {</div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>        <span class="keyword">auto</span> changed = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; entry : digraph) {</div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>            <span class="keyword">const</span> <span class="keyword">auto</span>&amp; utx = <a class="code hl_function" href="namespacedigraph__detail.html#a209e8907ed5d19a3a40a63945f4e357f">_get_key</a>(entry);</div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>            <span class="keyword">const</span> <span class="keyword">auto</span>&amp; nbrs = <a class="code hl_function" href="namespacedigraph__detail.html#a2bdc996e235cab0cd65a5216d29ca809">_get_val</a>(entry, digraph);</div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; nbr_entry : nbrs) {</div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>                <span class="keyword">const</span> <span class="keyword">auto</span>&amp; vtx = <a class="code hl_function" href="namespacedigraph__detail.html#a209e8907ed5d19a3a40a63945f4e357f">_get_key</a>(nbr_entry);</div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>                <span class="keyword">const</span> <span class="keyword">auto</span>&amp; edge = <a class="code hl_function" href="namespacedigraph__detail.html#a2bdc996e235cab0cd65a5216d29ca809">_get_val</a>(nbr_entry, nbrs);</div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>                <span class="keyword">auto</span> distance = dist[vtx] - std::forward&lt;GetWeight&gt;(get_weight)(edge);</div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>                <span class="keywordflow">if</span> (dist[utx] &lt; distance</div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>                    &amp;&amp; std::forward&lt;UpdateOk&gt;(update_ok)(dist[utx], distance)) {</div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>                    dist[utx] = distance;</div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>                    succ.insert_or_assign(utx, std::pair(vtx, edge));</div>
-<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>                    changed = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>                }</div>
-<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>            }</div>
-<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>        }</div>
-<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>        <span class="keywordflow">return</span> changed;</div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>    }</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span> </div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> DiGraph, <span class="keyword">typename</span> Mapping, <span class="keyword">typename</span> GetWeight, <span class="keyword">typename</span> PointTo,</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>              <span class="keyword">typename</span> UpdateOk&gt;</div>
+<div class="foldopen" id="foldopen00214" data-start="{" data-end="}">
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno"><a class="line" href="namespacedigraph__detail.html#af680bd8dac0a3215262b6472a5acf6b2">  214</a></span>    <span class="keyword">auto</span> <a class="code hl_function" href="namespacedigraph__detail.html#af680bd8dac0a3215262b6472a5acf6b2">relax_succ</a>(<span class="keyword">const</span> DiGraph&amp; digraph, Mapping&amp; dist, GetWeight&amp;&amp; get_weight, PointTo&amp; succ,</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>                    UpdateOk&amp;&amp; update_ok) -&gt; <span class="keywordtype">bool</span> {</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>        <span class="keyword">auto</span> changed = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; entry : digraph) {</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>            <span class="keyword">const</span> <span class="keyword">auto</span>&amp; utx = <a class="code hl_function" href="namespacedigraph__detail.html#a209e8907ed5d19a3a40a63945f4e357f">_get_key</a>(entry);</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>            <span class="keyword">const</span> <span class="keyword">auto</span>&amp; nbrs = <a class="code hl_function" href="namespacedigraph__detail.html#a2bdc996e235cab0cd65a5216d29ca809">_get_val</a>(entry, digraph);</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; nbr_entry : nbrs) {</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>                <span class="keyword">const</span> <span class="keyword">auto</span>&amp; vtx = <a class="code hl_function" href="namespacedigraph__detail.html#a209e8907ed5d19a3a40a63945f4e357f">_get_key</a>(nbr_entry);</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>                <span class="keyword">const</span> <span class="keyword">auto</span>&amp; edge = <a class="code hl_function" href="namespacedigraph__detail.html#a2bdc996e235cab0cd65a5216d29ca809">_get_val</a>(nbr_entry, nbrs);</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>                <span class="keyword">auto</span> distance = dist[vtx] - std::forward&lt;GetWeight&gt;(get_weight)(edge);</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>                <span class="keywordflow">if</span> (dist[utx] &lt; distance</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>                    &amp;&amp; std::forward&lt;UpdateOk&gt;(update_ok)(dist[utx], distance)) {</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>                    dist[utx] = distance;</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>                    succ.insert_or_assign(utx, std::pair(vtx, edge));</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>                    changed = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>                }</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>            }</div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>        }</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>        <span class="keywordflow">return</span> changed;</div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>    }</div>
 </div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span> </div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> DiGraph, <span class="keyword">typename</span> Mapping, <span class="keyword">typename</span> GetWeight, <span class="keyword">typename</span> PointTo,</div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>              <span class="keyword">typename</span> Relax, <span class="keyword">typename</span> Check&gt;</div>
-<div class="foldopen" id="foldopen00256" data-start="{" data-end="}">
-<div class="line"><a id="l00256" name="l00256"></a><span class="lineno"><a class="line" href="namespacedigraph__detail.html#a95f3ea7e71b19fcc6bce5d7648127510">  256</a></span>    <span class="keyword">auto</span> <a class="code hl_function" href="namespacedigraph__detail.html#a95f3ea7e71b19fcc6bce5d7648127510">howard_search</a>(<span class="keyword">const</span> DiGraph&amp; digraph, Mapping&amp; dist, GetWeight get_weight,</div>
-<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>                       PointTo&amp; point_to, Relax relax, Check check)</div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>        -&gt; py::Generator&lt;typename graph_traits&lt;DiGraph&gt;::Cycle&gt; {</div>
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>        <span class="keyword">using </span>Cycle = <span class="keyword">typename</span> <a class="code hl_typedef" href="structdigraph__detail_1_1graph__traits.html#af16e5448c808a9b0beec3a7d2de8e0a7">graph_traits&lt;DiGraph&gt;::Cycle</a>;</div>
-<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>        point_to.clear();</div>
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<span class="keyword">requires</span> { digraph.size(); }) point_to.reserve(digraph.size());</div>
-<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>        <span class="keyword">auto</span> found = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>        <span class="keywordflow">while</span> (!found &amp;&amp; relax(dist, get_weight)) {</div>
-<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; vtx : <a class="code hl_function" href="namespacedigraph__detail.html#aab4fca2fee4321906a88dea585323567">find_cycle</a>(digraph, point_to)) {</div>
-<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>                check(vtx, dist, get_weight);</div>
-<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>                <span class="keyword">co_yield</span> <a class="code hl_function" href="namespacedigraph__detail.html#ac10f3d2ba849c6014a40a1d65b779c0f">cycle_list</a>(vtx, point_to);</div>
-<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>                found = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>            }</div>
-<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>        }</div>
-<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>        <span class="keyword">co_return</span>;</div>
-<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>    }</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span> </div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>    <span class="keyword">template</span> &lt;<span class="keywordtype">bool</span> IsPred, <span class="keyword">typename</span> Weight, <span class="keyword">typename</span> DiGraph, <span class="keyword">typename</span> Mapping, <span class="keyword">typename</span> PointTo,</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>              <span class="keyword">typename</span> UpdateOk&gt;</div>
+<div class="foldopen" id="foldopen00253" data-start="{" data-end="};">
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno"><a class="line" href="classdigraph__detail_1_1RelaxCached.html">  253</a></span>    <span class="keyword">class </span><a class="code hl_class" href="classdigraph__detail_1_1RelaxCached.html">RelaxCached</a> {</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>      <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno"><a class="line" href="classdigraph__detail_1_1RelaxCached.html#ae877ea52dfa73d77b3f96b3c315bda08">  255</a></span>        <span class="keyword">using </span><a class="code hl_typedef" href="classdigraph__detail_1_1RelaxCached.html#ae877ea52dfa73d77b3f96b3c315bda08">Node</a> = <span class="keyword">typename</span> <a class="code hl_typedef" href="structdigraph__detail_1_1graph__traits.html#a3b76c9390af365c5f736c2d0e35ecf8e">graph_traits&lt;DiGraph&gt;::Node</a>;</div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span> </div>
+<div class="foldopen" id="foldopen00257" data-start="{" data-end="}">
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno"><a class="line" href="classdigraph__detail_1_1RelaxCached.html#a7ce9a04a5f19f7e386bda7f83bf7c40e">  257</a></span>        <a class="code hl_function" href="classdigraph__detail_1_1RelaxCached.html#a7ce9a04a5f19f7e386bda7f83bf7c40e">RelaxCached</a>(<span class="keyword">const</span> DiGraph&amp; digraph, PointTo&amp; point_to, UpdateOk update_ok)</div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>            : _digraph(digraph), _point_to(point_to), _update_ok(std::move(update_ok)) {}</div>
 </div>
-<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span> </div>
-<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Ratio, <span class="keyword">typename</span> Edge, <span class="keyword">typename</span> Cycle, <span class="keyword">typename</span> Domain, <span class="keyword">typename</span> Fn1,</div>
-<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>              <span class="keyword">typename</span> Fn2&gt;</div>
-<div class="foldopen" id="foldopen00286" data-start="{" data-end="};">
-<div class="line"><a id="l00286" name="l00286"></a><span class="lineno"><a class="line" href="classdigraph__detail_1_1CallbackParametricAPI.html">  286</a></span>    <span class="keyword">class </span><a class="code hl_class" href="classdigraph__detail_1_1CallbackParametricAPI.html">CallbackParametricAPI</a> {</div>
-<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>      <span class="keyword">public</span>:</div>
-<div class="foldopen" id="foldopen00288" data-start="{" data-end="}">
-<div class="line"><a id="l00288" name="l00288"></a><span class="lineno"><a class="line" href="classdigraph__detail_1_1CallbackParametricAPI.html#a6f193b1274d4ec7461bcc65663977811">  288</a></span>        <a class="code hl_function" href="classdigraph__detail_1_1CallbackParametricAPI.html#a6f193b1274d4ec7461bcc65663977811">CallbackParametricAPI</a>(Fn1 <a class="code hl_function" href="classdigraph__detail_1_1CallbackParametricAPI.html#a9956f8524a921168b10f007691347a9b">distance</a>, Fn2 <a class="code hl_function" href="classdigraph__detail_1_1CallbackParametricAPI.html#a153ddaa05dbc8474e2e52676f00b5f34">zero_cancel</a>)</div>
-<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>            : _distance(std::move(<a class="code hl_function" href="classdigraph__detail_1_1CallbackParametricAPI.html#a9956f8524a921168b10f007691347a9b">distance</a>)), _zero_cancel(std::move(<a class="code hl_function" href="classdigraph__detail_1_1CallbackParametricAPI.html#a153ddaa05dbc8474e2e52676f00b5f34">zero_cancel</a>)) {}</div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span> </div>
+<div class="foldopen" id="foldopen00260" data-start="{" data-end="}">
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno"><a class="line" href="classdigraph__detail_1_1RelaxCached.html#ab0083a61f42577fe3851bbb5ad12bfbb">  260</a></span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> GetWeight&gt; <span class="keyword">auto</span> <a class="code hl_function" href="classdigraph__detail_1_1RelaxCached.html#ab0083a61f42577fe3851bbb5ad12bfbb">operator()</a>(Mapping&amp; dist, GetWeight&amp; get_weight)</div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>            -&gt; <span class="keywordtype">bool</span> {</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>            <span class="keyword">const</span> <span class="keyword">auto</span> build = (_pass == 1);</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>            <span class="keywordflow">if</span> (build) _weights.clear();</div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>            <span class="keyword">auto</span> wit = _weights.begin();</div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>            <span class="keyword">auto</span> changed = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; entry : _digraph) {</div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>                <span class="keyword">const</span> <span class="keyword">auto</span>&amp; utx = <a class="code hl_function" href="namespacedigraph__detail.html#a209e8907ed5d19a3a40a63945f4e357f">_get_key</a>(entry);</div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>                <span class="keyword">const</span> <span class="keyword">auto</span>&amp; nbrs = <a class="code hl_function" href="namespacedigraph__detail.html#a2bdc996e235cab0cd65a5216d29ca809">_get_val</a>(entry, _digraph);</div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>                <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; nbr_entry : nbrs) {</div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>                    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; vtx = <a class="code hl_function" href="namespacedigraph__detail.html#a209e8907ed5d19a3a40a63945f4e357f">_get_key</a>(nbr_entry);</div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>                    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; edge = <a class="code hl_function" href="namespacedigraph__detail.html#a2bdc996e235cab0cd65a5216d29ca809">_get_val</a>(nbr_entry, nbrs);</div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>                    <span class="keyword">const</span> <span class="keyword">auto</span> weight</div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>                        = (_pass &gt;= 2) ? *wit++ : <span class="keyword">static_cast&lt;</span>Weight<span class="keyword">&gt;</span>(get_weight(edge));</div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>                    <span class="keywordflow">if</span> (build) _weights.push_back(weight);</div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>                    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (IsPred) {</div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>                        <span class="keyword">auto</span> distance = dist[utx] + weight;</div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>                        <span class="keywordflow">if</span> (dist[vtx] &gt; distance &amp;&amp; _update_ok(dist[vtx], distance)) {</div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>                            dist[vtx] = distance;</div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>                            _point_to.insert_or_assign(vtx, std::pair(utx, edge));</div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>                            changed = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>                        }</div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>                    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>                        <span class="keyword">auto</span> distance = dist[vtx] - weight;</div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>                        <span class="keywordflow">if</span> (dist[utx] &lt; distance &amp;&amp; _update_ok(dist[utx], distance)) {</div>
+<div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>                            dist[utx] = distance;</div>
+<div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span>                            _point_to.insert_or_assign(utx, std::pair(vtx, edge));</div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>                            changed = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>                        }</div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>                    }</div>
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>                }</div>
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>            }</div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>            ++_pass;</div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>            <span class="keywordflow">return</span> changed;</div>
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>        }</div>
 </div>
-<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span> </div>
-<div class="foldopen" id="foldopen00291" data-start="{" data-end="}">
-<div class="line"><a id="l00291" name="l00291"></a><span class="lineno"><a class="line" href="classdigraph__detail_1_1CallbackParametricAPI.html#a9956f8524a921168b10f007691347a9b">  291</a></span>        <span class="keyword">auto</span> <a class="code hl_function" href="classdigraph__detail_1_1CallbackParametricAPI.html#a9956f8524a921168b10f007691347a9b">distance</a>(Ratio&amp; r_opt, <span class="keyword">const</span> Edge&amp; edge) <span class="keyword">const</span> -&gt; Domain {</div>
-<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>            <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>Domain<span class="keyword">&gt;</span>(_distance(r_opt, edge));</div>
-<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>        }</div>
-</div>
-<div class="line"><a id="l00294" name="l00294"></a><span class="lineno"><a class="line" href="classdigraph__detail_1_1CallbackParametricAPI.html#a153ddaa05dbc8474e2e52676f00b5f34">  294</a></span>        <span class="keyword">auto</span> <a class="code hl_function" href="classdigraph__detail_1_1CallbackParametricAPI.html#a153ddaa05dbc8474e2e52676f00b5f34">zero_cancel</a>(<span class="keyword">const</span> Cycle&amp; cycle)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> _zero_cancel(cycle); }</div>
 <div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span> </div>
 <div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>      <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>        Fn1 _distance;</div>
-<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>        Fn2 _zero_cancel;</div>
-<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>    };</div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>        <span class="keyword">const</span> DiGraph&amp; _digraph;</div>
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>        PointTo&amp; _point_to;</div>
+<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>        UpdateOk _update_ok;</div>
+<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>        std::vector&lt;Weight&gt; _weights{};</div>
+<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>        <span class="keywordtype">int</span> _pass = 0;</div>
+<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>    };</div>
 </div>
-<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span> </div>
-<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>}  <span class="comment">// namespace digraph_detail</span></div>
+<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span> </div>
+<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> DiGraph, <span class="keyword">typename</span> Mapping, <span class="keyword">typename</span> GetWeight, <span class="keyword">typename</span> PointTo,</div>
+<div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>              <span class="keyword">typename</span> Relax, <span class="keyword">typename</span> Check&gt;</div>
+<div class="foldopen" id="foldopen00327" data-start="{" data-end="}">
+<div class="line"><a id="l00327" name="l00327"></a><span class="lineno"><a class="line" href="namespacedigraph__detail.html#a95f3ea7e71b19fcc6bce5d7648127510">  327</a></span>    <span class="keyword">auto</span> <a class="code hl_function" href="namespacedigraph__detail.html#a95f3ea7e71b19fcc6bce5d7648127510">howard_search</a>(<span class="keyword">const</span> DiGraph&amp; digraph, Mapping&amp; dist, GetWeight get_weight,</div>
+<div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span>                       PointTo&amp; point_to, Relax relax, Check check)</div>
+<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>        -&gt; py::Generator&lt;typename graph_traits&lt;DiGraph&gt;::Cycle&gt; {</div>
+<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>        point_to.clear();</div>
+<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>        <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<span class="keyword">requires</span> { digraph.size(); }) point_to.reserve(digraph.size());</div>
+<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>        <span class="keyword">auto</span> found = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>        <span class="keywordflow">while</span> (!found &amp;&amp; relax(dist, get_weight)) {</div>
+<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>            <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; vtx : <a class="code hl_function" href="namespacedigraph__detail.html#aab4fca2fee4321906a88dea585323567">find_cycle</a>(digraph, point_to)) {</div>
+<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>                check(vtx, dist, get_weight);</div>
+<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>                <span class="keyword">co_yield</span> <a class="code hl_function" href="namespacedigraph__detail.html#ac10f3d2ba849c6014a40a1d65b779c0f">cycle_list</a>(vtx, point_to);</div>
+<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>                found = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>            }</div>
+<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>        }</div>
+<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>        <span class="keyword">co_return</span>;</div>
+<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>    }</div>
 </div>
-<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span> </div>
-<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span><span class="preprocessor">#ifdef _MSC_VER</span></div>
-<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span><span class="preprocessor">#    pragma warning(pop)</span></div>
-<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span><span class="preprocessor">#endif</span></div>
-<div class="ttc" id="aclassdigraph__detail_1_1CallbackParametricAPI_html"><div class="ttname"><a href="classdigraph__detail_1_1CallbackParametricAPI.html">digraph_detail::CallbackParametricAPI</a></div><div class="ttdoc">Strategy adapter: present a (distance, zero_cancel) callback pair as a ParametricAPI (duck-typed inte...</div><div class="ttdef"><b>Definition</b> digraph_detail.hpp:286</div></div>
-<div class="ttc" id="aclassdigraph__detail_1_1CallbackParametricAPI_html_a153ddaa05dbc8474e2e52676f00b5f34"><div class="ttname"><a href="classdigraph__detail_1_1CallbackParametricAPI.html#a153ddaa05dbc8474e2e52676f00b5f34">digraph_detail::CallbackParametricAPI::zero_cancel</a></div><div class="ttdeci">auto zero_cancel(const Cycle &amp;cycle) const</div><div class="ttdef"><b>Definition</b> digraph_detail.hpp:294</div></div>
-<div class="ttc" id="aclassdigraph__detail_1_1CallbackParametricAPI_html_a6f193b1274d4ec7461bcc65663977811"><div class="ttname"><a href="classdigraph__detail_1_1CallbackParametricAPI.html#a6f193b1274d4ec7461bcc65663977811">digraph_detail::CallbackParametricAPI::CallbackParametricAPI</a></div><div class="ttdeci">CallbackParametricAPI(Fn1 distance, Fn2 zero_cancel)</div><div class="ttdef"><b>Definition</b> digraph_detail.hpp:288</div></div>
-<div class="ttc" id="aclassdigraph__detail_1_1CallbackParametricAPI_html_a9956f8524a921168b10f007691347a9b"><div class="ttname"><a href="classdigraph__detail_1_1CallbackParametricAPI.html#a9956f8524a921168b10f007691347a9b">digraph_detail::CallbackParametricAPI::distance</a></div><div class="ttdeci">auto distance(Ratio &amp;r_opt, const Edge &amp;edge) const -&gt; Domain</div><div class="ttdef"><b>Definition</b> digraph_detail.hpp:291</div></div>
+<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span> </div>
+<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Ratio, <span class="keyword">typename</span> Edge, <span class="keyword">typename</span> Cycle, <span class="keyword">typename</span> Domain, <span class="keyword">typename</span> Fn1,</div>
+<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>              <span class="keyword">typename</span> Fn2&gt;</div>
+<div class="foldopen" id="foldopen00356" data-start="{" data-end="};">
+<div class="line"><a id="l00356" name="l00356"></a><span class="lineno"><a class="line" href="classdigraph__detail_1_1CallbackParametricAPI.html">  356</a></span>    <span class="keyword">class </span><a class="code hl_class" href="classdigraph__detail_1_1CallbackParametricAPI.html">CallbackParametricAPI</a> {</div>
+<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>      <span class="keyword">public</span>:</div>
+<div class="foldopen" id="foldopen00358" data-start="{" data-end="}">
+<div class="line"><a id="l00358" name="l00358"></a><span class="lineno"><a class="line" href="classdigraph__detail_1_1CallbackParametricAPI.html#a6f193b1274d4ec7461bcc65663977811">  358</a></span>        <a class="code hl_function" href="classdigraph__detail_1_1CallbackParametricAPI.html#a6f193b1274d4ec7461bcc65663977811">CallbackParametricAPI</a>(Fn1 <a class="code hl_function" href="classdigraph__detail_1_1CallbackParametricAPI.html#a9956f8524a921168b10f007691347a9b">distance</a>, Fn2 <a class="code hl_function" href="classdigraph__detail_1_1CallbackParametricAPI.html#a153ddaa05dbc8474e2e52676f00b5f34">zero_cancel</a>)</div>
+<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span>            : _distance(std::move(<a class="code hl_function" href="classdigraph__detail_1_1CallbackParametricAPI.html#a9956f8524a921168b10f007691347a9b">distance</a>)), _zero_cancel(std::move(<a class="code hl_function" href="classdigraph__detail_1_1CallbackParametricAPI.html#a153ddaa05dbc8474e2e52676f00b5f34">zero_cancel</a>)) {}</div>
+</div>
+<div class="line"><a id="l00360" name="l00360"></a><span class="lineno">  360</span> </div>
+<div class="foldopen" id="foldopen00361" data-start="{" data-end="}">
+<div class="line"><a id="l00361" name="l00361"></a><span class="lineno"><a class="line" href="classdigraph__detail_1_1CallbackParametricAPI.html#a9956f8524a921168b10f007691347a9b">  361</a></span>        <span class="keyword">auto</span> <a class="code hl_function" href="classdigraph__detail_1_1CallbackParametricAPI.html#a9956f8524a921168b10f007691347a9b">distance</a>(Ratio&amp; r_opt, <span class="keyword">const</span> Edge&amp; edge) <span class="keyword">const</span> -&gt; Domain {</div>
+<div class="line"><a id="l00362" name="l00362"></a><span class="lineno">  362</span>            <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span>Domain<span class="keyword">&gt;</span>(_distance(r_opt, edge));</div>
+<div class="line"><a id="l00363" name="l00363"></a><span class="lineno">  363</span>        }</div>
+</div>
+<div class="line"><a id="l00364" name="l00364"></a><span class="lineno"><a class="line" href="classdigraph__detail_1_1CallbackParametricAPI.html#a153ddaa05dbc8474e2e52676f00b5f34">  364</a></span>        <span class="keyword">auto</span> <a class="code hl_function" href="classdigraph__detail_1_1CallbackParametricAPI.html#a153ddaa05dbc8474e2e52676f00b5f34">zero_cancel</a>(<span class="keyword">const</span> Cycle&amp; cycle)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> _zero_cancel(cycle); }</div>
+<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span> </div>
+<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>      <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>        Fn1 _distance;</div>
+<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span>        Fn2 _zero_cancel;</div>
+<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>    };</div>
+</div>
+<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span> </div>
+<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>}  <span class="comment">// namespace digraph_detail</span></div>
+</div>
+<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span> </div>
+<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span><span class="preprocessor">#ifdef _MSC_VER</span></div>
+<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span><span class="preprocessor">#    pragma warning(pop)</span></div>
+<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="aclassdigraph__detail_1_1CallbackParametricAPI_html"><div class="ttname"><a href="classdigraph__detail_1_1CallbackParametricAPI.html">digraph_detail::CallbackParametricAPI</a></div><div class="ttdoc">Strategy adapter: present a (distance, zero_cancel) callback pair as a ParametricAPI (duck-typed inte...</div><div class="ttdef"><b>Definition</b> digraph_detail.hpp:356</div></div>
+<div class="ttc" id="aclassdigraph__detail_1_1CallbackParametricAPI_html_a153ddaa05dbc8474e2e52676f00b5f34"><div class="ttname"><a href="classdigraph__detail_1_1CallbackParametricAPI.html#a153ddaa05dbc8474e2e52676f00b5f34">digraph_detail::CallbackParametricAPI::zero_cancel</a></div><div class="ttdeci">auto zero_cancel(const Cycle &amp;cycle) const</div><div class="ttdef"><b>Definition</b> digraph_detail.hpp:364</div></div>
+<div class="ttc" id="aclassdigraph__detail_1_1CallbackParametricAPI_html_a6f193b1274d4ec7461bcc65663977811"><div class="ttname"><a href="classdigraph__detail_1_1CallbackParametricAPI.html#a6f193b1274d4ec7461bcc65663977811">digraph_detail::CallbackParametricAPI::CallbackParametricAPI</a></div><div class="ttdeci">CallbackParametricAPI(Fn1 distance, Fn2 zero_cancel)</div><div class="ttdef"><b>Definition</b> digraph_detail.hpp:358</div></div>
+<div class="ttc" id="aclassdigraph__detail_1_1CallbackParametricAPI_html_a9956f8524a921168b10f007691347a9b"><div class="ttname"><a href="classdigraph__detail_1_1CallbackParametricAPI.html#a9956f8524a921168b10f007691347a9b">digraph_detail::CallbackParametricAPI::distance</a></div><div class="ttdeci">auto distance(Ratio &amp;r_opt, const Edge &amp;edge) const -&gt; Domain</div><div class="ttdef"><b>Definition</b> digraph_detail.hpp:361</div></div>
+<div class="ttc" id="aclassdigraph__detail_1_1RelaxCached_html"><div class="ttname"><a href="classdigraph__detail_1_1RelaxCached.html">digraph_detail::RelaxCached</a></div><div class="ttdoc">Relaxation strategy that caches edge weights across passes.</div><div class="ttdef"><b>Definition</b> digraph_detail.hpp:253</div></div>
+<div class="ttc" id="aclassdigraph__detail_1_1RelaxCached_html_a7ce9a04a5f19f7e386bda7f83bf7c40e"><div class="ttname"><a href="classdigraph__detail_1_1RelaxCached.html#a7ce9a04a5f19f7e386bda7f83bf7c40e">digraph_detail::RelaxCached::RelaxCached</a></div><div class="ttdeci">RelaxCached(const DiGraph &amp;digraph, PointTo &amp;point_to, UpdateOk update_ok)</div><div class="ttdef"><b>Definition</b> digraph_detail.hpp:257</div></div>
+<div class="ttc" id="aclassdigraph__detail_1_1RelaxCached_html_ab0083a61f42577fe3851bbb5ad12bfbb"><div class="ttname"><a href="classdigraph__detail_1_1RelaxCached.html#ab0083a61f42577fe3851bbb5ad12bfbb">digraph_detail::RelaxCached::operator()</a></div><div class="ttdeci">auto operator()(Mapping &amp;dist, GetWeight &amp;get_weight) -&gt; bool</div><div class="ttdef"><b>Definition</b> digraph_detail.hpp:260</div></div>
+<div class="ttc" id="aclassdigraph__detail_1_1RelaxCached_html_ae877ea52dfa73d77b3f96b3c315bda08"><div class="ttname"><a href="classdigraph__detail_1_1RelaxCached.html#ae877ea52dfa73d77b3f96b3c315bda08">digraph_detail::RelaxCached::Node</a></div><div class="ttdeci">typename graph_traits&lt; DiGraph &gt;::Node Node</div><div class="ttdef"><b>Definition</b> digraph_detail.hpp:255</div></div>
 <div class="ttc" id="anamespacedigraph__detail_html"><div class="ttname"><a href="namespacedigraph__detail.html">digraph_detail</a></div><div class="ttdef"><b>Definition</b> digraph_detail.hpp:28</div></div>
 <div class="ttc" id="anamespacedigraph__detail_html_a209e8907ed5d19a3a40a63945f4e357f"><div class="ttname"><a href="namespacedigraph__detail.html#a209e8907ed5d19a3a40a63945f4e357f">digraph_detail::_get_key</a></div><div class="ttdeci">decltype(auto) _get_key(const T &amp;entry)</div><div class="ttdef"><b>Definition</b> digraph_detail.hpp:33</div></div>
 <div class="ttc" id="anamespacedigraph__detail_html_a2bdc996e235cab0cd65a5216d29ca809"><div class="ttname"><a href="namespacedigraph__detail.html#a2bdc996e235cab0cd65a5216d29ca809">digraph_detail::_get_val</a></div><div class="ttdeci">decltype(auto) _get_val(const T &amp;entry, const Container &amp;c)</div><div class="ttdef"><b>Definition</b> digraph_detail.hpp:45</div></div>
-<div class="ttc" id="anamespacedigraph__detail_html_a95f3ea7e71b19fcc6bce5d7648127510"><div class="ttname"><a href="namespacedigraph__detail.html#a95f3ea7e71b19fcc6bce5d7648127510">digraph_detail::howard_search</a></div><div class="ttdeci">auto howard_search(const DiGraph &amp;digraph, Mapping &amp;dist, GetWeight get_weight, PointTo &amp;point_to, Relax relax, Check check) -&gt; py::Generator&lt; typename graph_traits&lt; DiGraph &gt;::Cycle &gt;</div><div class="ttdoc">Template Method: Howard's policy-iteration skeleton.</div><div class="ttdef"><b>Definition</b> digraph_detail.hpp:256</div></div>
+<div class="ttc" id="anamespacedigraph__detail_html_a95f3ea7e71b19fcc6bce5d7648127510"><div class="ttname"><a href="namespacedigraph__detail.html#a95f3ea7e71b19fcc6bce5d7648127510">digraph_detail::howard_search</a></div><div class="ttdeci">auto howard_search(const DiGraph &amp;digraph, Mapping &amp;dist, GetWeight get_weight, PointTo &amp;point_to, Relax relax, Check check) -&gt; py::Generator&lt; typename graph_traits&lt; DiGraph &gt;::Cycle &gt;</div><div class="ttdoc">Template Method: Howard's policy-iteration skeleton.</div><div class="ttdef"><b>Definition</b> digraph_detail.hpp:327</div></div>
 <div class="ttc" id="anamespacedigraph__detail_html_aab4fca2fee4321906a88dea585323567"><div class="ttname"><a href="namespacedigraph__detail.html#aab4fca2fee4321906a88dea585323567">digraph_detail::find_cycle</a></div><div class="ttdeci">auto find_cycle(const DiGraph &amp;digraph, const PointTo &amp;point_to) -&gt; py::Generator&lt; typename graph_traits&lt; DiGraph &gt;::Node &gt;</div><div class="ttdoc">Find all cycles in a predecessor/successor map (policy graph).</div><div class="ttdef"><b>Definition</b> digraph_detail.hpp:83</div></div>
-<div class="ttc" id="anamespacedigraph__detail_html_ab74195babb092a2e16d7e5d59536853a"><div class="ttname"><a href="namespacedigraph__detail.html#ab74195babb092a2e16d7e5d59536853a">digraph_detail::is_negative</a></div><div class="ttdeci">auto is_negative(const Node &amp;handle, const Mapping &amp;dist, GetWeight &amp;&amp;get_weight, const PointTo &amp;point_to) -&gt; bool</div><div class="ttdoc">Check whether the cycle starting at handle is negative.</div><div class="ttdef"><b>Definition</b> digraph_detail.hpp:144</div></div>
-<div class="ttc" id="anamespacedigraph__detail_html_ac10f3d2ba849c6014a40a1d65b779c0f"><div class="ttname"><a href="namespacedigraph__detail.html#ac10f3d2ba849c6014a40a1d65b779c0f">digraph_detail::cycle_list</a></div><div class="ttdeci">auto cycle_list(const typename PointTo::key_type &amp;handle, const PointTo &amp;point_to) -&gt; std::vector&lt; typename PointTo::mapped_type::second_type &gt;</div><div class="ttdoc">Reconstruct the cycle edges starting from a handle node.</div><div class="ttdef"><b>Definition</b> digraph_detail.hpp:115</div></div>
-<div class="ttc" id="anamespacedigraph__detail_html_ac6898c6d6687ce255dfbe37cb5dfcf78"><div class="ttname"><a href="namespacedigraph__detail.html#ac6898c6d6687ce255dfbe37cb5dfcf78">digraph_detail::relax_pred</a></div><div class="ttdeci">auto relax_pred(const DiGraph &amp;digraph, Mapping &amp;dist, GetWeight &amp;&amp;get_weight, PointTo &amp;pred, UpdateOk &amp;&amp;update_ok) -&gt; bool</div><div class="ttdoc">Predecessor relaxation (Bellman-Ford forward) with an update gate.</div><div class="ttdef"><b>Definition</b> digraph_detail.hpp:174</div></div>
-<div class="ttc" id="anamespacedigraph__detail_html_af680bd8dac0a3215262b6472a5acf6b2"><div class="ttname"><a href="namespacedigraph__detail.html#af680bd8dac0a3215262b6472a5acf6b2">digraph_detail::relax_succ</a></div><div class="ttdeci">auto relax_succ(const DiGraph &amp;digraph, Mapping &amp;dist, GetWeight &amp;&amp;get_weight, PointTo &amp;succ, UpdateOk &amp;&amp;update_ok) -&gt; bool</div><div class="ttdoc">Successor relaxation (reverse) with an update gate.</div><div class="ttdef"><b>Definition</b> digraph_detail.hpp:212</div></div>
+<div class="ttc" id="anamespacedigraph__detail_html_ab74195babb092a2e16d7e5d59536853a"><div class="ttname"><a href="namespacedigraph__detail.html#ab74195babb092a2e16d7e5d59536853a">digraph_detail::is_negative</a></div><div class="ttdeci">auto is_negative(const Node &amp;handle, const Mapping &amp;dist, GetWeight &amp;&amp;get_weight, const PointTo &amp;point_to) -&gt; bool</div><div class="ttdoc">Check whether the cycle starting at handle is negative.</div><div class="ttdef"><b>Definition</b> digraph_detail.hpp:146</div></div>
+<div class="ttc" id="anamespacedigraph__detail_html_ac10f3d2ba849c6014a40a1d65b779c0f"><div class="ttname"><a href="namespacedigraph__detail.html#ac10f3d2ba849c6014a40a1d65b779c0f">digraph_detail::cycle_list</a></div><div class="ttdeci">auto cycle_list(const typename PointTo::key_type &amp;handle, const PointTo &amp;point_to) -&gt; std::vector&lt; typename PointTo::mapped_type::second_type &gt;</div><div class="ttdoc">Reconstruct the cycle edges starting from a handle node.</div><div class="ttdef"><b>Definition</b> digraph_detail.hpp:117</div></div>
+<div class="ttc" id="anamespacedigraph__detail_html_ac6898c6d6687ce255dfbe37cb5dfcf78"><div class="ttname"><a href="namespacedigraph__detail.html#ac6898c6d6687ce255dfbe37cb5dfcf78">digraph_detail::relax_pred</a></div><div class="ttdeci">auto relax_pred(const DiGraph &amp;digraph, Mapping &amp;dist, GetWeight &amp;&amp;get_weight, PointTo &amp;pred, UpdateOk &amp;&amp;update_ok) -&gt; bool</div><div class="ttdoc">Predecessor relaxation (Bellman-Ford forward) with an update gate.</div><div class="ttdef"><b>Definition</b> digraph_detail.hpp:176</div></div>
+<div class="ttc" id="anamespacedigraph__detail_html_af680bd8dac0a3215262b6472a5acf6b2"><div class="ttname"><a href="namespacedigraph__detail.html#af680bd8dac0a3215262b6472a5acf6b2">digraph_detail::relax_succ</a></div><div class="ttdeci">auto relax_succ(const DiGraph &amp;digraph, Mapping &amp;dist, GetWeight &amp;&amp;get_weight, PointTo &amp;succ, UpdateOk &amp;&amp;update_ok) -&gt; bool</div><div class="ttdoc">Successor relaxation (reverse) with an update gate.</div><div class="ttdef"><b>Definition</b> digraph_detail.hpp:214</div></div>
 <div class="ttc" id="astructdigraph__detail_1_1graph__traits_html"><div class="ttname"><a href="structdigraph__detail_1_1graph__traits.html">digraph_detail::graph_traits</a></div><div class="ttdoc">Type trait deriving Node / Edge / Cycle from any supported graph container.</div><div class="ttdef"><b>Definition</b> digraph_detail.hpp:59</div></div>
 <div class="ttc" id="astructdigraph__detail_1_1graph__traits_html_a18a74c082a64f54518700318a87699fc"><div class="ttname"><a href="structdigraph__detail_1_1graph__traits.html#a18a74c082a64f54518700318a87699fc">digraph_detail::graph_traits::Elem</a></div><div class="ttdeci">decltype(*std::declval&lt; ItemsT &gt;().begin()) Elem</div><div class="ttdef"><b>Definition</b> digraph_detail.hpp:61</div></div>
 <div class="ttc" id="astructdigraph__detail_1_1graph__traits_html_a3b76c9390af365c5f736c2d0e35ecf8e"><div class="ttname"><a href="structdigraph__detail_1_1graph__traits.html#a3b76c9390af365c5f736c2d0e35ecf8e">digraph_detail::graph_traits::Node</a></div><div class="ttdeci">std::remove_cv_t&lt; std::remove_reference_t&lt; decltype(_get_key(std::declval&lt; Elem &gt;()))&gt; &gt; Node</div><div class="ttdef"><b>Definition</b> digraph_detail.hpp:63</div></div>
