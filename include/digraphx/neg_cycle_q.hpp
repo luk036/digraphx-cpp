@@ -83,9 +83,11 @@ class NegCycleFinderQ {
     auto howard_pred(Mapping& dist, GetWeight get_weight, UpdateOk update_ok)
         -> py::Generator<Cycle> {
         // Strategy: constrained predecessor relaxation
-        auto relax = [this, update_ok](Mapping& d, auto& gw) {
-            return digraph_detail::relax_pred(this->_digraph, d, gw, this->_pred, update_ok);
-        };
+        using Weight = std::remove_cv_t<
+            std::remove_reference_t<decltype(get_weight(std::declval<const Edge&>()))>>;
+        auto relax
+            = digraph_detail::RelaxCached<true, Weight, DiGraph, Mapping, decltype(this->_pred),
+                                          UpdateOk>{this->_digraph, this->_pred, update_ok};
         // Hook: verify candidate cycles are actually negative
         auto check = [&](const auto& vtx, const auto& d, auto& gw) {
             assert(digraph_detail::is_negative(vtx, d, gw, this->_pred));
@@ -117,9 +119,11 @@ class NegCycleFinderQ {
     auto howard_succ(Mapping& dist, GetWeight get_weight, UpdateOk update_ok)
         -> py::Generator<Cycle> {
         // Strategy: constrained successor relaxation
-        auto relax = [this, update_ok](Mapping& d, auto& gw) {
-            return digraph_detail::relax_succ(this->_digraph, d, gw, this->_succ, update_ok);
-        };
+        using Weight = std::remove_cv_t<
+            std::remove_reference_t<decltype(get_weight(std::declval<const Edge&>()))>>;
+        auto relax
+            = digraph_detail::RelaxCached<false, Weight, DiGraph, Mapping, decltype(this->_succ),
+                                          UpdateOk>{this->_digraph, this->_succ, update_ok};
         // Hook: successor variant performs no negativity assertion
         auto no_check = [](const auto&, const auto&, auto&) {};
         return digraph_detail::howard_search(this->_digraph, dist, std::move(get_weight),

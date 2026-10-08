@@ -107,10 +107,12 @@ class NegCycleFinder {
     template <typename Mapping, typename Callable> auto howard(Mapping& dist, Callable get_weight)
         -> py::Generator<Cycle> {
         // Strategy: unconstrained predecessor relaxation (always allow updates)
-        auto relax = [this](Mapping& d, auto& gw) {
-            return digraph_detail::relax_pred(this->_digraph, d, gw, this->_pred,
-                                              [](const auto&, const auto&) { return true; });
-        };
+        auto always_true = [](const auto&, const auto&) { return true; };
+        using Weight = std::remove_cv_t<
+            std::remove_reference_t<decltype(get_weight(std::declval<const Edge&>()))>>;
+        auto relax = digraph_detail::RelaxCached<true, Weight, DiGraph, Mapping,
+                                                 decltype(this->_pred), decltype(always_true)>{
+            this->_digraph, this->_pred, always_true};
         // Hook: verify candidate cycles are actually negative
         auto check = [&](const auto& vtx, const auto& d, auto& gw) {
             assert(digraph_detail::is_negative(vtx, d, gw, this->_pred));

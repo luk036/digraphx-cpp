@@ -200,7 +200,9 @@ TEST_CASE("NegCycleFinderQ non-zero initial distances") {
 TEST_CASE("MinParametricSolver with MapAdapter graph") {
     using EdgeData = flat_hash_map<string, double>;
     using NodeList = vector<pair<size_t, EdgeData>>;
-    NodeList row0, row1, row2;
+    NodeList row0;
+    NodeList row1;
+    NodeList row2;
     row0.emplace_back(1, EdgeData{{"cost", 7.0}, {"time", 1.0}});
     row1.emplace_back(2, EdgeData{{"cost", 5.0}, {"time", 1.0}});
     row2.emplace_back(0, EdgeData{{"cost", -3.0}, {"time", 1.0}});
@@ -214,7 +216,8 @@ TEST_CASE("MinParametricSolver with MapAdapter graph") {
             return edge.at("cost") - ratio * edge.at("time");
         }
         auto zero_cancel(const vector<EdgeData>& cycle) -> double override {
-            double tc = 0.0, tt = 0.0;
+            double tc = 0.0;
+            double tt = 0.0;
             for (const auto& e : cycle) {
                 tc += e.at("cost");
                 tt += e.at("time");
@@ -247,7 +250,8 @@ TEST_CASE("MinParametricSolver with positive-signed cycle") {
             return edge.at("cost") - ratio * edge.at("time");
         }
         auto zero_cancel(const vector<EdgeData>& cycle) -> double override {
-            double tc = 0.0, tt = 0.0;
+            double tc = 0.0;
+            double tt = 0.0;
             for (const auto& e : cycle) {
                 tc += e.at("cost");
                 tt += e.at("time");
@@ -282,7 +286,8 @@ TEST_CASE("MinParametricSolver with pick_one_only finds improving cycle") {
             return edge.at("cost") - ratio * edge.at("time");
         }
         auto zero_cancel(const vector<Edge>& cycle) -> double override {
-            double tc = 0.0, tt = 0.0;
+            double tc = 0.0;
+            double tt = 0.0;
             for (const auto& e : cycle) {
                 tc += e.at("cost");
                 tt += e.at("time");
@@ -318,7 +323,8 @@ TEST_CASE("MinParametricSolver with negative cycle and infinity init") {
             return edge.at("cost") - ratio * edge.at("time");
         }
         auto zero_cancel(const vector<Edge>& cycle) -> double override {
-            double tc = 0.0, tt = 0.0;
+            double tc = 0.0;
+            double tt = 0.0;
             for (const auto& e : cycle) {
                 tc += e.at("cost");
                 tt += e.at("time");

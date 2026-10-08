@@ -45,14 +45,14 @@ static auto build_spare_tsv_graph() -> std::pair<MCFGraph, MCFDemands> {
             double dy = pos[i].second - pos[j].second;
             double d = std::sqrt(dx * dx + dy * dy);
             if (d <= eta) {
-                int64_t w = static_cast<int64_t>(d * 100.0);
-                g[i][j] = MCFEdge{w, 4};
-                g[j][i] = MCFEdge{w, 4};
+                auto w = static_cast<int64_t>(d * 100.0);
+                g[i][j] = MCFEdge{.weight = w, .capacity = 4};
+                g[j][i] = MCFEdge{.weight = w, .capacity = 4};
             }
         }
     }
     for (size_t i = n; i < t; ++i) {
-        g[i][t] = MCFEdge{0, 4};
+        g[i][t] = MCFEdge{.weight = 0, .capacity = 4};
     }
 
     MCFDemands demands;

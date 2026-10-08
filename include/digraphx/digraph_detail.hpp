@@ -13,9 +13,9 @@
  */
 
 #include <absl/container/flat_hash_map.h>
-#include <py2cpp/gen.hpp>
 
 #include <cassert>
+#include <py2cpp/gen.hpp>
 #include <type_traits>
 #include <utility>
 #include <vector>
@@ -87,17 +87,19 @@ namespace digraph_detail {
         if constexpr (requires { digraph.size(); }) visited.reserve(digraph.size());
         for (const auto& entry : digraph) {
             const auto& vtx = _get_key(entry);
-            if (visited.contains(vtx)) continue;
+            // Single probe: mark the DFS root and skip if already visited.
+            if (!visited.try_emplace(vtx, vtx).second) continue;
             auto utx = vtx;
-            visited[utx] = vtx;
-            while (point_to.contains(utx)) {
-                utx = point_to.at(utx).first;
+            while (true) {
+                auto pit = point_to.find(utx);
+                if (pit == point_to.end()) break;
+                utx = pit->second.first;
                 auto it = visited.find(utx);
                 if (it != visited.end()) {
                     if (it->second == vtx) co_yield utx;
                     break;
                 }
-                visited[utx] = vtx;
+                visited.emplace(utx, vtx);
             }
         }
         co_return;
@@ -229,6 +231,75 @@ namespace digraph_detail {
         }
         return changed;
     }
+
+    /**
+     * @brief Relaxation strategy that caches edge weights across passes.
+     *
+     * The parameter (and therefore every edge weight) is fixed for the whole
+     * search, so the weights only need to be evaluated once.  The cache is
+     * built lazily during the second pass - a single-pass search re-evaluates
+     * nothing and allocates nothing - and reused from the third pass onward.
+     * This mirrors the strategy used by the Python `digraphx` port.
+     *
+     * @tparam IsPred true for predecessor relaxation, false for successor
+     * @tparam Weight result type of the weight callable
+     * @tparam DiGraph graph container type
+     * @tparam Mapping distance mapping
+     * @tparam PointTo policy map
+     * @tparam UpdateOk constraint callable (old, new) -> bool
+     */
+    template <bool IsPred, typename Weight, typename DiGraph, typename Mapping, typename PointTo,
+              typename UpdateOk>
+    class RelaxCached {
+      public:
+        using Node = typename graph_traits<DiGraph>::Node;
+
+        RelaxCached(const DiGraph& digraph, PointTo& point_to, UpdateOk update_ok)
+            : _digraph(digraph), _point_to(point_to), _update_ok(std::move(update_ok)) {}
+
+        template <typename GetWeight> auto operator()(Mapping& dist, GetWeight& get_weight)
+            -> bool {
+            const auto build = (_pass == 1);
+            if (build) _weights.clear();
+            auto wit = _weights.begin();
+            auto changed = false;
+            for (const auto& entry : _digraph) {
+                const auto& utx = _get_key(entry);
+                const auto& nbrs = _get_val(entry, _digraph);
+                for (const auto& nbr_entry : nbrs) {
+                    const auto& vtx = _get_key(nbr_entry);
+                    const auto& edge = _get_val(nbr_entry, nbrs);
+                    const auto weight
+                        = (_pass >= 2) ? *wit++ : static_cast<Weight>(get_weight(edge));
+                    if (build) _weights.push_back(weight);
+                    if constexpr (IsPred) {
+                        auto distance = dist[utx] + weight;
+                        if (dist[vtx] > distance && _update_ok(dist[vtx], distance)) {
+                            dist[vtx] = distance;
+                            _point_to.insert_or_assign(vtx, std::pair(utx, edge));
+                            changed = true;
+                        }
+                    } else {
+                        auto distance = dist[vtx] - weight;
+                        if (dist[utx] < distance && _update_ok(dist[utx], distance)) {
+                            dist[utx] = distance;
+                            _point_to.insert_or_assign(utx, std::pair(vtx, edge));
+                            changed = true;
+                        }
+                    }
+                }
+            }
+            ++_pass;
+            return changed;
+        }
+
+      private:
+        const DiGraph& _digraph;
+        PointTo& _point_to;
+        UpdateOk _update_ok;
+        std::vector<Weight> _weights{};
+        int _pass = 0;
+    };
 
     /**
      * @brief Template Method: Howard's policy-iteration skeleton.

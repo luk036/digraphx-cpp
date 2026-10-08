@@ -378,8 +378,8 @@ inline auto min_parametric(const DiGraph& digraph, Ratio ratio, Fn1 distance, Fn
     using Node1 = decltype((*std::declval<DiGraph>().begin()).first);
     using Node = std::remove_cv_t<std::remove_reference_t<Node1>>;
 
-    digraph_detail::CallbackMinParametricAPI<Node, Edge, Ratio, Fn1, Fn2> omega{std::move(distance),
-                                                                                std::move(zero_cancel)};
+    digraph_detail::CallbackMinParametricAPI<Node, Edge, Ratio, Fn1, Fn2> omega{
+        std::move(distance), std::move(zero_cancel)};
     auto solver = MinParametricSolver<DiGraph, Ratio, Domain>{digraph, omega};
     auto update_ok = [](const Domain& /*old_val*/, const Domain& /*new_val*/) { return true; };
     return solver.run(dist, ratio, update_ok, pick_one_only);
