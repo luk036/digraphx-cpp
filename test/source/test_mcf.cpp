@@ -38,14 +38,14 @@ static auto build_small_fixture() -> std::pair<MCFGraph, MCFDemands> {
             double dy = y_vals[i] - y_vals[j];
             double dist = std::sqrt(dx * dx + dy * dy);
             if (dist <= eta) {
-                int64_t w = static_cast<int64_t>(dist * 100.0);  // trunc toward zero
-                g[i][j] = MCFEdge{w, 4};
-                g[j][i] = MCFEdge{w, 4};
+                auto w = static_cast<int64_t>(dist * 100.0);  // trunc toward zero
+                g[i][j] = MCFEdge{.weight = w, .capacity = 4};
+                g[j][i] = MCFEdge{.weight = w, .capacity = 4};
             }
         }
     }
     for (size_t i = 9; i < t; ++i) {
-        g[i][t] = MCFEdge{0, 4};
+        g[i][t] = MCFEdge{.weight = 0, .capacity = 4};
     }
 
     MCFDemands demands;
@@ -56,8 +56,8 @@ static auto build_small_fixture() -> std::pair<MCFGraph, MCFDemands> {
 
 TEST_CASE("MCF simple chain") {
     MCFGraph g;
-    g[0] = {{1, MCFEdge{1, 5}}};
-    g[1] = {{2, MCFEdge{1, 5}}};
+    g[0] = {{1, MCFEdge{.weight = 1, .capacity = 5}}};
+    g[1] = {{2, MCFEdge{.weight = 1, .capacity = 5}}};
     g[2] = {};
 
     MCFDemands d{{0, -2}, {2, 2}};
@@ -68,9 +68,9 @@ TEST_CASE("MCF simple chain") {
 
 TEST_CASE("MCF two paths") {
     MCFGraph g;
-    g[0] = {{1, MCFEdge{1, 5}}, {2, MCFEdge{5, 5}}};
-    g[1] = {{3, MCFEdge{2, 5}}};
-    g[2] = {{3, MCFEdge{1, 5}}};
+    g[0] = {{1, MCFEdge{.weight = 1, .capacity = 5}}, {2, MCFEdge{.weight = 5, .capacity = 5}}};
+    g[1] = {{3, MCFEdge{.weight = 2, .capacity = 5}}};
+    g[2] = {{3, MCFEdge{.weight = 1, .capacity = 5}}};
     g[3] = {};
 
     MCFDemands d{{0, -2}, {3, 2}};
@@ -81,10 +81,10 @@ TEST_CASE("MCF two paths") {
 
 TEST_CASE("MCF negative cycle cancellation") {
     MCFGraph g;
-    g[0] = {{1, MCFEdge{10, 3}}, {2, MCFEdge{1, 5}}};
-    g[1] = {{2, MCFEdge{1, 3}}};
-    g[2] = {{3, MCFEdge{1, 5}}};
-    g[3] = {{1, MCFEdge{-8, 3}}};
+    g[0] = {{1, MCFEdge{.weight = 10, .capacity = 3}}, {2, MCFEdge{.weight = 1, .capacity = 5}}};
+    g[1] = {{2, MCFEdge{.weight = 1, .capacity = 3}}};
+    g[2] = {{3, MCFEdge{.weight = 1, .capacity = 5}}};
+    g[3] = {{1, MCFEdge{.weight = -8, .capacity = 3}}};
 
     MCFDemands d{{0, -3}, {3, 3}};
     auto result = cycle_canceling_mcf(g, d);
@@ -118,7 +118,7 @@ TEST_CASE("MCF spareTSV fixture - exact flow match") {
 
 TEST_CASE("MCF infeasible") {
     MCFGraph g;
-    g[0] = {{1, MCFEdge{1, 1}}};
+    g[0] = {{1, MCFEdge{.weight = 1, .capacity = 1}}};
     g[1] = {};
 
     MCFDemands d{{0, -2}, {1, 2}};
