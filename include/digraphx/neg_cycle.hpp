@@ -29,7 +29,6 @@
  */
 #include <absl/container/flat_hash_map.h>
 
-#include <cassert>
 #include <py2cpp/gen.hpp>
 #include <type_traits>
 #include <utility>
@@ -113,14 +112,7 @@ class NegCycleFinder {
         auto relax = digraph_detail::RelaxCached<true, Weight, DiGraph, Mapping,
                                                  decltype(this->_pred), decltype(always_true)>{
             this->_digraph, this->_pred, always_true};
-        // Hook: verify candidate cycles are actually negative
-        auto check = [&](const auto& vtx, const auto& d, auto& gw) {
-            assert(digraph_detail::is_negative(vtx, d, gw, this->_pred));
-            (void)vtx;
-            (void)d;
-            (void)gw;
-        };
         return digraph_detail::howard_search(this->_digraph, dist, std::move(get_weight),
-                                             this->_pred, std::move(relax), std::move(check));
+                                             this->_pred, std::move(relax));
     }
 };

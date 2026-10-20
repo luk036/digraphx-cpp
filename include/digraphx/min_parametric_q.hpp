@@ -5,7 +5,7 @@
 #include <utility>
 #include <vector>
 
-#include "neg_cycle_q.hpp"  // import NegCycleFinderQ
+#include "parametric_detail.hpp"
 
 /**
  * @file min_parametric_q.hpp
@@ -57,9 +57,9 @@
  * - Space complexity: O(V + E) for mappings
  * - Constraints can significantly improve convergence
  *
- * @tparam DiGraph Type of the directed graph representation
+ * @tparam Node Type of a graph node
+ * @tparam Edge Type of a graph edge
  * @tparam Ratio Type representing the parameter value
- * @tparam Domain Type of the domain for distance calculations
  */
 template <typename Node, typename Edge, typename Ratio> class MinParametricAPI {
   public:
@@ -183,13 +183,10 @@ namespace digraph_detail {
  */
 template <typename DiGraph, typename Ratio, typename Domain> class MinParametricSolver {
   public:
-    using Node1 = decltype((*std::declval<DiGraph>().begin()).first);
-    using Node = std::remove_cv_t<std::remove_reference_t<Node1>>;
-    using Nbrs1 = decltype((*std::declval<DiGraph>().begin()).second);
-    using Nbrs = std::remove_cv_t<std::remove_reference_t<Nbrs1>>;
-    using Edge1 = decltype((*std::declval<Nbrs>().begin()).second);
-    using Edge = std::remove_cv_t<std::remove_reference_t<Edge1>>;
-    using Cycle = std::vector<Edge>;
+    using Traits = digraph_detail::graph_traits<DiGraph>;
+    using Node = typename Traits::Node;
+    using Edge = typename Traits::Edge;
+    using Cycle = typename Traits::Cycle;
     using UpdateOk = std::function<bool(const Domain&, const Domain&)>;
 
   private:
@@ -227,61 +224,14 @@ template <typename DiGraph, typename Ratio, typename Domain> class MinParametric
      */
     template <typename Mapping> auto run(Mapping& dist, Ratio ratio, const UpdateOk& update_ok,
                                          bool pick_one_only = false) -> std::pair<Ratio, Cycle> {
-        // Helper function to calculate edge weights based on current ratio
-        auto get_weight = [this, &ratio](const Edge& edge) -> Domain {
-            return static_cast<Domain>(this->_omega.distance(ratio, edge));
-        };
+        auto round = digraph_detail::AlternatingRound<DiGraph, MinParametricAPI<Node, Edge, Ratio>,
+                                                      Domain, UpdateOk>{
+            this->_digraph, this->_omega, update_ok};
 
-        // Initialize tracking variables for maximum ratio and corresponding cycle
-        auto r_max = ratio;
-        auto c_max = Cycle{};
-        auto cycle = Cycle{};
-        auto reverse = true;  // Flag to alternate search direction
-
-        // Initialize the negative cycle finder with our graph
-        auto ncf = NegCycleFinderQ<DiGraph, Domain>{this->_digraph};
-
-        // Main optimization loop
-        while (true) {
-            // Search for cycles in either forward or reverse direction
-            if (reverse) {
-                auto cycles = ncf.howard_succ(dist, get_weight, update_ok);
-                for (auto&& c_i : cycles) {
-                    auto r_i = this->_omega.zero_cancel(c_i);
-                    if (r_max < r_i) {
-                        r_max = r_i;
-                        c_max = std::move(c_i);
-                        if (pick_one_only) {  // Early exit if we only need one improvement
-                            break;
-                        }
-                    }
-                }
-            } else {
-                auto cycles = ncf.howard_pred(dist, get_weight, update_ok);
-                for (auto&& c_i : cycles) {
-                    auto r_i = this->_omega.zero_cancel(c_i);
-                    if (r_max < r_i) {
-                        r_max = r_i;
-                        c_max = std::move(c_i);
-                        if (pick_one_only) {  // Early exit if we only need one improvement
-                            break;
-                        }
-                    }
-                }
-            }
-
-            // Termination condition: no better ratio found
-            if (r_max <= ratio) {
-                break;
-            }
-
-            // Update state for next iteration
-            cycle = std::move(c_max);
-            ratio = r_max;
-            reverse = !reverse;  // Alternate search direction
-        }
-
-        return std::make_pair(ratio, std::move(cycle));
+        return digraph_detail::parametric_search<Cycle>(
+            dist, ratio, digraph_detail::KeepLarger{}, round,
+            [this](const Cycle& cycle) { return this->_omega.zero_cancel(cycle); },
+            pick_one_only);
     }
 
     /**
@@ -371,12 +321,9 @@ inline auto min_parametric(const DiGraph& digraph, Ratio ratio, Fn1 distance, Fn
     -> std::pair<Ratio, std::vector<typename MinParametricSolver<DiGraph, Ratio, Domain>::Edge>> {
     (void)domain;  // Mark as used to avoid compiler warning
 
-    using Nbrs1 = decltype((*std::declval<DiGraph>().begin()).second);
-    using Nbrs = std::remove_cv_t<std::remove_reference_t<Nbrs1>>;
-    using Edge1 = decltype((*std::declval<Nbrs>().begin()).second);
-    using Edge = std::remove_cv_t<std::remove_reference_t<Edge1>>;
-    using Node1 = decltype((*std::declval<DiGraph>().begin()).first);
-    using Node = std::remove_cv_t<std::remove_reference_t<Node1>>;
+    using Traits = digraph_detail::graph_traits<DiGraph>;
+    using Node = typename Traits::Node;
+    using Edge = typename Traits::Edge;
 
     digraph_detail::CallbackMinParametricAPI<Node, Edge, Ratio, Fn1, Fn2> omega{
         std::move(distance), std::move(zero_cancel)};

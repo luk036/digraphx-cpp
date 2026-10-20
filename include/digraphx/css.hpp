@@ -1,10 +1,9 @@
 // -*- coding: utf-8 -*-
 #pragma once
 
-#include <limits>
 #include <utility>
 
-#include "min_cycle_ratio.hpp"  // import max_parametric
+#include "parametric.hpp"
 
 /**
  * @file css.hpp
@@ -72,23 +71,9 @@ template <typename Graph, typename T, typename CostTime, typename Mapping>
 auto css_ratio(const Graph& gra, T& r0, CostTime cost_time, Mapping& dist) {
     using Edge = typename digraph_detail::graph_traits<Graph>::Edge;
 
-    auto calc_weight = [&cost_time](const T& r, const Edge& edge) -> T {
-        const auto [cost, time] = cost_time(edge);
-        return static_cast<T>(cost) - r * static_cast<T>(time);
-    };
-
-    auto calc_ratio = [&cost_time](const auto& cycle) -> T {
-        auto total_cost = T{0};
-        auto total_time = T{0};
-        for (const auto& edge : cycle) {
-            const auto [cost, time] = cost_time(edge);
-            total_cost += static_cast<T>(cost);
-            total_time += static_cast<T>(time);
-        }
-        return total_time != T{0} ? total_cost / total_time : std::numeric_limits<T>::infinity();
-    };
-
-    return max_parametric(gra, r0, std::move(calc_weight), std::move(calc_ratio), dist, T{0});
+    digraph_detail::CostTimeAPI<Edge, T, CostTime> omega{std::move(cost_time)};
+    auto solver = MaxParametricSolver(gra, omega);
+    return solver.run(r0, dist, T{0});
 }
 
 /**

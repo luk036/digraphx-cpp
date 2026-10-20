@@ -19,7 +19,6 @@
  */
 #include <absl/container/flat_hash_map.h>
 
-#include <cassert>
 #include <py2cpp/gen.hpp>
 #include <type_traits>
 #include <utility>
@@ -39,7 +38,7 @@ using digraph_detail::_get_val;
  *
  * The algorithm skeleton is shared with NegCycleFinder (see
  * digraph_detail::howard_search); the constrained relaxation and the
- * verification hook are supplied as strategies here.
+ * orientation-specific negativity test are supplied as strategies here.
  *
  * @tparam DiGraph Type of the directed graph representation
  * @tparam Domain Numeric type for distance calculations
@@ -88,15 +87,8 @@ class NegCycleFinderQ {
         auto relax
             = digraph_detail::RelaxCached<true, Weight, DiGraph, Mapping, decltype(this->_pred),
                                           UpdateOk>{this->_digraph, this->_pred, update_ok};
-        // Hook: verify candidate cycles are actually negative
-        auto check = [&](const auto& vtx, const auto& d, auto& gw) {
-            assert(digraph_detail::is_negative(vtx, d, gw, this->_pred));
-            (void)vtx;
-            (void)d;
-            (void)gw;
-        };
         return digraph_detail::howard_search(this->_digraph, dist, std::move(get_weight),
-                                             this->_pred, std::move(relax), std::move(check));
+                                             this->_pred, std::move(relax));
     }
 
     /**
@@ -124,9 +116,7 @@ class NegCycleFinderQ {
         auto relax
             = digraph_detail::RelaxCached<false, Weight, DiGraph, Mapping, decltype(this->_succ),
                                           UpdateOk>{this->_digraph, this->_succ, update_ok};
-        // Hook: successor variant performs no negativity assertion
-        auto no_check = [](const auto&, const auto&, auto&) {};
         return digraph_detail::howard_search(this->_digraph, dist, std::move(get_weight),
-                                             this->_succ, std::move(relax), std::move(no_check));
+                                             this->_succ, std::move(relax));
     }
 };

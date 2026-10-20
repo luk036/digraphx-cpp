@@ -13,6 +13,7 @@
 #include <algorithm>
 #include <cstdint>
 #include <limits>
+#include <optional>
 #include <queue>
 #include <utility>
 #include <vector>
@@ -47,6 +48,27 @@ inline auto flow_value(const MCFFlow& flow, size_t u, size_t v) -> int64_t {
     auto fv = fu->second.find(v);
     if (fv == fu->second.end()) return 0;
     return fv->second;
+}
+
+/// Present / absent forward and backward residual edge for (u, v).
+struct ResidualPair {
+    std::optional<ResidualEdge> forward;
+    std::optional<ResidualEdge> backward;
+};
+
+/// Residual capacity available in each direction for the original edge (u, v).
+inline auto residual_edges(const MCFGraph& g, const MCFFlow& flow, size_t u, size_t v)
+    -> ResidualPair {
+    const auto& data = g.at(u).at(v);
+    auto f = flow_value(flow, u, v);
+    ResidualPair pair;
+    if (f < data.capacity) {
+        pair.forward = ResidualEdge{data.weight, data.capacity - f, {u, v}, true};
+    }
+    if (f > 0) {
+        pair.backward = ResidualEdge{-data.weight, f, {u, v}, false};
+    }
+    return pair;
 }
 
 // ---------------------------------------------------------------------------
@@ -162,28 +184,22 @@ inline auto build_residual(const MCFGraph& g, const MCFFlow& flow) -> MCFResidua
     MCFResidual residual;
 
     for (const auto& [u, nbrs] : g) {
-        for (const auto& [v, data] : nbrs) {
-            auto cap = data.capacity;
-            auto wgt = data.weight;
-            auto f = flow_value(flow, u, v);
+        for (const auto& [v, _] : nbrs) {
+            const auto [fwd, bwd] = residual_edges(g, flow, u, v);
 
-            // Forward residual edge
-            if (f < cap) {
-                ResidualEdge edge{wgt, cap - f, {u, v}, true};
+            if (fwd) {
                 auto& row = residual[u];
                 auto prev = row.find(v);
-                if (prev == row.end() || edge.cost < prev->second.cost) {
-                    row[v] = std::move(edge);
+                if (prev == row.end() || fwd->cost < prev->second.cost) {
+                    row[v] = *fwd;
                 }
             }
 
-            // Backward residual edge
-            if (f > 0) {
-                ResidualEdge edge{-wgt, f, {u, v}, false};
+            if (bwd) {
                 auto& row = residual[v];
                 auto prev = row.find(u);
-                if (prev == row.end() || edge.cost < prev->second.cost) {
-                    row[u] = std::move(edge);
+                if (prev == row.end() || bwd->cost < prev->second.cost) {
+                    row[u] = *bwd;
                 }
             }
         }
@@ -211,15 +227,9 @@ inline void update_residual_edge(MCFResidual& residual, const MCFGraph& g, const
     if (gu != g.end()) {
         auto gv = gu->second.find(v);
         if (gv != gu->second.end()) {
-            auto cap = gv->second.capacity;
-            auto wgt = gv->second.weight;
-            auto f = flow_value(flow, u, v);
-            if (f < cap) {
-                residual[u][v] = ResidualEdge{wgt, cap - f, {u, v}, true};
-            }
-            if (f > 0) {
-                residual[v][u] = ResidualEdge{-wgt, f, {u, v}, false};
-            }
+            const auto [fwd, bwd] = residual_edges(g, flow, u, v);
+            if (fwd) residual[u][v] = *fwd;
+            if (bwd) residual[v][u] = *bwd;
         }
     }
 }

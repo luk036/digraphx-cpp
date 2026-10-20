@@ -77,19 +77,12 @@
  * @tparam DiGraph Type of the directed graph representation
  * @tparam Ratio Type representing the ratio/cost values
  */
-template <typename DiGraph, typename Ratio> class CycleRatioAPI {
-    using Nbrs1 = decltype((*std::declval<DiGraph>().begin()).second);
-    using Nbrs = std::remove_cv_t<std::remove_reference_t<Nbrs1>>;
-    using Edge1 = decltype((*std::declval<Nbrs>().begin()).second);
-    using Edge = std::remove_cv_t<std::remove_reference_t<Edge1>>;
-    using Cycle = std::vector<Edge>;
-
-    const DiGraph& digraph;
-    // The line `const DiGraph& digraph;` is declaring a constant reference variable
-    // named `digraph` of type `DiGraph`. This variable  is used to store a
-    // reference to an object of type `DiGraph`. The `const` qualifier indicates
-    // that the reference is   constant, meaning that the object it refers to
-    // cannot be modified through this reference.
+template <typename DiGraph, typename Ratio>
+class CycleRatioAPI
+    : public digraph_detail::CostTimeAPI<typename digraph_detail::graph_traits<DiGraph>::Edge,
+                                         Ratio, digraph_detail::map_cost_time> {
+    using Base = digraph_detail::CostTimeAPI<
+        typename digraph_detail::graph_traits<DiGraph>::Edge, Ratio, digraph_detail::map_cost_time>;
 
   public:
     /**
@@ -103,52 +96,8 @@ template <typename DiGraph, typename Ratio> class CycleRatioAPI {
      * member variable is a constant reference to a `DiGraph` object, which means it cannot be
      * modified
      */
-    explicit CycleRatioAPI(const DiGraph& digraph) : digraph(digraph) {}
+    explicit CycleRatioAPI(const DiGraph&) : Base(digraph_detail::map_cost_time{}) {}
 
-    /**
-     * @brief Distance between two end points of an edge
-     *
-     * The parametric edge weight for a given ratio \f$r\f$:
-     * @f[
-     *     d_r(e) = c(e) - r \cdot t(e)
-     * @f]
-     * where \f$c(e)\f$ is the cost and \f$t(e)\f$ is the time of edge \f$e\f$.
-     *
-     * @param[in] ratio A reference to a `Ratio` object named `ratio`.
-     * @param[in] edge The `edge` parameter is a constant reference to an `Edge` object. It
-     * represents an edge in a graph connecting two vertices.
-     *
-     * @return a `Ratio` object.
-     */
-    auto distance(Ratio& ratio, const Edge& edge) const -> Ratio {
-        return Ratio(edge.at("cost")) - ratio * edge.at("time");
-    }
-
-    /**
-     * The `zero_cancel` function calculates the ratio of the total cost to the total time for a
-     * given cycle.
-     *
-     * The cycle ratio (the value of \f$r\f$ that makes the cycle weight zero):
-     * @f[
-     *     r(C) = \frac{\sum_{e \in C} c(e)}{\sum_{e \in C} t(e)}
-     * @f]
-     *
-     * @param[in] cycle The `cycle` parameter is of type `Cycle`, which is likely a container or
-     * data structure that represents a cycle in a graph. It is used to calculate the ratio of the
-     * total cost to the total time for the given cycle.
-     *
-     * @return The `zero_cancel` function returns the ratio of the total cost to the total time for
-     * a given cycle.
-     */
-    auto zero_cancel(const Cycle& cycle) const -> Ratio {
-        Ratio total_cost = 0;
-        Ratio total_time = 0;
-        for (const auto& edge : cycle) {
-            total_cost += edge.at("cost");
-            total_time += edge.at("time");
-        }
-        return Ratio(total_cost) / total_time;
-    }
 };
 
 /**
@@ -188,11 +137,9 @@ template <typename DiGraph, typename Ratio> class CycleRatioAPI {
  * @tparam Ratio Type representing ratio values (typically double)
  */
 template <typename DiGraph, typename Ratio> class MinCycleRatioSolver {
-    using Nbrs1 = decltype((*std::declval<DiGraph>().begin()).second);
-    using Nbrs = std::remove_cv_t<std::remove_reference_t<Nbrs1>>;
-    using Edge1 = decltype((*std::declval<Nbrs>().begin()).second);
-    using Edge = std::remove_cv_t<std::remove_reference_t<Edge1>>;
-    using Cycle = std::vector<Edge>;
+    using Traits = digraph_detail::graph_traits<DiGraph>;
+    using Edge = typename Traits::Edge;
+    using Cycle = typename Traits::Cycle;
 
     const DiGraph& digraph;
 
@@ -304,27 +251,13 @@ auto min_cycle_ratio(const DiGraph& digraph, Ratio& r0, Fn1 get_cost, Fn2 get_ti
                      Domain dummy) {
     (void)dummy;  // Mark as used to avoid compiler warning
 
-    using Nbrs1 = decltype((*std::declval<DiGraph>().begin()).second);
-    using Nbrs = std::remove_cv_t<std::remove_reference_t<Nbrs1>>;
-    using Edge1 = decltype((*std::declval<Nbrs>().begin()).second);
-    using Edge = std::remove_cv_t<std::remove_reference_t<Edge1>>;
-    using Cycle = std::vector<Edge>;
-    using cost_T = decltype(get_cost(std::declval<Edge>()));
-    using time_T = decltype(get_time(std::declval<Edge>()));
+    using Traits = digraph_detail::graph_traits<DiGraph>;
+    using Edge = typename Traits::Edge;
 
-    auto calc_ratio = [&get_cost, &get_time](const Cycle& cycle) -> Ratio {
-        auto total_cost = cost_T(0);
-        auto total_time = time_T(0);
-        for (const auto& edge : cycle) {
-            total_cost += get_cost(edge);
-            total_time += get_time(edge);
-        }
-        return Ratio(total_cost) / total_time;
-    };
+    auto cost_time = [get_cost = std::move(get_cost), get_time = std::move(get_time)](
+                         const Edge& edge) { return std::pair{get_cost(edge), get_time(edge)}; };
 
-    auto calc_weight = [&get_cost, &get_time](const Ratio& ratio, const Edge& edge) -> Ratio {
-        return get_cost(edge) - ratio * get_time(edge);
-    };
-
-    return max_parametric(digraph, r0, std::move(calc_weight), std::move(calc_ratio), dist, dummy);
+    digraph_detail::CostTimeAPI<Edge, Ratio, decltype(cost_time)> omega{std::move(cost_time)};
+    auto solver = MaxParametricSolver<DiGraph, decltype(omega)>(digraph, omega);
+    return solver.run(r0, dist, dummy);
 }
