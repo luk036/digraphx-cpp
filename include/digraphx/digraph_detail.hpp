@@ -15,6 +15,7 @@
 #include <absl/container/flat_hash_map.h>
 
 #include <cassert>
+#include <limits>
 #include <py2cpp/gen.hpp>
 #include <type_traits>
 #include <utility>
@@ -143,12 +144,33 @@ namespace digraph_detail {
      * @return true if the cycle violates the triangle inequality (negative)
      */
     template <typename Node, typename Mapping, typename GetWeight, typename PointTo>
-    auto is_negative(const Node& handle, const Mapping& dist, GetWeight&& get_weight,
-                     const PointTo& point_to) -> bool {
+    auto is_negative_pred(const Node& handle, const Mapping& dist, GetWeight&& get_weight,
+                          const PointTo& point_to) -> bool {
         auto vtx = handle;
         while (true) {
             const auto& [utx, edge] = point_to.at(vtx);
             if (dist.at(vtx) > dist.at(utx) + std::forward<GetWeight>(get_weight)(edge))
+                return true;
+            vtx = utx;
+            if (vtx == handle) break;
+        }
+        return false;
+    }
+
+    /**
+     * @brief Predecessor negativity check mirrored for successor relaxation.
+     *
+     * The successor policy keeps @f$d_u \ge d_v - w(u,v)@f$ for
+     * `point_to[u] == (v, edge)`, so a negative cycle violates the inequality in
+     * the opposite direction: @f$d_u < d_v - w(u,v)@f$.
+     */
+    template <typename Node, typename Mapping, typename GetWeight, typename PointTo>
+    auto is_negative_succ(const Node& handle, const Mapping& dist, GetWeight&& get_weight,
+                          const PointTo& point_to) -> bool {
+        auto vtx = handle;
+        while (true) {
+            const auto& [utx, edge] = point_to.at(vtx);
+            if (dist.at(vtx) < dist.at(utx) - std::forward<GetWeight>(get_weight)(edge))
                 return true;
             vtx = utx;
             if (vtx == handle) break;
@@ -293,6 +315,22 @@ namespace digraph_detail {
             return changed;
         }
 
+        /**
+         * @brief Verify that the cycle starting at `handle` is negative.
+         *
+         * The predicate is orientation-specific, so it is selected here from
+         * the same `IsPred` flag that selects the relaxation direction.
+         */
+        template <typename GetWeight>
+        auto is_negative(const Node& handle, const Mapping& dist, GetWeight& get_weight) const
+            -> bool {
+            if constexpr (IsPred) {
+                return is_negative_pred(handle, dist, get_weight, _point_to);
+            } else {
+                return is_negative_succ(handle, dist, get_weight, _point_to);
+            }
+        }
+
       private:
         const DiGraph& _digraph;
         PointTo& _point_to;
@@ -304,41 +342,89 @@ namespace digraph_detail {
     /**
      * @brief Template Method: Howard's policy-iteration skeleton.
      *
-     * The algorithm structure is fixed here; the variable parts (the
-     * relaxation step and the cycle-verification hook) are injected as
-     * strategies.
+     * The algorithm structure is fixed here; the relaxation step and the
+     * orientation-specific negativity test are both supplied by the injected
+     * relaxation strategy, so every yielded cycle is verified in debug builds.
      *
      * @tparam DiGraph graph container type
      * @tparam Mapping distance mapping
      * @tparam GetWeight weight callable
      * @tparam PointTo policy map
-     * @tparam Relax callable (dist, get_weight) -> bool performing one pass
-     * @tparam Check callable (vtx, dist, get_weight) -> void verifying a cycle
+     * @tparam Relax strategy providing `operator()(dist, get_weight)` and
+     *         `is_negative(handle, dist, get_weight)`
      * @param[in] digraph the graph
      * @param[in,out] dist distance estimates
      * @param[in] get_weight weight function
      * @param[in,out] point_to policy map to populate
      * @param[in] relax the relaxation strategy
-     * @param[in] check the verification hook
      * @return py::Generator<Cycle> generator yielding negative cycles
      */
     template <typename DiGraph, typename Mapping, typename GetWeight, typename PointTo,
-              typename Relax, typename Check>
+              typename Relax>
     auto howard_search(const DiGraph& digraph, Mapping& dist, GetWeight get_weight,
-                       PointTo& point_to, Relax relax, Check check)
+                       PointTo& point_to, Relax relax)
         -> py::Generator<typename graph_traits<DiGraph>::Cycle> {
         point_to.clear();
         if constexpr (requires { digraph.size(); }) point_to.reserve(digraph.size());
         auto found = false;
         while (!found && relax(dist, get_weight)) {
             for (const auto& vtx : find_cycle(digraph, point_to)) {
-                check(vtx, dist, get_weight);
+                assert(relax.is_negative(vtx, dist, get_weight));
                 co_yield cycle_list(vtx, point_to);
                 found = true;
             }
         }
         co_return;
     }
+
+    /**
+     * @brief Parametric API for edges described by a (cost, time) column pair.
+     *
+     * @f[
+     *     d_r(e) = c(e) - r \cdot t(e), \qquad
+     *     r(C) = \frac{\sum_{e \in C} c(e)}{\sum_{e \in C} t(e)}
+     * @f]
+     *
+     * The minimum-cycle-ratio API and the CSS objectives are the same
+     * arithmetic with different column extractors, so it is implemented once
+     * here.  A cycle with zero total time has an undefined ratio and maps to
+     * @f$+\infty@f$ rather than dividing by zero.
+     *
+     * @tparam Edge edge type
+     * @tparam Ratio ratio type
+     * @tparam CostTime callable (edge) -> pair(cost, time)
+     */
+    template <typename Edge, typename Ratio, typename CostTime> class CostTimeAPI {
+      public:
+        explicit CostTimeAPI(CostTime cost_time) : _cost_time(std::move(cost_time)) {}
+
+        auto distance(const Ratio& ratio, const Edge& edge) const -> Ratio {
+            const auto [cost, time] = _cost_time(edge);
+            return static_cast<Ratio>(cost) - ratio * static_cast<Ratio>(time);
+        }
+
+        auto zero_cancel(const std::vector<Edge>& cycle) const -> Ratio {
+            auto total_cost = Ratio{0};
+            auto total_time = Ratio{0};
+            for (const auto& edge : cycle) {
+                const auto [cost, time] = _cost_time(edge);
+                total_cost += static_cast<Ratio>(cost);
+                total_time += static_cast<Ratio>(time);
+            }
+            if (total_time == Ratio{0}) return std::numeric_limits<Ratio>::infinity();
+            return total_cost / total_time;
+        }
+
+      private:
+        CostTime _cost_time;
+    };
+
+    /// Read the "cost" / "time" keys of a mapping edge (the MCR convention).
+    struct map_cost_time {
+        template <typename Edge> auto operator()(const Edge& edge) const {
+            return std::pair{edge.at("cost"), edge.at("time")};
+        }
+    };
 
     /**
      * @brief Strategy adapter: present a (distance, zero_cancel) callback pair

@@ -1,8 +1,9 @@
 #pragma once
 
+#include <utility>
 #include <vector>
 
-#include "neg_cycle.hpp"  // import NegCycleFinder
+#include "parametric_detail.hpp"
 
 /**
  * @file parametric.hpp
@@ -54,14 +55,12 @@
  */
 template <typename DiGraph, typename ParametricAPI> class MaxParametricSolver {
   public:
-    using Nbrs1 = decltype((*std::declval<DiGraph>().begin()).second);
-    using Nbrs = std::remove_cv_t<std::remove_reference_t<Nbrs1>>;
-    using Edge1 = decltype((*std::declval<Nbrs>().begin()).second);
-    using Edge = std::remove_cv_t<std::remove_reference_t<Edge1>>;
-    using Cycle = std::vector<Edge>;
+    using Traits = digraph_detail::graph_traits<DiGraph>;
+    using Edge = typename Traits::Edge;
+    using Cycle = typename Traits::Cycle;
 
   private:
-    NegCycleFinder<DiGraph> _ncf;
+    const DiGraph& _digraph;
     ParametricAPI& _omega;
 
   public:
@@ -77,7 +76,7 @@ template <typename DiGraph, typename ParametricAPI> class MaxParametricSolver {
      * @param[in] omega API object providing distance calculation methods
      */
     MaxParametricSolver(const DiGraph& digraph, ParametricAPI& omega)
-        : _ncf{digraph}, _omega{omega} {}
+        : _digraph{digraph}, _omega{omega} {}
 
     /**
      * @brief Execute the maximum parametric algorithm
@@ -131,32 +130,15 @@ template <typename DiGraph, typename ParametricAPI> class MaxParametricSolver {
     auto run(Ratio& r_opt, Mapping& dist, Domain domain) {
         (void)domain;  // Mark as used to avoid compiler warning
 
-        auto get_weight = [this,
-                           &r_opt](const Edge& edge) -> Domain {  // note!!!
-            return Domain(this->_omega.distance(r_opt, edge));
-        };
+        auto round
+            = digraph_detail::HowardRound<DiGraph, ParametricAPI, Domain>{this->_digraph,
+                                                                          this->_omega};
+        auto critical = digraph_detail::parametric_search<Cycle>(
+            dist, r_opt, digraph_detail::KeepSmaller{}, round,
+            [this](const Cycle& cycle) { return this->_omega.zero_cancel(cycle); });
 
-        auto r_min = r_opt;
-        auto c_min = Cycle{};
-        auto c_opt = Cycle{};
-
-        while (true) {
-            for (auto&& ci : this->_ncf.howard(dist, get_weight)) {
-                auto ri = this->_omega.zero_cancel(ci);
-                if (r_min > ri) {
-                    r_min = ri;
-                    c_min = std::move(ci);
-                }
-            }
-            if (r_min >= r_opt) {
-                break;
-            }
-
-            c_opt = std::move(c_min);
-            r_opt = r_min;
-        }
-
-        return c_opt;
+        r_opt = critical.first;
+        return std::move(critical.second);
     }
 };
 
@@ -174,22 +156,6 @@ template <typename DiGraph, typename ParametricAPI> class MaxParametricSolver {
  *     \max \; r \quad \text{s.t.} \quad
  *     d_v - d_u \le w_r(u,v), \; \forall (u,v) \in E
  * @f]
- *
- * @dot
- *   digraph parametric_iter {
- *     rankdir=LR; bgcolor="transparent";
- *     node [shape=box, style=filled, fillcolor="#d4e6f1"];
- *     init [label="Initialize\nr = r_opt", fillcolor="#a9cce3"];
- *     find [label="Find negative\ncycles at current r"];
- *     compute [label="Compute\nzero_cancel(C)"];
- *     update [label="Update r_opt\n= min(r_opt, r_i)"];
- *     check [label="Converged?", shape=diamond, fillcolor="#f9e79f"];
- *     done [label="Done!\nReturn r_opt", fillcolor="#7fb3d8"];
- *     init -> find -> compute -> update -> check;
- *     check -> find [label="No", style=dashed, color="#e74c3c"];
- *     check -> done [label="Yes", color="#27ae60"];
- *   }
- * @enddot
  *
  * This approach is useful when:
  * - You prefer functional programming style
@@ -217,11 +183,9 @@ template <typename DiGraph, typename ParametricAPI> class MaxParametricSolver {
 template <typename DiGraph, typename T, typename Fn1, typename Fn2, typename Mapping, typename D>
 auto max_parametric(const DiGraph& digraph, T& r_opt, Fn1 distance, Fn2 zero_cancel, Mapping& dist,
                     D domain) {
-    using Nbrs1 = decltype((*std::declval<DiGraph>().begin()).second);
-    using Nbrs = std::remove_cv_t<std::remove_reference_t<Nbrs1>>;
-    using Edge1 = decltype((*std::declval<Nbrs>().begin()).second);
-    using Edge = std::remove_cv_t<std::remove_reference_t<Edge1>>;
-    using Cycle = std::vector<Edge>;
+    using Traits = digraph_detail::graph_traits<DiGraph>;
+    using Edge = typename Traits::Edge;
+    using Cycle = typename Traits::Cycle;
 
     digraph_detail::CallbackParametricAPI<T, Edge, Cycle, D, Fn1, Fn2> omega{
         std::move(distance), std::move(zero_cancel)};
