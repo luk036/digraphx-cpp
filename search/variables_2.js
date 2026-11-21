@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['orig_0',['orig',['../structResidualEdge.html#ac5cd88481363db9dd53366818e217fd7',1,'ResidualEdge']]]
+  ['delay_0',['delay',['../structtiming__edge.html#a197c4921bd663c81fa27ca3b34dedbe5',1,'timing_edge']]]
 ];

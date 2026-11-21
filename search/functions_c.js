@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['relax_5fpred_0',['relax_pred',['../namespacedigraph__detail.html#ac6898c6d6687ce255dfbe37cb5dfcf78',1,'digraph_detail']]],
-  ['relax_5fsucc_1',['relax_succ',['../namespacedigraph__detail.html#af680bd8dac0a3215262b6472a5acf6b2',1,'digraph_detail']]],
-  ['relaxcached_2',['RelaxCached',['../classdigraph__detail_1_1RelaxCached.html#a7ce9a04a5f19f7e386bda7f83bf7c40e',1,'digraph_detail::RelaxCached']]],
-  ['run_3',['run',['../classMinCycleRatioSolver.html#a964c6a660aebb5b24b29c6e8cb0bb97d',1,'MinCycleRatioSolver::run()'],['../classMinParametricSolver.html#a42fde848b8a00471685e4b275da7b613',1,'MinParametricSolver::run()'],['../classMaxParametricSolver.html#af6bc440f7143e000eff6dc0d4975f0d9',1,'MaxParametricSolver::run()']]]
+  ['operator_28_29_0',['operator()',['../classdigraph__detail_1_1RelaxCached.html#ab0083a61f42577fe3851bbb5ad12bfbb',1,'digraph_detail::RelaxCached::operator()()'],['../structdigraph__detail_1_1map__cost__time.html#a54ac320186ce3c6113d227ec71238a3e',1,'digraph_detail::map_cost_time::operator()()'],['../classdigraph__detail_1_1HowardRound.html#a5028d0e6e6affeb020d5f5acff6076ef',1,'digraph_detail::HowardRound::operator()()'],['../classdigraph__detail_1_1AlternatingRound.html#a62f068d73b1e681a942ca456e4df5b5f',1,'digraph_detail::AlternatingRound::operator()()']]],
+  ['operator_3d_1',['operator=',['../classMinParametricAPI.html#af3f5adf3a88d24fb277b20dd7d363e38',1,'MinParametricAPI::operator=(const MinParametricAPI &amp;)=default'],['../classMinParametricAPI.html#a786eaa70568da1c8c95c4a9cb139b662',1,'MinParametricAPI::operator=(MinParametricAPI &amp;&amp;)=default']]]
 ];

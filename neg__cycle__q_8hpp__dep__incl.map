@@ -1,5 +1,13 @@
 <map id="digraphx/neg_cycle_q.hpp" name="digraphx/neg_cycle_q.hpp">
-<area shape="rect" id="Node000001" title="Negative cycle detection with constraints using Howard&#39;s method." alt="" coords="25,5,173,45"/>
-<area shape="rect" id="Node000002" href="$min__parametric__q_8hpp.html" title="Minimum parametric network problem solver with constraints." alt="" coords="5,93,192,133"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="101,59,101,93,96,93,96,59"/>
+<area shape="rect" id="Node000001" title="Negative cycle detection with constraints using Howard&#39;s method." alt="" coords="128,5,276,50"/>
+<area shape="rect" id="Node000002" href="$parametric__detail_8hpp.html" title="Shared parametric&#45;search loop and its injected strategies." alt="" coords="125,98,279,143"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="203,63,205,99,199,97,201,68"/>
+<area shape="rect" id="Node000003" href="$min__parametric__q_8hpp.html" title="Minimum parametric network problem solver with constraints." alt="" coords="5,191,191,235"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="164,155,125,192,121,188,168,151"/>
+<area shape="rect" id="Node000004" href="$parametric_8hpp.html" title="Maximum parametric network problem solver." alt="" coords="215,199,397,227"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="239,150,294,198,288,199,237,155"/>
+<area shape="rect" id="Node000005" href="$css_8hpp.html" title="Clock Skew Scheduling (CSS) objectives as one min&#45;ratio engine." alt="" coords="158,292,289,320"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="287,237,237,294,234,289,282,239"/>
+<area shape="rect" id="Node000006" href="$min__cycle__ratio_8hpp.html" title="Minimum cycle ratio algorithms for directed graphs." alt="" coords="313,283,462,328"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="329,236,370,283,365,282,327,241"/>
 </map>

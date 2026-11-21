@@ -1,7 +1,13 @@
 <map id="digraphx/neg_cycle.hpp" name="digraphx/neg_cycle.hpp">
-<area shape="rect" id="Node000001" title="Negative cycle detection for weighted directed graphs." alt="" coords="9,5,185,31"/>
-<area shape="rect" id="Node000002" href="$parametric_8hpp.html" title="Maximum parametric network problem solver." alt="" coords="5,79,188,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,44,99,79,94,79,94,44"/>
-<area shape="rect" id="Node000003" href="$min__cycle__ratio_8hpp.html" title="Minimum cycle ratio algorithms for directed graphs." alt="" coords="22,152,171,192"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="99,118,99,152,94,152,94,118"/>
+<area shape="rect" id="Node000001" title="Negative cycle detection for weighted directed graphs." alt="" coords="114,5,290,33"/>
+<area shape="rect" id="Node000002" href="$parametric__detail_8hpp.html" title="Shared parametric&#45;search loop and its injected strategies." alt="" coords="125,81,279,126"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="203,46,205,81,199,80,201,51"/>
+<area shape="rect" id="Node000003" href="$min__parametric__q_8hpp.html" title="Minimum parametric network problem solver with constraints." alt="" coords="5,174,191,218"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="164,138,125,175,121,171,168,134"/>
+<area shape="rect" id="Node000004" href="$parametric_8hpp.html" title="Maximum parametric network problem solver." alt="" coords="215,182,397,210"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="239,133,294,181,288,182,237,138"/>
+<area shape="rect" id="Node000005" href="$css_8hpp.html" title="Clock Skew Scheduling (CSS) objectives as one min&#45;ratio engine." alt="" coords="158,275,289,302"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="287,220,237,277,234,272,282,222"/>
+<area shape="rect" id="Node000006" href="$min__cycle__ratio_8hpp.html" title="Minimum cycle ratio algorithms for directed graphs." alt="" coords="313,266,462,311"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="329,219,370,266,365,265,327,224"/>
 </map>

@@ -1,15 +1,17 @@
 <map id="digraphx/digraph_detail.hpp" name="digraphx/digraph_detail.hpp">
-<area shape="rect" id="Node000001" title="Internal implementation helpers shared by the digraphx algorithms." alt="" coords="289,5,493,31"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,144,119"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="345,33,158,80,157,74,344,28"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="168,86,237,111"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="364,33,244,83,242,78,362,28"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="261,86,387,111"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="383,33,345,77,341,74,379,29"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="411,86,503,111"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="403,29,441,74,437,77,398,33"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="527,86,587,111"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="416,28,522,78,520,83,414,33"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="611,86,674,111"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="438,28,515,49,601,76,607,78,605,83,599,81,514,54,437,33"/>
+<area shape="rect" id="Node000001" title="Internal implementation helpers shared by the digraphx algorithms." alt="" coords="305,5,508,33"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,81,144,126"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="352,36,160,83,158,78,351,31"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="168,90,237,117"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="373,33,250,83,245,85,244,80,248,79,368,34"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="261,90,320,117"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="390,33,323,83,320,78,385,34"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="344,90,469,117"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="408,32,409,76,404,72,405,36"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="493,90,584,117"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="428,31,507,81,502,81,427,36"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="609,90,668,117"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="455,31,523,52,597,79,602,83,597,82,595,83,521,57,454,36"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="693,90,755,117"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="489,31,582,50,681,78,688,83,683,83,679,84,581,56,488,36"/>
 </map>

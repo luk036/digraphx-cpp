@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['_7eminparametricapi_0',['~MinParametricAPI',['../classMinParametricAPI.html#a1a563dc206307d42a22b95469b7618b1',1,'MinParametricAPI']]],
-  ['_7ethreadpool_1',['~ThreadPool',['../classThreadPool.html#a44d3d2ab618970605e684efc216655eb',1,'ThreadPool']]]
+  ['update_5fresidual_5fedge_0',['update_residual_edge',['../mcf_8hpp.html#a387eb06cc8b70d6b4cacefe7f8f775e4',1,'mcf.hpp']]]
 ];

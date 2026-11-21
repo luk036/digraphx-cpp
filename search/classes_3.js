@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['negcyclefinder_0',['NegCycleFinder',['../classNegCycleFinder.html',1,'']]],
-  ['negcyclefinderq_1',['NegCycleFinderQ',['../classNegCycleFinderQ.html',1,'']]]
+  ['howardround_0',['HowardRound',['../classdigraph__detail_1_1HowardRound.html',1,'digraph_detail']]]
 ];

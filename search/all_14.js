@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['your_20needs_0',['Adjust the template to your needs',['../index.html#autotoc_md3',1,'']]]
+  ['weight_0',['weight',['../structMCFEdge.html#ad7883bc8ffd97c1b406577efef0fa959',1,'MCFEdge']]]
 ];

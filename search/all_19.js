@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['🔀_20digraphx_20cpp_0',['🔀 digraphx-cpp',['../index.html#autotoc_md0',1,'']]]
+  ['❓_20faq_0',['❓ FAQ',['../index.html#autotoc_md10',1,'']]]
 ];

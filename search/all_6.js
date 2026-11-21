@@ -7,5 +7,5 @@ var searchData=
   ['find_5ffeasible_5fflow_4',['find_feasible_flow',['../mcf_8hpp.html#a6468efa8e698c9e15074214e5f0d0baa',1,'mcf.hpp']]],
   ['flow_5fvalue_5',['flow_value',['../mcf_8hpp.html#acd2706edb42a6042fd806ecb5b1a6b17',1,'mcf.hpp']]],
   ['format_6',['Run clang-format',['../index.html#autotoc_md6',1,'']]],
-  ['forward_7',['forward',['../structResidualEdge.html#a18eacee1573c1317a5d64b2b0a29f9f9',1,'ResidualEdge']]]
+  ['forward_7',['forward',['../structResidualEdge.html#a18eacee1573c1317a5d64b2b0a29f9f9',1,'ResidualEdge::forward'],['../structResidualPair.html#a88fc47f796aab2db04698472d01c3fbf',1,'ResidualPair::forward']]]
 ];

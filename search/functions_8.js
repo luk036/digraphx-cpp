@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['log_5fwith_5fspdlog_0',['log_with_spdlog',['../namespacedigraphx.html#ab760004694a785605c64d92da1636126',1,'digraphx']]]
+  ['is_5fnegative_0',['is_negative',['../classdigraph__detail_1_1RelaxCached.html#a62f1a6b0471e36bc162521bf2343ef51',1,'digraph_detail::RelaxCached']]],
+  ['is_5fnegative_5fpred_1',['is_negative_pred',['../namespacedigraph__detail.html#a88d5c6675db73a00a40fed2fde670a39',1,'digraph_detail']]],
+  ['is_5fnegative_5fsucc_2',['is_negative_succ',['../namespacedigraph__detail.html#a1cd2cc115e41217cfdb657ec7fd319ea',1,'digraph_detail']]]
 ];
